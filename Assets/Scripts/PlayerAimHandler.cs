@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class MouseLookAt : MonoBehaviour
+public class PlayerAimHandler : MonoBehaviour
 {
     [SerializeField]
     private float _angleOffset = -90f;
@@ -8,7 +10,6 @@ public class MouseLookAt : MonoBehaviour
     private void Update()
     {
         float angle = ConvertMousePositionToLookAngle();
-
         transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
     }
 
@@ -20,7 +21,7 @@ public class MouseLookAt : MonoBehaviour
     {
         Vector3 playerPositionOnScreen = Camera.main.WorldToScreenPoint(transform.position);
         Vector3 direction = Input.mousePosition - playerPositionOnScreen;
-        
+
         float angle = (Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg) + _angleOffset;
 
         return angle;
