@@ -15,9 +15,23 @@ public class FieldOfView : MonoBehaviour
     [HideInInspector]
     public List<Transform> visibleTargets = new List<Transform>();
 
+    public float meshResolution;
+
+    public MeshFilter viewMeshFilter;
+    private Mesh _viewMesh;
+
     private void Start()
     {
+        _viewMesh = new Mesh();
+        _viewMesh.name = "View Mesh";
+        viewMeshFilter.mesh = _viewMesh;
+
         StartCoroutine("FindTargetWithDelay", 0.2f);
+    }
+
+    private void LateUpdate()
+    {
+        DrawFieldOfView();
     }
 
     private IEnumerator FindTargetWithDelay(float delay)
@@ -57,6 +71,75 @@ public class FieldOfView : MonoBehaviour
                 if (!Physics2D.Raycast(transform.position, directionToTarget, distanceToTarget, _obstacleMask))
                     visibleTargets.Add(target);
             }
+        }
+    }
+
+    private void DrawFieldOfView()
+    {
+        int stepCount = Mathf.RoundToInt(viewAngle * meshResolution);
+        float stepAngleSize = viewAngle / stepCount;
+
+        List<Vector3> viewPoints = new List<Vector3>();
+
+        for (int i = 0; i <= stepCount; i++)
+        {
+            float angle = -transform.eulerAngles.z - (viewAngle / 2f) + (stepAngleSize * i);
+            ViewCastInfo newViewCastInfo = ViewCast(angle);
+            viewPoints.Add(newViewCastInfo.point);
+            //Debug.DrawLine(transform.position, transform.position + DirectionFromAngle(angle, true) * viewRadius, Color.white);
+        }
+
+        int vertexCount = viewPoints.Count + 1;
+        Vector3[] vertices = new Vector3[vertexCount];
+        int[] triangles = new int[(vertexCount - 2) * 3];
+
+        vertices[0] = Vector3.zero;
+        for (int i = 0; i < (vertexCount - 1); i++)
+        {
+            vertices[i + 1] = transform.InverseTransformPoint(viewPoints[i]);
+
+            if (i < (vertexCount - 2))
+            {
+                triangles[i * 3] = 0;
+                triangles[i * 3 + 1] = i + 1;
+                triangles[i * 3 + 2] = i + 2;
+            }            
+        }
+
+        _viewMesh.Clear();
+        _viewMesh.vertices = vertices;
+        _viewMesh.triangles = triangles;
+        _viewMesh.RecalculateNormals();
+    }
+
+    private ViewCastInfo ViewCast(float globalAngle)
+    {
+        Vector3 direction = DirectionFromAngle(globalAngle, true);
+        RaycastHit2D hit2D = Physics2D.Raycast(transform.position, direction, viewRadius, _obstacleMask);
+
+        if (hit2D.collider != null)
+        {
+            return new ViewCastInfo(true, hit2D.point, hit2D.distance, globalAngle);
+        }
+        else
+        {
+            return new ViewCastInfo(false, transform.position + direction * viewRadius, viewRadius, globalAngle);
+        }
+    }
+
+    public struct ViewCastInfo
+    {
+        public bool hit;
+        public Vector3 point;
+        public float distance;
+        public float angle;
+
+        public ViewCastInfo(bool _hit, Vector3 _point, float _distance, float _angle)
+        {
+            hit = _hit;
+            point = _point;
+            distance = _distance;
+            angle = _angle;
         }
     }
 }

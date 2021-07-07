@@ -19,10 +19,10 @@ public class FieldOfViewEditor : Editor
         Handles.DrawWireArc(fov.transform.position, Vector3.forward, viewAngleB, fov.viewAngle, fov.viewRadius);
 
         // Draws a line to target if we found one in view (without being obstructed)
-        Handles.color = Color.red;
-        foreach (Transform visibleTarget in fov.visibleTargets)
-        {
-            Handles.DrawLine(fov.transform.position, visibleTarget.position);
-        }
+        //Handles.color = Color.red;
+        //foreach (Transform visibleTarget in fov.visibleTargets)
+        //{
+        //    Handles.DrawLine(fov.transform.position, visibleTarget.position);
+        //}
     }
 }
