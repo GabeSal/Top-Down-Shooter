@@ -71,7 +71,9 @@ public class FieldOfView : MonoBehaviour
                 float distanceToTarget = Vector3.Distance(transform.position, target.position);
                 // If line draw from object is not interrupted by an obstruction, then add the target to list of visible targets
                 if (!Physics2D.Raycast(transform.position, directionToTarget, distanceToTarget, _obstacleMask))
+                {
                     visibleTargets.Add(target);
+                }
             }
         }
     }
