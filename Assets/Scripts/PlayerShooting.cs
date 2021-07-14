@@ -30,12 +30,16 @@ public class PlayerShooting : MonoBehaviour
 
         if (something != null)
         {
+            //Debug.Log("Something was hit at point: " + hitInfo2D.point);
+            //Debug.Log("Normal of the hit point is: " + hitInfo2D.normal);
+
             _lineRenderer.SetPosition(0, _firePoint.position);
             _lineRenderer.SetPosition(1, hitInfo2D.point);
 
             if (IsEnemy(something))
             {
                 something.GetComponent<Health>().TakeHit(_weaponDamage);
+                something.GetComponent<EnemyStatus>().RecoilFromHit(-hitInfo2D.normal);
             }
         }
         else
