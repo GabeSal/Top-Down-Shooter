@@ -1,13 +1,47 @@
+using System;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering.Universal;
 
 public class PlayerAimHandler : MonoBehaviour
 {
+    [SerializeField]
+    private Light2D _visionConeDefault;
+    [SerializeField]
+    private Light2D _visionConeAimed;
+
     private float _angleOffset = 90f;
+    private int _mouseRightClick = 1;
+
+    private bool _isAiming { get { return Input.GetMouseButtonDown(_mouseRightClick) == true; } }
 
     private void Update()
     {
         float angle = ConvertMousePositionToLookAngle();
         transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+
+        if (Input.GetMouseButtonDown(_mouseRightClick))
+        {
+            SwitchVisionCone();
+        }
+
+        if (Input.GetMouseButtonUp(_mouseRightClick))
+        {
+            SwitchVisionCone();
+        }
+    }
+
+    private void SwitchVisionCone()
+    {
+        if (_isAiming)
+        {
+            _visionConeDefault.gameObject.SetActive(false);
+            _visionConeAimed.gameObject.SetActive(true);
+        }
+        else
+        {
+            _visionConeDefault.gameObject.SetActive(true);
+            _visionConeAimed.gameObject.SetActive(false);
+        }
     }
 
     /// <summary>
