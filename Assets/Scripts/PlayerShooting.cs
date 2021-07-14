@@ -7,6 +7,8 @@ public class PlayerShooting : MonoBehaviour
     private Transform _firePoint;
     [SerializeField]
     private LineRenderer _lineRenderer;
+    [SerializeField]
+    private int _weaponDamage = 1;
 
     private int _mouseLeftClick = 0;
 
@@ -30,6 +32,11 @@ public class PlayerShooting : MonoBehaviour
         {
             _lineRenderer.SetPosition(0, _firePoint.position);
             _lineRenderer.SetPosition(1, hitInfo2D.point);
+
+            if (IsEnemy(something))
+            {
+                something.GetComponent<Health>().TakeHit(_weaponDamage);
+            }
         }
         else
         {
@@ -40,6 +47,11 @@ public class PlayerShooting : MonoBehaviour
         yield return new WaitForSeconds(0.05f);
 
         _lineRenderer.enabled = false;
+    }
+
+    private bool IsEnemy(Collider2D game_object)
+    {
+        return game_object.GetComponent<Health>() != null;
     }
 
     private Vector3 GetMousePosition()
