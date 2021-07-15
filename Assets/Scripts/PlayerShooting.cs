@@ -12,6 +12,12 @@ public class PlayerShooting : MonoBehaviour
     private int _weaponDamage = 1;
 
     private int _mouseLeftClick = 0;
+    private float _weaponRecoilForce;
+
+    private void Start()
+    {
+        _weaponRecoilForce = GetComponentInChildren<Weapon>().RecoilForce;
+    }
 
     private void Update()
     {
@@ -24,8 +30,9 @@ public class PlayerShooting : MonoBehaviour
     private IEnumerator ShootWeapon()
     {
         RaycastHit2D hitInfo2D = Physics2D.Raycast(_firePoint.position, GetMouseDirection());
-
         Collider2D something = hitInfo2D.collider;
+
+        WeaponRecoil(-GetMouseDirection());
 
         _lineRenderer.enabled = true;
 
@@ -54,6 +61,11 @@ public class PlayerShooting : MonoBehaviour
         yield return new WaitForSeconds(0.05f);
 
         _lineRenderer.enabled = false;
+    }
+
+    private void WeaponRecoil(Vector3 recoilDirection)
+    {
+        GetComponent<Rigidbody2D>().AddForce(recoilDirection * _weaponRecoilForce, ForceMode2D.Impulse);
     }
 
     private bool IsEnemy(Collider2D game_object)
