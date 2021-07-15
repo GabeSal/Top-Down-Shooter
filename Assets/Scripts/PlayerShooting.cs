@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 public class PlayerShooting : MonoBehaviour
 {
@@ -8,7 +7,6 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField]
     private Transform _firePoint;
 
-    private int _mouseLeftClick = 0;
     private float _weaponRecoilForce;
     private Weapon _weapon;
 

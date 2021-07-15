@@ -16,6 +16,8 @@ public class Weapon : MonoBehaviour
     private bool _isFullAuto;
     [SerializeField]
     private KeyCode _weaponHotKey;
+    [SerializeField]
+    private LineRenderer _lineRenderer;
 
     private float _fireTimer;
     private PlayerShooting _playerShooting;
@@ -72,6 +74,7 @@ public class Weapon : MonoBehaviour
 
         if (something != null)
         {
+            StartCoroutine(DrawBulletTrailAtHitPoint(hitInfo2D));
             if (IsEnemy(something))
             {
                 something.GetComponent<EnemyStatus>().RecoilFromHit(-hitInfo2D.normal);
@@ -80,5 +83,17 @@ public class Weapon : MonoBehaviour
         }
 
         OnFire();
+    }
+
+    private IEnumerator DrawBulletTrailAtHitPoint(RaycastHit2D hit2D)
+    {
+        _lineRenderer.enabled = true;
+
+        _lineRenderer.SetPosition(0, _firePoint.position);
+        _lineRenderer.SetPosition(1, hit2D.point);
+
+        yield return new WaitForSeconds(0.05f);
+
+        _lineRenderer.enabled = false;
     }
 }

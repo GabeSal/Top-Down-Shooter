@@ -3778,6 +3778,7 @@ MonoBehaviour:
   _fireDelay: 0.1
   _isFullAuto: 1
   _weaponHotKey: 49
+  _lineRenderer: {fileID: 358614142}
 --- !u!114 &1631561064
 MonoBehaviour:
   m_ObjectHideFlags: 0
