@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 public class PlayerShooting : MonoBehaviour
 {
@@ -22,7 +23,7 @@ public class PlayerShooting : MonoBehaviour
 
     private IEnumerator ShootWeapon()
     {
-        RaycastHit2D hitInfo2D = Physics2D.Raycast(_firePoint.position, GetMousePosition());
+        RaycastHit2D hitInfo2D = Physics2D.Raycast(_firePoint.position, GetMouseDirection());
 
         Collider2D something = hitInfo2D.collider;
 
@@ -45,8 +46,10 @@ public class PlayerShooting : MonoBehaviour
         else
         {
             _lineRenderer.SetPosition(0, _firePoint.position);
-            _lineRenderer.SetPosition(1, _firePoint.position + _firePoint.up * 50f);
-        }        
+            _lineRenderer.SetPosition(1, GetMousePosition());
+
+            //Debug.Log("Nothing was detected.");
+        }
 
         yield return new WaitForSeconds(0.05f);
 
@@ -58,11 +61,16 @@ public class PlayerShooting : MonoBehaviour
         return game_object.GetComponent<Health>() != null;
     }
 
+    private Vector3 GetMouseDirection()
+    {
+        return (GetMousePosition() - _firePoint.position).normalized;
+    }
+
     private Vector3 GetMousePosition()
     {
-        Vector3 firedFromPosition = _firePoint.position;
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePosition.z = 0f;
 
-        return (mousePosition - firedFromPosition).normalized;
+        return mousePosition;
     }
 }
