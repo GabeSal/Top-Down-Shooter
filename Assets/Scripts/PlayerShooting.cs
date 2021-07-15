@@ -13,15 +13,17 @@ public class PlayerShooting : MonoBehaviour
 
     private int _mouseLeftClick = 0;
     private float _weaponRecoilForce;
+    private Weapon _weapon;
 
     private void Start()
     {
         _weaponRecoilForce = GetComponentInChildren<Weapon>().RecoilForce;
+        _weapon = GetComponentInChildren<Weapon>();
     }
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(_mouseLeftClick))
+        if (Input.GetMouseButtonDown(_mouseLeftClick) && _weapon.IsFiring)
         {
             StartCoroutine(ShootWeapon());
         }

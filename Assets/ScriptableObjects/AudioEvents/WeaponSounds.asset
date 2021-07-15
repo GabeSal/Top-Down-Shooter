@@ -10,19 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5b3705d216c1ae0408d37e04907b84a4, type: 3}
-  m_Name: ZombieDeath
+  m_Name: WeaponSounds
   m_EditorClassIdentifier: 
   _clips:
-  - {fileID: 8300000, guid: 277d6b9ed62c02344affe7d0d6a1413b, type: 3}
-  - {fileID: 8300000, guid: 2ff4282b137213b47b62d4fb730d531b, type: 3}
-  - {fileID: 8300000, guid: 0f6f09416f409e444a269badc4105512, type: 3}
+  - {fileID: 8300000, guid: 530362a337d4b5c4d849b81833f16e1b, type: 3}
   volume:
-    minValue: 0.6212125
-    maxValue: 0.88636374
+    minValue: 0.38775533
+    maxValue: 0.6428573
   pitch:
-    minValue: 0.7727275
+    minValue: 0.59183687
     maxValue: 1
   _distance:
     minValue: 1
-    maxValue: 318.18246
-  _mixer: {fileID: 749902124394339426, guid: 5b4446526cef8de40980305baca65717, type: 2}
+    maxValue: 107.14313
+  _mixer: {fileID: -2476616618268136997, guid: 7ef3cd21aec11ee47ab69c73deda6c9f, type: 2}
