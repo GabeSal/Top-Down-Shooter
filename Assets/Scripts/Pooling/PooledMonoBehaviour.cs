@@ -5,7 +5,7 @@ using UnityEngine;
 public class PooledMonoBehaviour : MonoBehaviour
 {
     [SerializeField]
-    private int _initialPoolSize = 50;
+    private int _initialPoolSize = 10;
 
     public event Action<PooledMonoBehaviour> OnReturnToPool;
 

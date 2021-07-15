@@ -1,15 +1,12 @@
 using UnityEngine;
 using System.Collections;
-using System;
 
 public class PlayerShooting : MonoBehaviour
 {
     [SerializeField]
-    private Transform _firePoint;
-    [SerializeField]
     private LineRenderer _lineRenderer;
     [SerializeField]
-    private int _weaponDamage = 1;
+    private Transform _firePoint;
 
     private int _mouseLeftClick = 0;
     private float _weaponRecoilForce;
@@ -19,50 +16,12 @@ public class PlayerShooting : MonoBehaviour
     {
         _weaponRecoilForce = GetComponentInChildren<Weapon>().RecoilForce;
         _weapon = GetComponentInChildren<Weapon>();
+        _weapon.OnFire += Weapon_OnFire;
     }
 
-    private void Update()
+    private void Weapon_OnFire()
     {
-        if (Input.GetMouseButtonDown(_mouseLeftClick) && _weapon.IsFiring)
-        {
-            StartCoroutine(ShootWeapon());
-        }
-    }
-
-    private IEnumerator ShootWeapon()
-    {
-        RaycastHit2D hitInfo2D = Physics2D.Raycast(_firePoint.position, GetMouseDirection());
-        Collider2D something = hitInfo2D.collider;
-
         WeaponRecoil(-GetMouseDirection());
-
-        _lineRenderer.enabled = true;
-
-        if (something != null)
-        {
-            //Debug.Log("Something was hit at point: " + hitInfo2D.point);
-            //Debug.Log("Normal of the hit point is: " + hitInfo2D.normal);
-
-            _lineRenderer.SetPosition(0, _firePoint.position);
-            _lineRenderer.SetPosition(1, hitInfo2D.point);
-
-            if (IsEnemy(something))
-            {
-                something.GetComponent<Health>().TakeHit(_weaponDamage);
-                something.GetComponent<EnemyStatus>().RecoilFromHit(-hitInfo2D.normal);
-            }
-        }
-        else
-        {
-            _lineRenderer.SetPosition(0, _firePoint.position);
-            _lineRenderer.SetPosition(1, GetMousePosition());
-
-            //Debug.Log("Nothing was detected.");
-        }
-
-        yield return new WaitForSeconds(0.05f);
-
-        _lineRenderer.enabled = false;
     }
 
     private void WeaponRecoil(Vector3 recoilDirection)
@@ -70,17 +29,17 @@ public class PlayerShooting : MonoBehaviour
         GetComponent<Rigidbody2D>().AddForce(recoilDirection * _weaponRecoilForce, ForceMode2D.Impulse);
     }
 
-    private bool IsEnemy(Collider2D game_object)
+    private void OnDisable()
     {
-        return game_object.GetComponent<Health>() != null;
+        _weapon.OnFire -= Weapon_OnFire;
     }
 
-    private Vector3 GetMouseDirection()
+    public Vector3 GetMouseDirection()
     {
         return (GetMousePosition() - _firePoint.position).normalized;
     }
 
-    private Vector3 GetMousePosition()
+    public Vector3 GetMousePosition()
     {
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePosition.z = 0f;
