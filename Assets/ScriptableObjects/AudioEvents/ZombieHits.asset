@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b3705d216c1ae0408d37e04907b84a4, type: 3}
+  m_Name: ZombieHits
+  m_EditorClassIdentifier: 
+  _clips:
+  - {fileID: 8300000, guid: d55df90b47f59584db9fe4c2cdbdd9be, type: 3}
+  - {fileID: 8300000, guid: de6c710e03ba953448d4fae688f4b604, type: 3}
+  - {fileID: 8300000, guid: 44004430d9d8cb2499835a159f2aecad, type: 3}
+  - {fileID: 8300000, guid: 4bca68dff174dd646ac6e81e4631007a, type: 3}
+  - {fileID: 8300000, guid: a245ccae914b46c48819194df72acc1f, type: 3}
+  - {fileID: 8300000, guid: a7d0d9024ef103844af81d026d921548, type: 3}
+  - {fileID: 8300000, guid: 5bc7ce302712d6b428b72c73190b39ff, type: 3}
+  - {fileID: 8300000, guid: 277d6b9ed62c02344affe7d0d6a1413b, type: 3}
+  - {fileID: 8300000, guid: be6d73a266dc7fa4fb498af417357a99, type: 3}
+  - {fileID: 8300000, guid: 67d0b201197bad048b0ed1e362f75efa, type: 3}
+  volume:
+    minValue: 0.6212125
+    maxValue: 0.88636374
+  pitch:
+    minValue: 0.7727275
+    maxValue: 1
+  _distance:
+    minValue: 1
+    maxValue: 318.18246
+  _mixer: {fileID: 749902124394339426, guid: 5b4446526cef8de40980305baca65717, type: 2}

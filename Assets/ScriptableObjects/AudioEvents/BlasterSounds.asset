@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b3705d216c1ae0408d37e04907b84a4, type: 3}
+  m_Name: BlasterSounds
+  m_EditorClassIdentifier: 
+  _clips:
+  - {fileID: 8300000, guid: 321c57076d528934aa5e2ed5eb2798ce, type: 3}
+  - {fileID: 8300000, guid: 4a14985fcced5674bb9a3ec19845dc96, type: 3}
+  - {fileID: 8300000, guid: 0800b4854e84ad243a55e1f7a44844f2, type: 3}
+  - {fileID: 8300000, guid: fa5a8beea5991cb4e8fa6302dc57c59f, type: 3}
+  - {fileID: 8300000, guid: 6f8efae2a70a9f54cbdb5dc8dd4e9fd7, type: 3}
+  - {fileID: 8300000, guid: 98a3c95a6ae178f4b8249ae2b336832c, type: 3}
+  volume:
+    minValue: 0.7448981
+    maxValue: 0.9744898
+  pitch:
+    minValue: 0.89795923
+    maxValue: 1.2551019
+  _distance:
+    minValue: 1
+    maxValue: 311.22467
+  _mixer: {fileID: 7301908498713112671, guid: 5b4446526cef8de40980305baca65717, type: 2}
