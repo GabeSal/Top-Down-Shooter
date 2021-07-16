@@ -81,6 +81,7 @@ public class Weapon : MonoBehaviour
             {
                 something.GetComponent<EnemyStatus>().RecoilFromHit(-hitInfo2D.normal);
                 something.GetComponent<Health>().TakeHit(_weaponDamage);
+                something.GetComponent<EnemyStatus>().SpawnBloodSplatterParticle(hitInfo2D.point, hitInfo2D.normal);
             }
             else
             {

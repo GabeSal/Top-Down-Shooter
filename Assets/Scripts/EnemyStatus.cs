@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Health))]
@@ -5,6 +6,8 @@ public class EnemyStatus : MonoBehaviour
 {
     [SerializeField]
     private float _recoilForce = 2f;
+    [SerializeField]
+    private PooledMonoBehaviour _bloodSplatterParticle;
 
     private Rigidbody2D _rigidBody2D;
 
@@ -28,5 +31,11 @@ public class EnemyStatus : MonoBehaviour
     internal void RecoilFromHit(Vector2 recoilDirection)
     {
         _rigidBody2D.AddForce(recoilDirection * _recoilForce, ForceMode2D.Impulse);
+    }
+
+    internal void SpawnBloodSplatterParticle(Vector2 point, Vector2 normal)
+    {
+        var bloodSplatter = _bloodSplatterParticle.Get<PooledMonoBehaviour>(point, Quaternion.LookRotation(-normal));
+        bloodSplatter.ReturnToPool(1f);
     }
 }

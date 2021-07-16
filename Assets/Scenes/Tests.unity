@@ -835,6 +835,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _recoilForce: 30
+  _bloodSplatterParticle: {fileID: 2615551007351578680, guid: 593de87bfcb31334e905006ec5196802, type: 3}
 --- !u!50 &424546256
 Rigidbody2D:
   serializedVersion: 4
@@ -1284,7 +1285,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 4a997d23457b695499b1e99a80fa5548, type: 2}
+  - {fileID: 2100000, guid: 67f3efea59a59784daa010de8f66a23d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1388,6 +1389,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _recoilForce: 30
+  _bloodSplatterParticle: {fileID: 2615551007351578680, guid: 593de87bfcb31334e905006ec5196802, type: 3}
 --- !u!50 &590532613
 Rigidbody2D:
   serializedVersion: 4
@@ -2087,7 +2089,7 @@ MonoBehaviour:
   m_Intensity: 1.5
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: 00000000e1b20e80
+  m_ApplyToSortingLayers: 00000000e1b20e8069f6f409
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -3438,6 +3440,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _recoilForce: 30
+  _bloodSplatterParticle: {fileID: 2615551007351578680, guid: 593de87bfcb31334e905006ec5196802, type: 3}
 --- !u!50 &1148911272
 Rigidbody2D:
   serializedVersion: 4
@@ -3879,7 +3882,7 @@ MonoBehaviour:
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: 00000000
+  m_ApplyToSortingLayers: 0000000069f6f409
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: -5
@@ -4606,7 +4609,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.1712918, y: 1}
+    m_SensorSize: {x: 2.3703346, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
