@@ -88,7 +88,6 @@ public class Weapon : MonoBehaviour
                 SpawnBulletImpactParticle(hitInfo2D.point, hitInfo2D.normal);
             }
         }
-
         OnFire();
     }
 
