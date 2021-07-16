@@ -3,8 +3,6 @@ using UnityEngine;
 public class PlayerShooting : MonoBehaviour
 {
     [SerializeField]
-    private LineRenderer _lineRenderer;
-    [SerializeField]
     private Transform _firePoint;
 
     private float _weaponRecoilForce;
@@ -12,8 +10,9 @@ public class PlayerShooting : MonoBehaviour
 
     private void Start()
     {
-        _weaponRecoilForce = GetComponentInChildren<Weapon>().RecoilForce;
         _weapon = GetComponentInChildren<Weapon>();
+        _weaponRecoilForce = _weapon.RecoilForce;
+
         _weapon.OnFire += Weapon_OnFire;
     }
 

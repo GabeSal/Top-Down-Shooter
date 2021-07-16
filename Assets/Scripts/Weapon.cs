@@ -11,6 +11,8 @@ public class Weapon : MonoBehaviour
     [SerializeField]
     private Transform _firePoint;
     [SerializeField]
+    private PooledMonoBehaviour _bulletImpactParticle;
+    [SerializeField]
     private float _fireDelay;
     [SerializeField]
     private bool _isFullAuto;
@@ -80,9 +82,19 @@ public class Weapon : MonoBehaviour
                 something.GetComponent<EnemyStatus>().RecoilFromHit(-hitInfo2D.normal);
                 something.GetComponent<Health>().TakeHit(_weaponDamage);
             }
+            else
+            {
+                SpawnBulletImpactParticle(hitInfo2D.point, hitInfo2D.normal);
+            }
         }
 
         OnFire();
+    }
+
+    private void SpawnBulletImpactParticle(Vector2 point, Vector2 normal)
+    {
+        var particle = _bulletImpactParticle.Get<PooledMonoBehaviour>(point, Quaternion.LookRotation(-normal));
+        particle.ReturnToPool(1f);
     }
 
     private IEnumerator DrawBulletTrailAtHitPoint(RaycastHit2D hit2D)

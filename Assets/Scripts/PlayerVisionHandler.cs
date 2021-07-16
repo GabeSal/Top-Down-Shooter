@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering.Universal;
 
-public class PlayerAimHandler : MonoBehaviour
+public class PlayerVisionHandler : MonoBehaviour
 {
     [SerializeField]
     private Light2D _visionConeDefault;
