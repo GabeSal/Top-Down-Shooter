@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b3705d216c1ae0408d37e04907b84a4, type: 3}
+  m_Name: BulletRicochetSounds
+  m_EditorClassIdentifier: 
+  _clips:
+  - {fileID: 8300000, guid: 4031e628cfc564d93ac39f8955afbbda, type: 3}
+  - {fileID: 8300000, guid: e8210ab1fe6784e7eb15956b135716c9, type: 3}
+  volume:
+    minValue: 0.5625
+    maxValue: 0.84375
+  pitch:
+    minValue: 0.78125
+    maxValue: 1.28125
+  _distance:
+    minValue: 1
+    maxValue: 31.250065
+  _mixer: {fileID: 6759820404976056971, guid: 7ef3cd21aec11ee47ab69c73deda6c9f, type: 2}
