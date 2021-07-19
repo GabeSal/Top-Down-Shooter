@@ -898,16 +898,16 @@ GameObject:
   - component: {fileID: 424546253}
   - component: {fileID: 424546254}
   - component: {fileID: 424546255}
-  - component: {fileID: 424546259}
   - component: {fileID: 424546258}
   - component: {fileID: 424546257}
+  - component: {fileID: 424546259}
   m_Layer: 7
   m_Name: Shooting Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &424546250
 Transform:
   m_ObjectHideFlags: 0
@@ -1363,18 +1363,20 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 590532607}
+  - component: {fileID: 590532619}
   - component: {fileID: 590532608}
   - component: {fileID: 590532613}
   - component: {fileID: 590532609}
   - component: {fileID: 590532610}
   - component: {fileID: 590532611}
   - component: {fileID: 590532612}
+  - component: {fileID: 590532618}
   - component: {fileID: 590532615}
   - component: {fileID: 590532616}
   - component: {fileID: 590532614}
   - component: {fileID: 590532617}
   m_Layer: 7
-  m_Name: Chasing Enemy
+  m_Name: Melee Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1641,6 +1643,117 @@ MonoBehaviour:
   raycastOffset: {x: 0, y: 0, z: 0}
   useGraphRaycasting: 1
   quality: 2
+--- !u!114 &590532618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 590532606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b310c4a99821d64ea2b8f61fe1c3446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _attackRange: 3.5
+  _timeUntilNextAttack: 1.5
+  _damageDealt: 1
+--- !u!82 &590532619
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 590532606}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!43 &600094141
 Mesh:
   m_ObjectHideFlags: 0
@@ -2080,7 +2193,7 @@ MonoBehaviour:
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: -1
-  m_OverlapOperation: 1
+  m_OverlapOperation: 0
   m_NormalMapDistance: 3
   m_NormalMapQuality: 2
   m_UseNormalMap: 0
@@ -3510,26 +3623,26 @@ GameObject:
   m_Component:
   - component: {fileID: 1148911266}
   - component: {fileID: 1148911280}
+  - component: {fileID: 1148911279}
   - component: {fileID: 1148911267}
   - component: {fileID: 1148911272}
   - component: {fileID: 1148911268}
   - component: {fileID: 1148911269}
   - component: {fileID: 1148911270}
   - component: {fileID: 1148911271}
+  - component: {fileID: 1148911277}
   - component: {fileID: 1148911276}
+  - component: {fileID: 1148911278}
   - component: {fileID: 1148911275}
   - component: {fileID: 1148911274}
   - component: {fileID: 1148911273}
-  - component: {fileID: 1148911278}
-  - component: {fileID: 1148911277}
-  - component: {fileID: 1148911279}
   m_Layer: 7
   m_Name: Kamikaze Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1148911266
 Transform:
   m_ObjectHideFlags: 0
@@ -5303,7 +5416,7 @@ MonoBehaviour:
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: -1
-  m_OverlapOperation: 1
+  m_OverlapOperation: 0
   m_NormalMapDistance: 3
   m_NormalMapQuality: 2
   m_UseNormalMap: 0
@@ -5568,7 +5681,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.73442, y: 1}
+    m_SensorSize: {x: 2.2844574, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
