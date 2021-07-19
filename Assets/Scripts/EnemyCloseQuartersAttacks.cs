@@ -8,7 +8,7 @@ public class EnemyCloseQuartersAttacks : MonoBehaviour
     [SerializeField]
     private float _timeUntilNextAttack = 1f;
     [SerializeField]
-    private int _damageDealt = 1;
+    private int _damage = 1;
 
     private float _attackTimer = 0;
     private int _layerMask;
@@ -45,7 +45,7 @@ public class EnemyCloseQuartersAttacks : MonoBehaviour
         {
             Vector2 direction = -GetDirectionToPlayer(player);
 
-            player.GetComponent<Health>().TakeHit(_damageDealt);
+            player.GetComponent<Health>().TakeHit(_damage);
             player.GetComponent<HandlePlayerImpact>().MeleeHit(direction);
         }
     }

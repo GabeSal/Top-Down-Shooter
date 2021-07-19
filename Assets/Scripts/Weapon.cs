@@ -9,6 +9,8 @@ public class Weapon : MonoBehaviour
     [SerializeField]
     private int _weaponDamage = 1;
     [SerializeField]
+    private float _weaponRange = 50f;
+    [SerializeField]
     private Transform _firePoint;
     [SerializeField]
     private PooledMonoBehaviour _bulletImpactParticle;
@@ -20,6 +22,8 @@ public class Weapon : MonoBehaviour
     private KeyCode _weaponHotKey;
     [SerializeField]
     private LineRenderer _lineRenderer;
+    [SerializeField]
+    private LayerMask _layerMask;
 
     private float _fireTimer;
     private PlayerShooting _playerShooting;
@@ -65,7 +69,8 @@ public class Weapon : MonoBehaviour
     {
         _fireTimer = 0;
 
-        RaycastHit2D hitInfo2D = Physics2D.Raycast(_firePoint.position, _playerShooting.GetMouseDirection());
+        RaycastHit2D hitInfo2D = Physics2D.Raycast(_firePoint.position, _playerShooting.GetMouseDirection(), 
+            _weaponRange, _layerMask);
         Collider2D something = hitInfo2D.collider;
 
         if (something != null)
