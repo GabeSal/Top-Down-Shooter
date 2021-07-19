@@ -30,7 +30,7 @@ public class Weapon : MonoBehaviour
     public bool IsFiring { get { return CanFire(); } }
     public KeyCode WeaponHotKey { get { return _weaponHotKey; } }
 
-    private void Awake()
+    private void Start()
     {
         RecoilForce = _recoilForce;
         _playerShooting = GetComponentInParent<PlayerShooting>();
@@ -56,15 +56,9 @@ public class Weapon : MonoBehaviour
             }
         }
     }
-
     private bool CanFire()
     {
         return _fireTimer >= _fireDelay;
-    }
-
-    private bool IsEnemy(Collider2D game_object)
-    {
-        return game_object.GetComponent<Health>() != null;
     }
 
     private void FireWeapon()
@@ -89,6 +83,11 @@ public class Weapon : MonoBehaviour
             }
         }
         OnFire();
+    }
+
+    private bool IsEnemy(Collider2D game_object)
+    {
+        return game_object.CompareTag("Enemy");
     }
 
     private void SpawnBulletImpactParticle(Vector2 point, Vector2 normal)

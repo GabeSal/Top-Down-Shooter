@@ -35,7 +35,7 @@ public class EnemyStatus : MonoBehaviour
 
     internal void SpawnBloodSplatterParticle(Vector2 point, Vector2 normal)
     {
-        var bloodSplatter = _bloodSplatterParticle.Get<PooledMonoBehaviour>(point, Quaternion.LookRotation(-normal));
+        var bloodSplatter = _bloodSplatterParticle.Get<PooledMonoBehaviour>(point, Quaternion.LookRotation(normal));
         bloodSplatter.ReturnToPool(1f);
     }
 }
