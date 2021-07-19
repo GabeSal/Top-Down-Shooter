@@ -49,7 +49,7 @@ public class EnemySelfDestruct : MonoBehaviour
         transform.position = originalPosition;
 
         SelfDestruct();
-        float explosionLifetime = 6f;
+        float explosionLifetime = 5f;
 
         yield return new WaitForSeconds(explosionLifetime);
         this.GetComponent<Health>().TakeHit(9999999);

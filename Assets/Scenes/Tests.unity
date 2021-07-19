@@ -3804,7 +3804,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _damage: 5
-  _blastRadius: 4
+  _blastRadius: 8
   _countdownOnset: 1.5
   _shakeAmount: 5
   _explosionParticle: {fileID: -4119889352578749330, guid: 38caf5c5fbaf0e14185b674be75372f9, type: 3}
@@ -5568,7 +5568,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.3511963, y: 1}
+    m_SensorSize: {x: 1.73442, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
