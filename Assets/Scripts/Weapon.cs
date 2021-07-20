@@ -5,8 +5,6 @@ using UnityEngine;
 public class Weapon : MonoBehaviour
 {
     [SerializeField]
-    private float _recoilForce = 2f;
-    [SerializeField]
     private int _weaponDamage = 1;
     [SerializeField]
     private float _weaponRange = 50f;
@@ -35,14 +33,12 @@ public class Weapon : MonoBehaviour
     private PlayerShooting _playerShooting;
 
     public event Action OnFire = delegate { };
-    public float RecoilForce { get; private set; }
     public bool IsFullAuto { get { return _isFullAuto; } }
     public bool IsFiring { get { return CanFire(); } }
     public KeyCode WeaponHotKey { get { return _weaponHotKey; } }
 
     private void Start()
     {
-        RecoilForce = _recoilForce;
         _previousWeaponSway = _weaponSway;
         _playerShooting = GetComponentInParent<PlayerShooting>();
     }
@@ -86,7 +82,6 @@ public class Weapon : MonoBehaviour
             if (IsEnemy(something))
             {
                 something.GetComponent<Health>().TakeHit(_weaponDamage);
-                something.GetComponent<EnemyStatus>().RecoilFromHit(-hitInfo2D.normal);
                 something.GetComponent<EnemyStatus>().SpawnBloodSplatterParticle(hitInfo2D.point, hitInfo2D.normal);
             }
             else

@@ -72,7 +72,6 @@ public class EnemySelfDestruct : MonoBehaviour
             Vector2 direction = -GetDirectionToPlayer(playerCollision);
 
             playerCollision.GetComponent<Health>().TakeHit(_damage);
-            playerCollision.GetComponent<HandlePlayerImpact>().EnemyBlast(direction);
         }
 
         var explosion = _explosionParticle.Get<PooledMonoBehaviour>(transform.position, Quaternion.identity);

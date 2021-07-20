@@ -1,6 +1,5 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Weapon))]
 [RequireComponent(typeof(AudioSource))]
 public class WeaponSound : MonoBehaviour
 {

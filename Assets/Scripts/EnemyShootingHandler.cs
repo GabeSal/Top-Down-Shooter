@@ -1,6 +1,7 @@
 using UnityEngine;
 using Pathfinding;
 using System;
+using System.Collections;
 
 public class EnemyShootingHandler : MonoBehaviour
 {
@@ -12,14 +13,22 @@ public class EnemyShootingHandler : MonoBehaviour
     private float _weaponSwayAmount;
     [SerializeField]
     private int _damage = 3;
+
+
     [SerializeField]
     private LayerMask _layerMask;
     [SerializeField]
+    private Transform _firePoint;
+    [SerializeField]
     private PooledMonoBehaviour _bulletImpactParticle;
+    [SerializeField]
+    private LineRenderer _bulletTrail;
 
     private float _shootingTimer = 0;
     private AIPath _aiPath;
     private LayerMask _playerLayerMask;
+
+    public event Action OnFire = delegate { };
 
     private void Start()
     {
@@ -29,18 +38,12 @@ public class EnemyShootingHandler : MonoBehaviour
 
     private void Update()
     {
-
         if (_aiPath.reachedDestination == true)
         {
             _shootingTimer += Time.deltaTime;
+
             if (_shootingTimer >= _timeUntilNextShot)
-            {
                 ShootPlayer();
-            }
-        }
-        else
-        {
-            _shootingTimer = 0;
         }
     }
 
@@ -48,15 +51,17 @@ public class EnemyShootingHandler : MonoBehaviour
     {
         _shootingTimer = 0;
 
-        Collider2D player = CheckIfPlayerInRange();
+        Collider2D player = Physics2D.OverlapCircle(transform.position, 8f, _playerLayerMask);
 
-        if (player != null)
+        Vector2 shootingDirection = AimAtPlayer(player);
+
+        RaycastHit2D target = Physics2D.Raycast(transform.position, shootingDirection, _range, _layerMask);
+        //Debug.DrawRay(transform.position, shootingDirection * _range, Color.red, 1.5f);
+
+        if (target.collider != null)
         {
             //Debug.Log("Shoot player, they're within range!");
-            Vector2 shootingDirection = AimAtPlayer(player);
-
-            RaycastHit2D target = Physics2D.Raycast(transform.position, shootingDirection, _range, _layerMask);
-            Debug.DrawRay(transform.position, shootingDirection * 20f, Color.red, 1.5f);
+            StartCoroutine(DrawBulletTrail(target));
 
             if (target.collider.CompareTag("Player"))
             {
@@ -67,18 +72,27 @@ public class EnemyShootingHandler : MonoBehaviour
             {
                 SpawnBulletRicochetParticle(target.point, target.normal);
             }
+
+            OnFire();
         }
+    }
+
+    private IEnumerator DrawBulletTrail(RaycastHit2D target)
+    {
+        _bulletTrail.enabled = true;
+
+        _bulletTrail.SetPosition(0, _firePoint.position);
+        _bulletTrail.SetPosition(1, target.point);
+
+        yield return new WaitForSeconds(0.05f);
+
+        _bulletTrail.enabled = false;
     }
 
     private void SpawnBulletRicochetParticle(Vector2 point, Vector2 normal)
     {
         var ricochet = _bulletImpactParticle.Get<PooledMonoBehaviour>(point, Quaternion.LookRotation(-normal));
         ricochet.ReturnToPool(1f);
-    }
-
-    private Collider2D CheckIfPlayerInRange()
-    {
-        return Physics2D.OverlapCircle(transform.position, 10f, _playerLayerMask);
     }
 
     private Vector2 AimAtPlayer(Collider2D player)

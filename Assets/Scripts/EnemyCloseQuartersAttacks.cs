@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class EnemyCloseQuartersAttacks : MonoBehaviour
@@ -43,10 +42,7 @@ public class EnemyCloseQuartersAttacks : MonoBehaviour
 
         if (player != null)
         {
-            Vector2 direction = -GetDirectionToPlayer(player);
-
             player.GetComponent<Health>().TakeHit(_damage);
-            player.GetComponent<HandlePlayerImpact>().MeleeHit(direction);
         }
     }
 
@@ -63,11 +59,5 @@ public class EnemyCloseQuartersAttacks : MonoBehaviour
     private Collider2D CheckForPlayerCollision()
     {
         return Physics2D.OverlapCircle(transform.position, _attackRange, _layerMask);
-    }
-
-    private Vector2 GetDirectionToPlayer(Collider2D player)
-    {
-        var playerPosition = player.transform.position;
-        return (this.transform.position - playerPosition).normalized;
     }
 }
