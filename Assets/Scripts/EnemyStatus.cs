@@ -19,7 +19,6 @@ public class EnemyStatus : MonoBehaviour
 
     private void EnemyStatus_OnDied()
     {
-        StopAllCoroutines();
         this.gameObject.SetActive(false);
     }
 

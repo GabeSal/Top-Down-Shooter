@@ -10,12 +10,17 @@ public class Weapon : MonoBehaviour
     private int _weaponDamage = 1;
     [SerializeField]
     private float _weaponRange = 50f;
+    [SerializeField] [Range(0, 1.5f)]
+    private float _weaponSway;    // Used to throw the weapon off target for accuracy control
+    [SerializeField] [Range(0, 1)]
+    private float _aimedWeaponSway;
+    [SerializeField]
+    private float _fireDelay;
+
     [SerializeField]
     private Transform _firePoint;
     [SerializeField]
-    private PooledMonoBehaviour _bulletImpactParticle;
-    [SerializeField]
-    private float _fireDelay;
+    private PooledMonoBehaviour _bulletImpactParticle;    
     [SerializeField]
     private bool _isFullAuto;
     [SerializeField]
@@ -26,6 +31,7 @@ public class Weapon : MonoBehaviour
     private LayerMask _layerMask;
 
     private float _fireTimer;
+    private float _previousWeaponSway;
     private PlayerShooting _playerShooting;
 
     public event Action OnFire = delegate { };
@@ -37,6 +43,7 @@ public class Weapon : MonoBehaviour
     private void Start()
     {
         RecoilForce = _recoilForce;
+        _previousWeaponSway = _weaponSway;
         _playerShooting = GetComponentInParent<PlayerShooting>();
     }
 
@@ -69,8 +76,8 @@ public class Weapon : MonoBehaviour
     {
         _fireTimer = 0;
 
-        RaycastHit2D hitInfo2D = Physics2D.Raycast(_firePoint.position, _playerShooting.GetMouseDirection(), 
-            _weaponRange, _layerMask);
+        RaycastHit2D hitInfo2D = Physics2D.Raycast(_firePoint.position, 
+            _playerShooting.GetMouseDirection(GetRandomValueFromWeaponSway()), _weaponRange, _layerMask);
         Collider2D something = hitInfo2D.collider;
 
         if (something != null)
@@ -78,8 +85,8 @@ public class Weapon : MonoBehaviour
             StartCoroutine(DrawBulletTrailAtHitPoint(hitInfo2D));
             if (IsEnemy(something))
             {
-                something.GetComponent<EnemyStatus>().RecoilFromHit(-hitInfo2D.normal);
                 something.GetComponent<Health>().TakeHit(_weaponDamage);
+                something.GetComponent<EnemyStatus>().RecoilFromHit(-hitInfo2D.normal);
                 something.GetComponent<EnemyStatus>().SpawnBloodSplatterParticle(hitInfo2D.point, hitInfo2D.normal);
             }
             else
@@ -88,6 +95,16 @@ public class Weapon : MonoBehaviour
             }
         }
         OnFire();
+    }
+
+    private float GetRandomValueFromWeaponSway()
+    {
+        if (Input.GetButton("Fire2"))
+            _weaponSway = _aimedWeaponSway;
+        else
+            _weaponSway = _previousWeaponSway;
+
+        return UnityEngine.Random.Range(-_weaponSway, _weaponSway);
     }
 
     private bool IsEnemy(Collider2D game_object)

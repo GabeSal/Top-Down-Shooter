@@ -31,9 +31,11 @@ public class PlayerShooting : MonoBehaviour
         _weapon.OnFire -= Weapon_OnFire;
     }
 
-    public Vector3 GetMouseDirection()
+    public Vector3 GetMouseDirection(float weaponSwayOffset = 0)
     {
-        return (GetMousePosition() - _firePoint.position).normalized;
+        Vector3 offset = new Vector3(weaponSwayOffset, weaponSwayOffset, 0f);
+
+        return (GetMousePosition() - _firePoint.position + offset).normalized;
     }
 
     public Vector3 GetMousePosition()

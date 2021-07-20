@@ -11,7 +11,7 @@ public class EnemyCloseQuartersAttacks : MonoBehaviour
     private int _damage = 1;
 
     private float _attackTimer = 0;
-    private int _layerMask;
+    private LayerMask _layerMask;
 
     private void Start()
     {
