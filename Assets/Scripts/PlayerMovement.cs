@@ -11,10 +11,7 @@ public class PlayerMovement : MonoBehaviour
     {
         _movement.x = Input.GetAxisRaw("Horizontal");
         _movement.y = Input.GetAxisRaw("Vertical");
-    }
 
-    private void FixedUpdate()
-    {
-        transform.position += _movement * _movementSpeed * Time.fixedDeltaTime;
+        transform.position += _movement * _movementSpeed * Time.deltaTime;
     }
 }

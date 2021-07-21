@@ -69,19 +69,11 @@ public class EnemySelfDestruct : MonoBehaviour
 
         if (playerCollision != null)
         {
-            Vector2 direction = -GetDirectionToPlayer(playerCollision);
-
             playerCollision.GetComponent<Health>().TakeHit(_damage);
         }
 
         var explosion = _explosionParticle.Get<PooledMonoBehaviour>(transform.position, Quaternion.identity);
         explosion.ReturnToPool(_explosionParticle.GetComponent<ParticleSystem>().main.duration);
         OnExplosion();
-    }
-
-    private Vector2 GetDirectionToPlayer(Collider2D player)
-    {
-        var playerPosition = player.transform.position;
-        return (this.transform.position - playerPosition).normalized;
     }
 }

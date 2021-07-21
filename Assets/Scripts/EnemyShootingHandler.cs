@@ -27,6 +27,7 @@ public class EnemyShootingHandler : MonoBehaviour
     private float _shootingTimer = 0;
     private AIPath _aiPath;
     private LayerMask _playerLayerMask;
+    private Transform _target;
 
     public event Action OnFire = delegate { };
 
@@ -42,9 +43,24 @@ public class EnemyShootingHandler : MonoBehaviour
         {
             _shootingTimer += Time.deltaTime;
 
+            if (_target != null)
+                LookAtTarget();
+
             if (_shootingTimer >= _timeUntilNextShot)
                 ShootPlayer();
         }
+        else
+        {
+            _shootingTimer = 0;
+        }
+    }
+
+    private void LookAtTarget()
+    {
+        Vector2 direction = (_target.position - this.transform.position).normalized;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
+
+        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
     }
 
     private void ShootPlayer()
@@ -52,6 +68,16 @@ public class EnemyShootingHandler : MonoBehaviour
         _shootingTimer = 0;
 
         Collider2D player = Physics2D.OverlapCircle(transform.position, 8f, _playerLayerMask);
+
+        if (player != null)
+        {
+            _target = player.transform;
+        }
+        else
+        {
+            _target = null;
+            return;
+        }
 
         Vector2 shootingDirection = AimAtPlayer(player);
 
