@@ -164,7 +164,7 @@ Transform:
   - {fileID: 1631561062}
   - {fileID: 358614141}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &10089611
 MonoBehaviour:
@@ -1624,6 +1624,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &415192620
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 415192621}
+  - component: {fileID: 415192622}
+  m_Layer: 0
+  m_Name: '[Game Manager]'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &415192621
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 415192620}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &415192622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 415192620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 740c6142b4b49f64eb690ba6b912ebb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &424546249
 GameObject:
   m_ObjectHideFlags: 0
@@ -1748,7 +1791,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c68b4fde88b5ed4ca4c1b8822a1b925, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _range: 10
+  _range: 8
   _canShootAndRun: 1
   _timeUntilNextShot: 0.75
   _weaponSwayAmount: 1.5
@@ -3962,7 +4005,7 @@ Transform:
   - {fileID: 519420032}
   - {fileID: 1864854194}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &929108292
 GameObject:
@@ -4443,7 +4486,7 @@ Transform:
   m_LocalScale: {x: 60, y: 40, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &956699676
 GameObject:
@@ -4698,7 +4741,7 @@ RectTransform:
   - {fileID: 2139350986}
   - {fileID: 1663645291}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -5052,7 +5095,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1127902166
 GameObject:
@@ -5860,7 +5903,7 @@ Transform:
   m_Children:
   - {fileID: 93806239}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1242270911
 GameObject:
@@ -5894,7 +5937,7 @@ Transform:
   - {fileID: 488398197}
   - {fileID: 606140214}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1242597922
 GameObject:
@@ -6112,7 +6155,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1253998287
 MonoBehaviour:
@@ -6216,7 +6259,7 @@ MonoBehaviour:
   rotationSpeed: 1080
   slowdownDistance: 12
   pickNextWaypointDist: 2
-  endReachedDistance: 12
+  endReachedDistance: 10
   alwaysDrawGizmos: 0
   slowWhenNotFacingTarget: 1
   whenCloseToDestination: 0
@@ -6261,7 +6304,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c68b4fde88b5ed4ca4c1b8822a1b925, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _range: 16
+  _range: 14
   _canShootAndRun: 1
   _timeUntilNextShot: 1.75
   _weaponSwayAmount: 0.9
@@ -6696,7 +6739,7 @@ Transform:
   - {fileID: 1092786469}
   - {fileID: 1127902167}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &1407322761
 Mesh:
@@ -7309,7 +7352,7 @@ Transform:
   - {fileID: 1789820684}
   - {fileID: 1279956195}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1559770444
 GameObject:
@@ -7565,6 +7608,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _firedEvent: {fileID: 11400000, guid: bf5129ceef4d8d9449c8928bb676a3ac, type: 2}
+  _outOfAmmoEvent: {fileID: 11400000, guid: b28947cac3803e1419900b4ebfa4b15c, type: 2}
 --- !u!82 &1631561065
 AudioSource:
   m_ObjectHideFlags: 0
@@ -7989,7 +8033,7 @@ MonoBehaviour:
   rotationSpeed: 1080
   slowdownDistance: 8
   pickNextWaypointDist: 2
-  endReachedDistance: 4
+  endReachedDistance: 6
   alwaysDrawGizmos: 0
   slowWhenNotFacingTarget: 1
   whenCloseToDestination: 0
@@ -9243,7 +9287,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2012340951
 GameObject:

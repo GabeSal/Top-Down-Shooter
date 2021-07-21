@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5b3705d216c1ae0408d37e04907b84a4, type: 3}
-  m_Name: WeaponSounds
+  m_Name: WeaponFireSounds
   m_EditorClassIdentifier: 
   _clips:
   - {fileID: 8300000, guid: 530362a337d4b5c4d849b81833f16e1b, type: 3}

@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b3705d216c1ae0408d37e04907b84a4, type: 3}
+  m_Name: WeaponClickSounds
+  m_EditorClassIdentifier: 
+  _clips:
+  - {fileID: 8300000, guid: d89bc438b461818479fc6cd8b9f0e41f, type: 3}
+  volume:
+    minValue: 0.6575344
+    maxValue: 0.77739733
+  pitch:
+    minValue: 0.9315069
+    maxValue: 1.0684931
+  _distance:
+    minValue: 1
+    maxValue: 75.342834
+  _mixer: {fileID: -2476616618268136997, guid: 7ef3cd21aec11ee47ab69c73deda6c9f, type: 2}

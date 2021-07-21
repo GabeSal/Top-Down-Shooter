@@ -34,6 +34,7 @@ public class Weapon : MonoBehaviour
     private WeaponAmmo _ammo;
 
     public event Action OnFire = delegate { };
+    public event Action OutOfAmmo = delegate { };
     public bool IsFullAuto { get { return _isFullAuto; } }
     public bool IsFiring { get { return CanFire(); } }
     public KeyCode WeaponHotKey { get { return _weaponHotKey; } }
@@ -63,6 +64,12 @@ public class Weapon : MonoBehaviour
             {
                 FireWeapon();
             }
+        }
+
+        // Play the ammo clicks event
+        if (Input.GetButtonDown("Fire1") && _ammo.IsAmmoReady() == false)
+        {
+            OutOfAmmo();
         }
     }
     private bool CanFire()
