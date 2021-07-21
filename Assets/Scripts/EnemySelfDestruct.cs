@@ -70,6 +70,9 @@ public class EnemySelfDestruct : MonoBehaviour
         if (playerCollision != null)
         {
             playerCollision.GetComponent<Health>().TakeHit(_damage);
+
+            var direction = (playerCollision.transform.position - transform.position).normalized;
+            playerCollision.GetComponent<HandlePlayerImpact>().Explosion(direction);
         }
 
         var explosion = _explosionParticle.Get<PooledMonoBehaviour>(transform.position, Quaternion.identity);

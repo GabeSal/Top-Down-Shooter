@@ -552,7 +552,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &257609567
 Transform:
   m_ObjectHideFlags: 0
@@ -609,7 +609,7 @@ MonoBehaviour:
   repathRate: 0.5
   canSearch: 1
   canMove: 1
-  maxSpeed: 7
+  maxSpeed: 9
   gravity: {x: NaN, y: NaN, z: NaN}
   groundMask:
     serializedVersion: 2
@@ -941,7 +941,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 1.5
+  m_Radius: 1
 --- !u!43 &297180988
 Mesh:
   m_ObjectHideFlags: 0
@@ -1725,7 +1725,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 424546249}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -17.04, y: -0.23, z: 0}
+  m_LocalPosition: {x: -17.04, y: -2.74, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 828589861}
@@ -1814,10 +1814,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c68b4fde88b5ed4ca4c1b8822a1b925, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _range: 50
-  _timeUntilNextShot: 0.2
+  _range: 10
+  _canShootAndRun: 1
+  _timeUntilNextShot: 0.75
   _weaponSwayAmount: 1.5
   _damage: 1
+  _isBurstFire: 1
+  _burstSize: 3
+  _burstTimeUntilNextShot: 0.08
   _layerMask:
     serializedVersion: 2
     m_Bits: 73
@@ -1889,7 +1893,7 @@ MonoBehaviour:
   repathRate: 0.5
   canSearch: 1
   canMove: 1
-  maxSpeed: 6
+  maxSpeed: 7
   gravity: {x: NaN, y: NaN, z: NaN}
   groundMask:
     serializedVersion: 2
@@ -1900,9 +1904,9 @@ MonoBehaviour:
   targetCompatibility: {fileID: 0}
   maxAcceleration: 15
   rotationSpeed: 1080
-  slowdownDistance: 10
+  slowdownDistance: 8
   pickNextWaypointDist: 2
-  endReachedDistance: 8
+  endReachedDistance: 6
   alwaysDrawGizmos: 0
   slowWhenNotFacingTarget: 1
   whenCloseToDestination: 0
@@ -2292,7 +2296,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &590532607
 Transform:
   m_ObjectHideFlags: 0
@@ -2301,7 +2305,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 590532606}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.5, y: 7.2, z: 0}
+  m_LocalPosition: {x: 7.84, y: 8.07, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1800646268}
@@ -2441,7 +2445,7 @@ MonoBehaviour:
   repathRate: 0.5
   canSearch: 1
   canMove: 1
-  maxSpeed: 7
+  maxSpeed: 9
   gravity: {x: NaN, y: NaN, z: NaN}
   groundMask:
     serializedVersion: 2
@@ -3349,7 +3353,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 1.5
+  m_Radius: 1
 --- !u!1 &911555481
 GameObject:
   m_ObjectHideFlags: 0
@@ -3410,7 +3414,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &929108293
 Transform:
   m_ObjectHideFlags: 0
@@ -3467,7 +3471,7 @@ MonoBehaviour:
   repathRate: 0.5
   canSearch: 1
   canMove: 1
-  maxSpeed: 9
+  maxSpeed: 12
   gravity: {x: NaN, y: NaN, z: NaN}
   groundMask:
     serializedVersion: 2
@@ -4321,7 +4325,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 1.5
+  m_Radius: 1.25
 --- !u!1 &1066495833
 GameObject:
   m_ObjectHideFlags: 0
@@ -4368,7 +4372,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 1.5
+  m_Radius: 1.25
 --- !u!1 &1092786468
 GameObject:
   m_ObjectHideFlags: 0
@@ -4789,7 +4793,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1148911266
 Transform:
   m_ObjectHideFlags: 0
@@ -4961,7 +4965,7 @@ MonoBehaviour:
   repathRate: 0.5
   canSearch: 1
   canMove: 1
-  maxSpeed: 9
+  maxSpeed: 12
   gravity: {x: NaN, y: NaN, z: NaN}
   groundMask:
     serializedVersion: 2
@@ -5596,7 +5600,7 @@ MonoBehaviour:
   _weaponRange: 50
   _weaponSway: 0.75
   _aimedWeaponSway: 0.3
-  _fireDelay: 0.1
+  _fireDelay: 0.15
   _firePoint: {fileID: 2062382356}
   _bulletImpactParticle: {fileID: 9204919782905628836, guid: bbfc34a2b574d4548bd261e04cccb404, type: 3}
   _isFullAuto: 1
@@ -5817,7 +5821,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 1.5
+  m_Radius: 1.25
 --- !u!1 &1817236941
 GameObject:
   m_ObjectHideFlags: 0
@@ -5844,7 +5848,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1817236942
 Transform:
   m_ObjectHideFlags: 0
@@ -5901,7 +5905,7 @@ MonoBehaviour:
   repathRate: 0.5
   canSearch: 1
   canMove: 1
-  maxSpeed: 7
+  maxSpeed: 9
   gravity: {x: NaN, y: NaN, z: NaN}
   groundMask:
     serializedVersion: 2

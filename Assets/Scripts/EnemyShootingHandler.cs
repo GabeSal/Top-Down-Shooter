@@ -1,18 +1,26 @@
-using UnityEngine;
-using Pathfinding;
 using System;
 using System.Collections;
+using UnityEngine;
+using Pathfinding;
 
 public class EnemyShootingHandler : MonoBehaviour
 {
     [SerializeField]
-    private float _range = 50f;
+    private float _range = 8f;
+    [SerializeField]
+    private bool _canShootAndRun;
     [SerializeField]
     private float _timeUntilNextShot = 1.5f;
     [SerializeField] [Range(0, 1.5f)]
     private float _weaponSwayAmount;
     [SerializeField]
     private int _damage = 3;
+    [SerializeField]
+    private bool _isBurstFire;
+    [SerializeField]
+    private int _burstSize = 3;
+    [SerializeField]
+    private float _burstTimeUntilNextShot = 0.08f;
 
 
     [SerializeField]
@@ -39,19 +47,35 @@ public class EnemyShootingHandler : MonoBehaviour
 
     private void Update()
     {
-        if (_aiPath.reachedDestination == true)
+        if (_aiPath.reachedDestination || _canShootAndRun)
         {
             _shootingTimer += Time.deltaTime;
 
             if (_target != null)
                 LookAtTarget();
 
-            if (_shootingTimer >= _timeUntilNextShot)
+            if (_shootingTimer >= _timeUntilNextShot && _isBurstFire == false)
                 ShootPlayer();
+
+            if (_shootingTimer >= _timeUntilNextShot && _isBurstFire)
+            {
+                StartCoroutine(BurstFire());
+            }
         }
         else
         {
             _shootingTimer = 0;
+        }
+    }
+
+    private IEnumerator BurstFire()
+    {
+        _shootingTimer = 0;
+
+        for (int i = 0; i < _burstSize; i++)
+        {
+            ShootPlayer();
+            yield return new WaitForSeconds(_burstTimeUntilNextShot);
         }
     }
 
@@ -67,7 +91,7 @@ public class EnemyShootingHandler : MonoBehaviour
     {
         _shootingTimer = 0;
 
-        Collider2D player = Physics2D.OverlapCircle(transform.position, 8f, _playerLayerMask);
+        Collider2D player = Physics2D.OverlapCircle(transform.position, _range, _playerLayerMask);
 
         if (player != null)
         {
@@ -81,7 +105,7 @@ public class EnemyShootingHandler : MonoBehaviour
 
         Vector2 shootingDirection = AimAtPlayer(player);
 
-        RaycastHit2D target = Physics2D.Raycast(transform.position, shootingDirection, _range, _layerMask);
+        RaycastHit2D target = Physics2D.Raycast(transform.position, shootingDirection, 100f, _layerMask);
         //Debug.DrawRay(transform.position, shootingDirection * _range, Color.red, 1.5f);
 
         if (target.collider != null)

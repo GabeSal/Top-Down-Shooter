@@ -43,6 +43,10 @@ public class EnemyCloseQuartersAttacks : MonoBehaviour
         if (player != null)
         {
             player.GetComponent<Health>().TakeHit(_damage);
+
+            var direction = -(transform.position - player.transform.position).normalized;
+            player.GetComponent<HandlePlayerImpact>().SpawnBloodSplatterParticle(player.transform.position, direction);
+            player.GetComponent<HandlePlayerImpact>().MeleeAttack(direction);
         }
     }
 
