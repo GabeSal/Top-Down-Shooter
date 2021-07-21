@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b3705d216c1ae0408d37e04907b84a4, type: 3}
+  m_Name: ReloadSounds
+  m_EditorClassIdentifier: 
+  _clips:
+  - {fileID: 8300000, guid: eb5685b26a6494994af389a3293064e8, type: 3}
+  - {fileID: 8300000, guid: 9158afb6966d445db9caf1dccf7acbcc, type: 3}
+  - {fileID: 8300000, guid: e0c70bed5c1a4443083a81de5648c7d5, type: 3}
+  volume:
+    minValue: 0.7164947
+    maxValue: 0.88402045
+  pitch:
+    minValue: 0.8969072
+    maxValue: 1.0773196
+  _distance:
+    minValue: 1
+    maxValue: 72.164856
+  _mixer: {fileID: -2476616618268136997, guid: 7ef3cd21aec11ee47ab69c73deda6c9f, type: 2}

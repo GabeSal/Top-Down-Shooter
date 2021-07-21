@@ -12,15 +12,20 @@ public class WeaponAmmo : MonoBehaviour
     private int _maxAmmoInClip;
     [SerializeField]
     private float _reloadSpeed = 0.25f;
+    [SerializeField]
+    private SimpleAudioEvent _reloadSound;
 
     private int _ammoInClip;
     private int _ammoNotInClip;
     private Weapon _weapon;
+    private AudioSource _audioSource;
 
     public event Action OnAmmoChanged = delegate { };
 
     private void Awake()
     {
+        _audioSource = GetComponent<AudioSource>();
+
         _ammoInClip = _maxAmmoInClip;
         _ammoNotInClip = _maxAmmo - _ammoInClip;
 
@@ -63,6 +68,8 @@ public class WeaponAmmo : MonoBehaviour
         int ammoMissingFromClip = _maxAmmoInClip - _ammoInClip;
         int ammoToReload = Math.Min(ammoMissingFromClip, _ammoNotInClip);
 
+        _reloadSound.Play(_audioSource);
+
         if (_infiniteAmmo)
             ammoToReload = _maxAmmoInClip;
 
@@ -73,7 +80,7 @@ public class WeaponAmmo : MonoBehaviour
             _ammoInClip += ammoToReload;
             _ammoNotInClip -= ammoToReload;
             OnAmmoChanged();
-        }
+        }        
     }
 
     internal string GetCurrentAmmoText()
