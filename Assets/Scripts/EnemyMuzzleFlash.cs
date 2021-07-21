@@ -1,23 +1,22 @@
-using System;
-using System.Collections;
 using UnityEngine;
+using System.Collections;
 using UnityEngine.Experimental.Rendering.Universal;
 
-public class WeaponMuzzleFlash : MonoBehaviour
+public class EnemyMuzzleFlash : MonoBehaviour
 {
     [SerializeField]
     private Transform _muzzleLight;
 
-    private Weapon _weapon;
+    private EnemyShootingHandler _enemyShootingHandler;
 
     private void Awake()
     {
-        _weapon = GetComponentInParent<Weapon>();
+        _enemyShootingHandler = GetComponentInParent<EnemyShootingHandler>();
 
-        _weapon.OnFire += Weapon_OnFire;
+        _enemyShootingHandler.OnFire += EnemyWeapon_OnFire;
     }
 
-    private void Weapon_OnFire()
+    private void EnemyWeapon_OnFire()
     {
         if (_muzzleLight != null)
         {
@@ -37,11 +36,11 @@ public class WeaponMuzzleFlash : MonoBehaviour
 
     private void OnDisable()
     {
-        _weapon.OnFire -= Weapon_OnFire;
+        _enemyShootingHandler.OnFire -= EnemyWeapon_OnFire;
     }
 
     private void OnDestroy()
     {
-        _weapon.OnFire -= Weapon_OnFire;
+        _enemyShootingHandler.OnFire -= EnemyWeapon_OnFire;
     }
 }

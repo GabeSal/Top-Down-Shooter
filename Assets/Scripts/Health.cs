@@ -10,6 +10,7 @@ public class Health : MonoBehaviour
 
     public event Action OnTookHit = delegate { };
     public event Action OnDied = delegate { };
+    public event Action<int, int> OnHealthChanged = delegate { };
 
     private void OnEnable()
     {
@@ -32,5 +33,6 @@ public class Health : MonoBehaviour
     private void ModifyHealth(int amount)
     {
         _currentHealth += amount;
+        OnHealthChanged(_currentHealth, _maxHealth);
     }
 }
