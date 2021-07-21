@@ -31,15 +31,17 @@ public class Weapon : MonoBehaviour
     private float _fireTimer;
     private float _previousWeaponSway;
     private PlayerShooting _playerShooting;
+    private WeaponAmmo _ammo;
 
     public event Action OnFire = delegate { };
     public bool IsFullAuto { get { return _isFullAuto; } }
     public bool IsFiring { get { return CanFire(); } }
     public KeyCode WeaponHotKey { get { return _weaponHotKey; } }
 
-    private void Start()
+    private void Awake()
     {
         _previousWeaponSway = _weaponSway;
+        _ammo = GetComponent<WeaponAmmo>();
         _playerShooting = GetComponentInParent<PlayerShooting>();
     }
 
@@ -65,6 +67,9 @@ public class Weapon : MonoBehaviour
     }
     private bool CanFire()
     {
+        if (_ammo != null && _ammo.IsAmmoReady() == false)
+            return false;
+
         return _fireTimer >= _fireDelay;
     }
 
