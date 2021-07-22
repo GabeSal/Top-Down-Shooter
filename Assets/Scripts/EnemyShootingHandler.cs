@@ -5,40 +5,62 @@ using Pathfinding;
 
 public class EnemyShootingHandler : MonoBehaviour
 {
+    #region Serialized Fields
+    [Header("Enemy Weapon Settings")]
     [SerializeField]
-    private float _range = 8f;
+    [Range(2, 12)]
+    private int _damage;
     [SerializeField]
-    private bool _canShootAndRun;
+    [Range(5.5f, 16f)]
+    [Tooltip("Determines the range in which the enemy is allowed to fire their weapon.")]
+    private float _range;
     [SerializeField]
-    private float _timeUntilNextShot = 1.5f;
-    [SerializeField] [Range(0, 1.5f)]
+    [Range(50f, 1000f)]
+    [Tooltip("Determines the actual distance (for the raycast) in which the enemy weapon can shoot.")]
+    private float _weaponRange;
+    [SerializeField]
+    [Range(0, 1.5f)]
     private float _weaponSwayAmount;
     [SerializeField]
-    private int _damage = 3;
+    [Range(0.04f, 2f)]
+    private float _timeUntilNextShot;
     [SerializeField]
+    [Tooltip("Determines if the enemy weapon is fired in bursts rather than semi or fully automatic.")]
     private bool _isBurstFire;
     [SerializeField]
-    private int _burstSize = 3;
+    [Range(2, 5)]
+    private int _shotsPerBurst;
     [SerializeField]
-    private float _burstTimeUntilNextShot = 0.08f;
-
-
+    [Range(0.05f, 0.15f)]
+    private float _burstTimeUntilNextShot;
     [SerializeField]
-    private LayerMask _layerMask;
+    [Tooltip("Determines if the enemy can shoot the player while chasing them.")]
+    private bool _canShootAndRun;
+    [SerializeField]
+    [Tooltip("Determines which game object layers the bullets can collide with.")]
+    private LayerMask _collisionLayers;
+
+    [Header("Enemy Weapon Prefabs")]
     [SerializeField]
     private Transform _firePoint;
     [SerializeField]
     private PooledMonoBehaviour _bulletImpactParticle;
     [SerializeField]
     private LineRenderer _bulletTrail;
+    #endregion
 
+    #region Private Fields
     private float _shootingTimer = 0;
     private AIPath _aiPath;
     private LayerMask _playerLayerMask;
     private Transform _target;
+    #endregion
 
-    public event Action OnFire = delegate { };
+    #region Action Events
+    public event Action OnFire;
+    #endregion
 
+    #region Standard Unity Methods
     private void Start()
     {
         _aiPath = GetComponent<AIPath>();
@@ -67,18 +89,12 @@ public class EnemyShootingHandler : MonoBehaviour
             _shootingTimer = 0;
         }
     }
+    #endregion
 
-    private IEnumerator BurstFire()
-    {
-        _shootingTimer = 0;
-
-        for (int i = 0; i < _burstSize; i++)
-        {
-            ShootPlayer();
-            yield return new WaitForSeconds(_burstTimeUntilNextShot);
-        }
-    }
-
+    #region Class Defined Methods
+    /// <summary>
+    /// Changes the rotation of the enemy to look at the player according to their current position.
+    /// </summary>
     private void LookAtTarget()
     {
         Vector2 direction = (_target.position - this.transform.position).normalized;
@@ -87,6 +103,12 @@ public class EnemyShootingHandler : MonoBehaviour
         transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
     }
 
+    /// <summary>
+    /// Resets the shooting timer and checks to see if the player is within range. Once the player has been
+    /// targeted, the raycast for the enemy weapon will call AimAtPlayer() method to generate a direction
+    /// for the raycast and line renderer to be drawn then have the player take damage if they are colliding
+    /// with the ray. Otherwise, the pooled bullet ricochet particle will be instantiated at the point of contact.
+    /// </summary>
     private void ShootPlayer()
     {
         _shootingTimer = 0;
@@ -105,13 +127,12 @@ public class EnemyShootingHandler : MonoBehaviour
 
         Vector2 shootingDirection = AimAtPlayer(player);
 
-        RaycastHit2D target = Physics2D.Raycast(transform.position, shootingDirection, 100f, _layerMask);
-        //Debug.DrawRay(transform.position, shootingDirection * _range, Color.red, 1.5f);
+        RaycastHit2D target = Physics2D.Raycast(transform.position, shootingDirection, _weaponRange, _collisionLayers);
 
         if (target.collider != null)
         {
-            //Debug.Log("Shoot player, they're within range!");
-            StartCoroutine(DrawBulletTrail(target));
+            if (_bulletTrail != null)
+                StartCoroutine(DrawBulletTrail(target));            
 
             if (target.collider.CompareTag("Player"))
             {
@@ -123,10 +144,57 @@ public class EnemyShootingHandler : MonoBehaviour
                 SpawnBulletRicochetParticle(target.point, target.normal);
             }
 
-            OnFire();
+            OnFire?.Invoke();
         }
     }
 
+    /// <summary>
+    /// Enables a member of the _bulletRicochetParticle pool before returning them back
+    /// after a specified amount of time (in seconds).
+    /// </summary>
+    /// <param name="origin">Vector2 that positions the particle at this point.</param>
+    /// <param name="direction">Vector2 that sets the orientation of the particle at the origin.</param>
+    private void SpawnBulletRicochetParticle(Vector2 origin, Vector2 direction)
+    {
+        var ricochet = _bulletImpactParticle.Get<PooledMonoBehaviour>(origin, Quaternion.LookRotation(-direction));
+        ricochet.ReturnToPool(1f);
+    }
+
+    /// <summary>
+    /// Creates a Vector2 that is used to set the direction of the raycast in the ShootPlayer() method.
+    /// </summary>
+    /// <param name="player">Collider2D object that is passed from the collision detected in the
+    /// overlap circle generated in the ShootPlayer() method.</param>
+    /// <returns></returns>
+    private Vector2 AimAtPlayer(Collider2D player)
+    {
+        Vector3 weaponSwayOffset = new Vector3(GetRandomValueFromWeaponSway(), GetRandomValueFromWeaponSway(), 0f);
+
+        var aimDirection = (player.transform.position - this.transform.position +
+            weaponSwayOffset).normalized;
+
+        return aimDirection;
+    }
+
+    /// <summary>
+    /// Generates a value between the + and - _weaponSway values, which are used as a range.
+    /// </summary>
+    /// <returns>Float value that will be used to offset the raycast direction to reduce accuracy
+    /// of the weapon.</returns>
+    private float GetRandomValueFromWeaponSway()
+    {
+        float randomlyGeneratedValue = UnityEngine.Random.Range(-_weaponSwayAmount, _weaponSwayAmount);
+        return randomlyGeneratedValue;
+    }
+
+    /// <summary>
+    /// Coroutine that visualizes the bullet path for the enemy weapon. First the method enables the line renderer 
+    /// component of the _bulletTrail object, then sets the positions of the line renderer to match the trajectory
+    /// of the raycast/bullet path, and finally disables the line renderer after a short duration.
+    /// </summary>
+    /// <param name="target">RaycastHit2D object passed from the ShootPlayer() method where the
+    /// ray collided with some object of interest (player or environment).</param>
+    /// <returns></returns>
     private IEnumerator DrawBulletTrail(RaycastHit2D target)
     {
         _bulletTrail.enabled = true;
@@ -139,24 +207,18 @@ public class EnemyShootingHandler : MonoBehaviour
         _bulletTrail.enabled = false;
     }
 
-    private void SpawnBulletRicochetParticle(Vector2 point, Vector2 normal)
+    /// <summary>
+    /// Coroutine that begins a for loop that fires a round and delays the next shot in the burst fire 
+    /// until the amount of rounds fired reaches the _shotsPerBurst value.
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator BurstFire()
     {
-        var ricochet = _bulletImpactParticle.Get<PooledMonoBehaviour>(point, Quaternion.LookRotation(-normal));
-        ricochet.ReturnToPool(1f);
-    }
-
-    private Vector2 AimAtPlayer(Collider2D player)
-    {
-        Vector3 weaponSwayOffset = new Vector3(GetValueFromWeaponSway(), GetValueFromWeaponSway(), 0f);
-
-        var aimDirection = (player.transform.position - this.transform.position +
-            weaponSwayOffset).normalized;
-
-        return aimDirection;
-    }
-
-    private float GetValueFromWeaponSway()
-    {
-        return UnityEngine.Random.Range(-_weaponSwayAmount, _weaponSwayAmount);
-    }
+        for (int i = 0; i < _shotsPerBurst; i++)
+        {
+            ShootPlayer();
+            yield return new WaitForSeconds(_burstTimeUntilNextShot);
+        }
+    } 
+    #endregion
 }

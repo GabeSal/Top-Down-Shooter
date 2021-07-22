@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 9204919782905628836}
   - component: {fileID: 2205406272527652541}
   m_Layer: 0
-  m_Name: BulletSpark
+  m_Name: Bullet Spark
   m_TagString: Untagged
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -4989,7 +4989,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f146b1e6e46072544b59017f2b9dbaf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initialPoolSize: 25
+  _initialPoolSize: 50
 --- !u!114 &2205406272527652541
 MonoBehaviour:
   m_ObjectHideFlags: 0
