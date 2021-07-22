@@ -122,7 +122,8 @@ public class Weapon : MonoBehaviour
         _fireTimer = 0;
 
         RaycastHit2D hitInfo2D = Physics2D.Raycast(_firePoint.position,
-            _playerShooting.GetMouseDirection(GetRandomValueFromWeaponSway()), _weaponRange, _layerMask);
+            _playerShooting.SetShootingDirection(GetRandomValueFromWeaponSway(), GetRandomValueFromWeaponSway()), 
+            _weaponRange, _layerMask);
 
         Collider2D target = hitInfo2D.collider;
 

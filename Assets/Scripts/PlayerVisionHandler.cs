@@ -3,16 +3,20 @@ using UnityEngine.Experimental.Rendering.Universal;
 
 public class PlayerVisionHandler : MonoBehaviour
 {
+    #region Serialized Fields
     [SerializeField]
     private Light2D _visionConeDefault;
     [SerializeField]
     private Light2D _visionConeAimed;
+    #endregion
 
+    #region Private Fields
     private float _angleOffset = 90f;
-    private int _mouseRightClick = 1;
+    private int _mouseRightClick = 1;    
+    private bool _isAiming { get => Input.GetMouseButtonDown(_mouseRightClick); }
+    #endregion
 
-    private bool _isAiming { get { return Input.GetMouseButtonDown(_mouseRightClick) == true; } }
-
+    #region Standard Unity Methods
     private void Update()
     {
         float angle = ConvertMousePositionToLookAngle();
@@ -28,7 +32,12 @@ public class PlayerVisionHandler : MonoBehaviour
             SwitchVisionCone();
         }
     }
+    #endregion
 
+    #region Class Defined Methods
+    /// <summary>
+    /// Toggles the active state of the _visionConeDefault and _visionConeAimed objects.
+    /// </summary>
     private void SwitchVisionCone()
     {
         if (_isAiming)
@@ -46,7 +55,7 @@ public class PlayerVisionHandler : MonoBehaviour
     /// <summary>
     /// Converts the mouse cursors position from the screen view into a world point minus the transforms current position.
     /// </summary>
-    /// <returns>angle is the float value that represents the angle between the mouse and gameobject</returns>
+    /// <returns>Float value that represents the angle between the mouse and gameobject.</returns>
     private float ConvertMousePositionToLookAngle()
     {
         Vector3 playerPositionOnScreen = Camera.main.WorldToScreenPoint(transform.position);
@@ -56,4 +65,5 @@ public class PlayerVisionHandler : MonoBehaviour
 
         return angle;
     }
+    #endregion
 }

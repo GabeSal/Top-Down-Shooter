@@ -3,20 +3,35 @@ using UnityEngine;
 
 public class Health : MonoBehaviour
 {
+    #region Serialized Fields
     [SerializeField]
     private int _maxHealth;
+    #endregion
 
+    #region Private Fields
     private int _currentHealth;
+    #endregion
 
-    public event Action OnTookHit = delegate { };
-    public event Action OnDied = delegate { };
-    public event Action<int, int> OnHealthChanged = delegate { };
+    #region Action Events
+    public event Action OnTookHit;
+    public event Action OnDied;
+    public event Action<int, int> OnHealthChanged;
+    #endregion
 
+    #region Standard Unity Methods
     private void OnEnable()
     {
         _currentHealth = _maxHealth;
     }
+    #endregion
 
+    #region Class Defined Methods
+    /// <summary>
+    /// Checks to see if the _currentHealth of the game object is greater than 0 before proceeding to call the
+    /// ModifyHealth() method and invoke the appropriate event depending on the _currentHealth remaining.
+    /// </summary>
+    /// <param name="damage">Int value that is passed from the damage field 
+    /// of the corresponding class calling this function.</param>
     public void TakeHit(int damage)
     {
         if (_currentHealth <= 0)
@@ -25,14 +40,25 @@ public class Health : MonoBehaviour
         ModifyHealth(-damage);
 
         if (_currentHealth > 0)
-            OnTookHit();
+            OnTookHit?.Invoke();
         else
-            OnDied();
+            OnDied?.Invoke();
     }
 
+    /// <summary>
+    /// Can either increase or decrease the _currentHealth amount depending on the sign of the passed int
+    /// parameter, amount. After adding or subtracting from _currentHealth, the OnHealthChanged() event is
+    /// invoked to update the Player Health UI elements.
+    /// </summary>
+    /// <param name="amount">Int value that is added to the _currentHealth.</param>
     private void ModifyHealth(int amount)
     {
-        _currentHealth += amount;
-        OnHealthChanged(_currentHealth, _maxHealth);
+        if (_currentHealth <= _maxHealth)
+            _currentHealth += amount;
+        else
+            _currentHealth = _maxHealth;
+        
+        OnHealthChanged?.Invoke(_currentHealth, _maxHealth);
     }
+    #endregion
 }
