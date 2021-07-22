@@ -57,7 +57,7 @@ public class EnemyShootingHandler : MonoBehaviour
     #endregion
 
     #region Action Events
-    public event Action OnFire;
+    public event Action EnemyOnFire;
     #endregion
 
     #region Standard Unity Methods
@@ -144,7 +144,7 @@ public class EnemyShootingHandler : MonoBehaviour
                 SpawnBulletRicochetParticle(target.point, target.normal);
             }
 
-            OnFire?.Invoke();
+            EnemyOnFire?.Invoke();
         }
     }
 

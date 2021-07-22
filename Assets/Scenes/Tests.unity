@@ -7293,7 +7293,7 @@ GameObject:
   - component: {fileID: 1559770447}
   - component: {fileID: 1559770446}
   m_Layer: 5
-  m_Name: Current Max Ammo
+  m_Name: Current Remaining Ammo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7812,8 +7812,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 530c505dd9889e342942a38435500889, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentAmmoText: {fileID: 532881078}
-  _maxAmmoText: {fileID: 1559770446}
+  _ammoInClipText: {fileID: 532881078}
+  _ammoRemainingText: {fileID: 1559770446}
 --- !u!43 &1692386803
 Mesh:
   m_ObjectHideFlags: 0
