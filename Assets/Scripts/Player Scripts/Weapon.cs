@@ -64,6 +64,7 @@ public class Weapon : MonoBehaviour
     private void Awake()
     {
         _previousWeaponSway = _weaponSway;
+
         _ammo = GetComponent<WeaponAmmo>();
         _playerShooting = GetComponentInParent<PlayerShooting>();
     }
@@ -71,6 +72,12 @@ public class Weapon : MonoBehaviour
     private void Update()
     {
         _fireTimer += Time.deltaTime;
+
+        // Change weapon sway value if player is "aiming"
+        if (Input.GetButton("Fire2"))
+            _weaponSway = _aimedWeaponSway;
+        else
+            _weaponSway = _previousWeaponSway;
 
         // Check if player is holding button down
         if (Input.GetButton("Fire1"))
@@ -121,9 +128,10 @@ public class Weapon : MonoBehaviour
     {
         _fireTimer = 0;
 
-        RaycastHit2D hitInfo2D = Physics2D.Raycast(_firePoint.position,
-            _playerShooting.SetShootingDirection(GetRandomValueFromWeaponSway(), GetRandomValueFromWeaponSway()), 
-            _weaponRange, _collisionLayers);
+        Vector2 shootingDirection = _playerShooting.SetShootingDirection
+            (GetRandomValueFromWeaponSway(), GetRandomValueFromWeaponSway());
+
+        RaycastHit2D hitInfo2D = Physics2D.Raycast(_firePoint.position, shootingDirection, _weaponRange, _collisionLayers);
 
         Collider2D target = hitInfo2D.collider;
 
@@ -152,11 +160,6 @@ public class Weapon : MonoBehaviour
     /// weapon.</returns>
     private float GetRandomValueFromWeaponSway()
     {
-        if (Input.GetButton("Fire2"))
-            _weaponSway = _aimedWeaponSway;
-        else
-            _weaponSway = _previousWeaponSway;
-
         float randomGeneratedValue = UnityEngine.Random.Range(-_weaponSway, _weaponSway);
 
         return randomGeneratedValue;
@@ -199,7 +202,7 @@ public class Weapon : MonoBehaviour
         _bulletTrail.SetPosition(0, _firePoint.position);
         _bulletTrail.SetPosition(1, hit2D.point);
 
-        yield return new WaitForSeconds(0.02f);
+        yield return new WaitForSeconds(0.03f);
 
         _bulletTrail.enabled = false;
     }

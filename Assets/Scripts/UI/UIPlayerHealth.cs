@@ -31,6 +31,7 @@ public class UIPlayerHealth : MonoBehaviour
 
         if (currentHealth <= 0)
         {
+            GameManager.Instance.PlayerDied();
             RemoveEvent();
         }
     }
