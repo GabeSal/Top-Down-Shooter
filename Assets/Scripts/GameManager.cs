@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     private GameObject _playerUIHealth;
     [SerializeField]
     private GameObject _playerUIAmmo;
+    [SerializeField]
+    private GameObject _gameOverUI;
     #endregion
 
     #region Properties
@@ -55,6 +57,8 @@ public class GameManager : MonoBehaviour
     {
         _playerUIHealth.SetActive(false);
         _playerUIAmmo.SetActive(false);
+
+        _gameOverUI.SetActive(true);
     }
     #endregion
 }
