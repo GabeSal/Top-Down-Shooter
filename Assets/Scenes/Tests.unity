@@ -2503,7 +2503,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 200, y: 0}
-  m_SizeDelta: {x: 225, y: 150}
+  m_SizeDelta: {x: 270, y: 150}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &532881078
 MonoBehaviour:
@@ -2525,7 +2525,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 99/
+  m_text: 100/
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
   m_sharedMaterial: {fileID: 2147374, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
@@ -2559,7 +2559,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -7315,7 +7315,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 425, y: -0.100097656}
+  m_AnchoredPosition: {x: 478, y: -0.100097656}
   m_SizeDelta: {x: 160, y: 150}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1559770446
@@ -7514,13 +7514,13 @@ MonoBehaviour:
   _weaponSway: 1.2
   _aimedWeaponSway: 0.8
   _isFullAuto: 1
-  _fireDelay: 0.08
+  _fireDelay: 0.15
+  _collisionLayers:
+    serializedVersion: 2
+    m_Bits: 193
   _firePoint: {fileID: 2062382356}
   _bulletImpactParticle: {fileID: 9204919782905628836, guid: bbfc34a2b574d4548bd261e04cccb404, type: 3}
   _bulletTrail: {fileID: 358614142}
-  _layerMask:
-    serializedVersion: 2
-    m_Bits: 193
   _weaponHotKey: 49
 --- !u!114 &1631561064
 MonoBehaviour:
@@ -7644,10 +7644,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a80c0dde39833464baec9b856fd15bf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _clipSize: 60
-  _maxAmmo: 240
+  _clipSize: 100
+  _maxAmmo: 400
   _infiniteAmmo: 0
-  _reloadSpeed: 0.5
+  _reloadSpeed: 2.2
   _reloadSound: {fileID: 11400000, guid: 6f2e03bddd81e304aa3f9e21f12c9c40, type: 2}
 --- !u!1 &1637192510
 GameObject:

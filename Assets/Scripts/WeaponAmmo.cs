@@ -14,7 +14,7 @@ public class WeaponAmmo : MonoBehaviour
     [SerializeField]
     private bool _infiniteAmmo;
     [SerializeField]
-    [Range(0.25f, 1.2f)]
+    [Range(0.25f, 2.2f)]
     private float _reloadSpeed;
     [SerializeField]
     private SimpleAudioEvent _reloadSound;

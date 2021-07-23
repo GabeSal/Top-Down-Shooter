@@ -24,17 +24,17 @@ public class Weapon : MonoBehaviour
     [SerializeField]
     [Range(0.04f, 2f)]
     private float _fireDelay;
+    [SerializeField]
+    private LayerMask _collisionLayers;
 
     [Header("Weapon Prefabs")]
     [SerializeField]
-    [Tooltip("Used to specify the origin of which to draw the raycast of the weapon.")]
+    [Tooltip("Used to specify the origin of which to draw the raycast for the weapon.")]
     private Transform _firePoint;
     [SerializeField]
     private PooledMonoBehaviour _bulletImpactParticle;
     [SerializeField]
     private LineRenderer _bulletTrail;
-    [SerializeField]
-    private LayerMask _layerMask;
 
     [SerializeField]
     [Tooltip("Assign the key to be pressed to select the weapon component defined in the editor.")]
@@ -123,7 +123,7 @@ public class Weapon : MonoBehaviour
 
         RaycastHit2D hitInfo2D = Physics2D.Raycast(_firePoint.position,
             _playerShooting.SetShootingDirection(GetRandomValueFromWeaponSway(), GetRandomValueFromWeaponSway()), 
-            _weaponRange, _layerMask);
+            _weaponRange, _collisionLayers);
 
         Collider2D target = hitInfo2D.collider;
 
