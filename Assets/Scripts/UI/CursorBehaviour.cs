@@ -23,7 +23,7 @@ public class CursorBehaviour : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(_escapeKey))
+        if (Input.GetKeyDown(_escapeKey) || GameManager.Instance.PlayerIsDead)
         {
             Cursor.lockState = CursorLockMode.None;
         }

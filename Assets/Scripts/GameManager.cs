@@ -13,17 +13,24 @@ public class GameManager : MonoBehaviour
     private GameObject _gameOverUI;
     #endregion
 
+    #region Private Fields
+    private bool _playerIsDead; 
+    #endregion
+
     #region Properties
     public static GameManager Instance { get; private set; }
 
     public Transform playerPrefab;
     public float playerSpawnDelay = 3f;
+    public bool PlayerIsDead { get => _playerIsDead; }
     #endregion
 
     #region Standard Unity Methods
     private void Awake()
     {
         Instance = this;
+        _playerIsDead = false;
+        _gameOverUI.SetActive(false);
     }
     #endregion
 
@@ -55,6 +62,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void PlayerDied()
     {
+        _playerIsDead = true;
         _playerUIHealth.SetActive(false);
         _playerUIAmmo.SetActive(false);
 
