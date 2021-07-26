@@ -21,6 +21,10 @@ public class UIAmmoText : MonoBehaviour
 
         _currentWeaponAmmo.OnAmmoChanged += CurrentWeaponAmmo_OnAmmoChanged;
     }
+    private void OnDisable()
+    {
+        _currentWeaponAmmo.OnAmmoChanged -= CurrentWeaponAmmo_OnAmmoChanged;
+    }
 
     private void OnDestroy()
     {

@@ -17,6 +17,10 @@ public class EnemyStatus : MonoBehaviour
     {
         GetComponent<Health>().OnDied -= EnemyStatus_OnDied;
     }
+    private void OnDestroy()
+    {
+        GetComponent<Health>().OnDied -= EnemyStatus_OnDied;
+    }
     #endregion
 
     #region Class Defined Methods

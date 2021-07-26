@@ -25,6 +25,10 @@ public class EnemyWeaponSound : MonoBehaviour
     {
         _enemyShootingHandler.EnemyOnFire -= EnemyShootingHandler_EnemyOnFire;
     }
+    private void OnDestroy()
+    {
+        _enemyShootingHandler.EnemyOnFire -= EnemyShootingHandler_EnemyOnFire;
+    }
     #endregion
 
     #region Class Defined Methods

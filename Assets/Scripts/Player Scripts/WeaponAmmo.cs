@@ -55,7 +55,12 @@ public class WeaponAmmo : MonoBehaviour
         {
             StartCoroutine(Reload());
         }
-    } 
+    }
+
+    private void OnDestroy()
+    {
+        _weapon.OnFire -= Weapon_OnFire;
+    }
     #endregion
 
     #region Class Defined Methods
@@ -101,13 +106,12 @@ public class WeaponAmmo : MonoBehaviour
             OnAmmoChanged();
         }
     }
-    #endregion
 
     #region Public Methods
     public bool IsAmmoReady()
     {
         return _ammoInClip > 0;
-    } 
+    }
     #endregion
 
     #region Internal Class Methods
@@ -122,6 +126,8 @@ public class WeaponAmmo : MonoBehaviour
             return "999";
         else
             return string.Format("{0}", _ammoNotInClip);
-    } 
+    }
+    #endregion
+
     #endregion
 }

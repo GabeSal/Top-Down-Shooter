@@ -11,6 +11,12 @@ public class PooledMonoBehaviour : MonoBehaviour
 
     public int InitialPoolSize { get { return _initialPoolSize; } }
 
+    protected virtual void OnDisable()
+    {
+        if (OnReturnToPool != null)
+            OnReturnToPool(this);
+    }
+
     public T Get<T>(bool enable = true) where T : PooledMonoBehaviour
     {
         var pool = Pool.GetPool(this);
@@ -31,12 +37,6 @@ public class PooledMonoBehaviour : MonoBehaviour
         pooledObject.transform.rotation = rotation;
 
         return pooledObject;
-    }
-
-    protected virtual void OnDisable()
-    {
-        if (OnReturnToPool != null)
-            OnReturnToPool(this);
     }
 
     public void ReturnToPool(float delay = 0f)

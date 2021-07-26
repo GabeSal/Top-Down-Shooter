@@ -57,6 +57,17 @@ public class GameManager : MonoBehaviour
         StartCoroutine(StartGame());
     }
 
+    public void RestartLevel()
+    {
+        var pools = FindObjectsOfType<Pool>();
+        int currentScene = SceneManager.GetActiveScene().buildIndex;
+        foreach (var pool in pools)
+        {
+            DontDestroyOnLoad(pool);
+        }        
+        SceneManager.LoadScene(currentScene);
+    }
+
     /// <summary>
     /// Disables the player UI elements on the canvas object.
     /// </summary>

@@ -32,12 +32,11 @@ public class Pool : MonoBehaviour
         var pooledObject = _objects.Dequeue();
         return pooledObject as T;
     }
-
     private void GrowPool()
     {
         for (int i = 0; i < _prefab.InitialPoolSize; i++)
         {
-            var pooledObject = Instantiate(_prefab) as PooledMonoBehaviour;
+            PooledMonoBehaviour pooledObject = Instantiate(_prefab);
             pooledObject.gameObject.name += " " + i;
 
             pooledObject.OnReturnToPool += AddObjectToAvailableQueue;
