@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
+  - Retry Button
+  - Menu Button
   layers:
   - Default
   - TransparentFX

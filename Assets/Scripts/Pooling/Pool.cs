@@ -8,6 +8,13 @@ public class Pool : MonoBehaviour
     private Queue<PooledMonoBehaviour> _objects = new Queue<PooledMonoBehaviour>();
 
     private PooledMonoBehaviour _prefab;
+    private PooledMonoBehaviour _pooledObject;
+
+    private void OnDestroy()
+    {
+        _pooledObject.OnReturnToPool -= AddObjectToAvailableQueue;
+        _pools.Clear();
+    }
 
     public static Pool GetPool(PooledMonoBehaviour prefab)
     {
@@ -36,13 +43,13 @@ public class Pool : MonoBehaviour
     {
         for (int i = 0; i < _prefab.InitialPoolSize; i++)
         {
-            PooledMonoBehaviour pooledObject = Instantiate(_prefab);
-            pooledObject.gameObject.name += " " + i;
+            _pooledObject = Instantiate(_prefab);
+            _pooledObject.gameObject.name += " " + i;
 
-            pooledObject.OnReturnToPool += AddObjectToAvailableQueue;
+            _pooledObject.OnReturnToPool += AddObjectToAvailableQueue;
 
-            pooledObject.transform.SetParent(this.transform);
-            pooledObject.gameObject.SetActive(false);
+            _pooledObject.transform.SetParent(this.transform);
+            _pooledObject.gameObject.SetActive(false);
         }
     }
 
