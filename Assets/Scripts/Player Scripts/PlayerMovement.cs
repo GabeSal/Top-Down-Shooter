@@ -19,14 +19,17 @@ public class PlayerMovement : MonoBehaviour
     #region Standard Unity Methods
     private void Update()
     {
-        _movement.x = Input.GetAxisRaw("Horizontal");
-        _movement.y = Input.GetAxisRaw("Vertical");
+        if (GameManager.Instance.InputsAllowed)
+        {
+            _movement.x = Input.GetAxisRaw("Horizontal");
+            _movement.y = Input.GetAxisRaw("Vertical");
 
-        // Check if the sprint key is held down
-        if (Input.GetKey(_sprintKey))
-            transform.position += _movement * _movementSpeed * _sprintSpeedMultiplier * Time.deltaTime;
-        else
-            transform.position += _movement * _movementSpeed * Time.deltaTime;
+            // Check if the sprint key is held down
+            if (Input.GetKey(_sprintKey))
+                transform.position += _movement * _movementSpeed * _sprintSpeedMultiplier * Time.deltaTime;
+            else
+                transform.position += _movement * _movementSpeed * Time.deltaTime;
+        }
         
     } 
     #endregion

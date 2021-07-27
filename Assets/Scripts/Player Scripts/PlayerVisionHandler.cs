@@ -19,17 +19,20 @@ public class PlayerVisionHandler : MonoBehaviour
     #region Standard Unity Methods
     private void Update()
     {
-        float angle = ConvertMousePositionToLookAngle();
-        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-
-        if (Input.GetMouseButtonDown(_mouseRightClick))
+        if (GameManager.Instance.InputsAllowed)
         {
-            SwitchVisionCone();
-        }
+            float angle = ConvertMousePositionToLookAngle();
+            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
-        if (Input.GetMouseButtonUp(_mouseRightClick))
-        {
-            SwitchVisionCone();
+            if (Input.GetMouseButtonDown(_mouseRightClick))
+            {
+                SwitchVisionCone();
+            }
+
+            if (Input.GetMouseButtonUp(_mouseRightClick))
+            {
+                SwitchVisionCone();
+            }
         }
     }
     #endregion

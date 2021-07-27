@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,8 @@ public class UIPlayerHealth : MonoBehaviour
     [SerializeField]
     private Image _healthFillBar;
     #endregion
+
+    public event Action OnPlayerDied;
 
     #region Standard Unity Methods
     private void Start()
@@ -31,7 +34,7 @@ public class UIPlayerHealth : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            GameManager.Instance.PlayerDied();
+            OnPlayerDied?.Invoke();
             RemoveEvent();
         }
     }

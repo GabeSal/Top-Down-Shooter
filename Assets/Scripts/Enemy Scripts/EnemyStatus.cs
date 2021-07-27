@@ -29,6 +29,7 @@ public class EnemyStatus : MonoBehaviour
     /// </summary>
     private void EnemyStatus_OnDied()
     {
+        GameManager.Instance.EnemyDied();
         this.gameObject.SetActive(false);
     }
 

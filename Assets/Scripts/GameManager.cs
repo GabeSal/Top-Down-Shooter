@@ -1,3 +1,5 @@
+using TMPro;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
@@ -14,11 +16,18 @@ public class GameManager : MonoBehaviour
     private GameObject _gameOverUI;
 
     private bool _playerIsDead;
+    private bool _inputsAllowed;
+    private int _enemyCounter;
+    #endregion
+
+    #region Action Events
+    public event Action OnGameOver; 
     #endregion
 
     #region Properties
     public static GameManager Instance { get; private set; }
     public bool PlayerIsDead { get => _playerIsDead; }
+    public bool InputsAllowed { get => _inputsAllowed; }
     #endregion
 
     #region Standard Unity Methods
@@ -26,6 +35,7 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
         _playerIsDead = false;
+        _inputsAllowed = true;
     }
     #endregion
 
@@ -47,7 +57,6 @@ public class GameManager : MonoBehaviour
     private IEnumerator LoadSceneAsyncByName(string sceneName)
     {
         DontDestroyOnLoad(this);
-        _playerIsDead = false;
 
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
         // Wait until the asynchronous scene fully loads
@@ -56,9 +65,46 @@ public class GameManager : MonoBehaviour
 
         if (sceneName != "Main Menu")
         {
+            ResetGameSettings();
             FindGameUIElements();
             SetGameOverClickEvents();
-        }        
+            _enemyCounter = GetAllActiveEnemiesInScene();
+        }
+    }
+
+    private void ResetGameSettings()
+    {
+        _playerIsDead = false;
+        _inputsAllowed = true;
+    }
+
+    /// <summary>
+    /// Internal method that's called from the UIPlayerHealth object when the player's health reaches 0.
+    /// </summary>
+    private void GameManager_OnPlayerDied()
+    {
+        _playerIsDead = true;
+        GameOver();
+    }
+
+    /// <summary>
+    /// Finds all of the game objects in the loaded scene that have the EnemyStatus component and
+    /// counts how many are active/enabled in the Unity hierarchy.
+    /// </summary>
+    /// <returns>Int value that represents how many active enemies are in the current scene.</returns>
+    private int GetAllActiveEnemiesInScene()
+    {
+        var enemiesInScene = FindObjectsOfType<EnemyStatus>();
+        int enemyCount = 0;
+        foreach (var enemy in enemiesInScene)
+        {
+            if (enemy.gameObject.activeInHierarchy)
+            {
+                enemyCount++;
+            }            
+        }
+
+        return enemyCount;
     }
 
     /// <summary>
@@ -72,6 +118,7 @@ public class GameManager : MonoBehaviour
             _playerUIAmmo = GetGameObjectFromTransformChildIndex(1);
             _gameOverUI = GetGameObjectFromTransformChildIndex(2);
 
+            _playerUIHealth.GetComponent<UIPlayerHealth>().OnPlayerDied += GameManager_OnPlayerDied;
             _gameOverUI.SetActive(false);
         }
     }
@@ -133,13 +180,35 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Disables the player UI elements on the canvas object.
     /// </summary>
-    public void PlayerDied()
+    private void GameOver()
     {
-        _playerIsDead = true;
+        OnGameOver?.Invoke();
         _playerUIHealth.SetActive(false);
         _playerUIAmmo.SetActive(false);
 
         _gameOverUI.SetActive(true);
+
+        var gameOverText = _gameOverUI.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+
+        if (_playerIsDead)
+            gameOverText.text = "You Died!";
+        else
+            gameOverText.text = "You Win!";
+    }
+
+    /// <summary>
+    /// Internal method that's called from EnemyStatus that decreases the _enemyCounter value when the player kills
+    /// an enemy in the scene.
+    /// </summary>
+    internal void EnemyDied()
+    {
+        _enemyCounter--;
+
+        if(_enemyCounter == 0)
+        {
+            GameOver();
+            _inputsAllowed = false;
+        }
     }
     #endregion
 }

@@ -71,36 +71,39 @@ public class Weapon : MonoBehaviour
 
     private void Update()
     {
-        _fireTimer += Time.deltaTime;
-
-        // Change weapon sway value if player is "aiming"
-        if (Input.GetButton("Fire2"))
-            _weaponSway = _aimedWeaponSway;
-        else
-            _weaponSway = _previousWeaponSway;
-
-        // Check if player is holding button down
-        if (Input.GetButton("Fire1"))
+        if (GameManager.Instance.InputsAllowed)
         {
-            if (CanFire() && _isFullAuto == true)
+            _fireTimer += Time.deltaTime;
+
+            // Change weapon sway value if player is "aiming"
+            if (Input.GetButton("Fire2"))
+                _weaponSway = _aimedWeaponSway;
+            else
+                _weaponSway = _previousWeaponSway;
+
+            // Check if player is holding button down
+            if (Input.GetButton("Fire1"))
             {
-                FireWeapon();
+                if (CanFire() && _isFullAuto == true)
+                {
+                    FireWeapon();
+                }
             }
-        }
 
-        // Check if player just pressed button
-        if (Input.GetButtonDown("Fire1"))
-        {
-            if (CanFire() && _isFullAuto == false)
+            // Check if player just pressed button
+            if (Input.GetButtonDown("Fire1"))
             {
-                FireWeapon();
+                if (CanFire() && _isFullAuto == false)
+                {
+                    FireWeapon();
+                }
             }
-        }
 
-        // Play the ammo clicks event when out of ammo
-        if (Input.GetButtonDown("Fire1") && _ammo.IsAmmoReady() == false)
-        {
-            OutOfAmmo?.Invoke();
+            // Play the ammo clicks event when out of ammo
+            if (Input.GetButtonDown("Fire1") && _ammo.IsAmmoReady() == false)
+            {
+                OutOfAmmo?.Invoke();
+            }
         }
     }
     #endregion

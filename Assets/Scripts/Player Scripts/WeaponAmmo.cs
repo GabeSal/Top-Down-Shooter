@@ -51,7 +51,7 @@ public class WeaponAmmo : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R) && _maxAmmo > 0)
+        if (Input.GetKeyDown(KeyCode.R) && _maxAmmo > 0 && GameManager.Instance.InputsAllowed)
         {
             StartCoroutine(Reload());
         }

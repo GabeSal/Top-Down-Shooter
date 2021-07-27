@@ -19,19 +19,45 @@ public class CursorBehaviour : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Confined;
         Cursor.SetCursor(crosshair, centerPivot, CursorMode.Auto);
+
+        GameManager.Instance.OnGameOver += CursorBehaviour_OnGameOver;
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(_escapeKey) || GameManager.Instance.PlayerIsDead)
+        if (Input.GetKeyDown(_escapeKey))
         {
-            Cursor.lockState = CursorLockMode.None;
+            UnlockAndShowMouseCursor();
         }
 
         if (Input.GetMouseButtonDown(_leftMouseClick))
         {
             Cursor.lockState = CursorLockMode.Confined;
         }
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.Instance.OnGameOver -= CursorBehaviour_OnGameOver;
+    }
+    #endregion
+
+    #region Class Defined Methods
+    /// <summary>
+    /// Method invoked when the Game Managers OnGameOver() event is called.
+    /// </summary>
+    private void CursorBehaviour_OnGameOver()
+    {
+        UnlockAndShowMouseCursor();
+    }
+
+    /// <summary>
+    /// Unrestrains the mouse cursor to the game window and shows the default mouse cursor.
+    /// </summary>
+    private static void UnlockAndShowMouseCursor()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
     } 
     #endregion
 }
