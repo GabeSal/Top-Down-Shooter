@@ -13,12 +13,11 @@ MonoBehaviour:
   m_Name: EnemyFootstepSounds
   m_EditorClassIdentifier: 
   _clips:
-  - {fileID: 8300000, guid: 63b050bb5ad85e54fbd6f079d2dbfcae, type: 3}
-  - {fileID: 8300000, guid: a2c24f828c0ec384b982688946ac8ecb, type: 3}
-  - {fileID: 8300000, guid: 8225efd5e4442e7409b238e64ed5e220, type: 3}
-  - {fileID: 8300000, guid: 823a90ae5e8a69a41825750977415bcd, type: 3}
+  - {fileID: 8300000, guid: 4c6fa14faaa26454eb43c4e503e42a22, type: 3}
+  - {fileID: 8300000, guid: d0c88b72285c00e458eb00b81482441b, type: 3}
+  - {fileID: 8300000, guid: f86761061dbbcfc4ca6a6af40a70cded, type: 3}
   volume:
-    minValue: 0.92537314
+    minValue: 0.88805974
     maxValue: 1
   pitch:
     minValue: 0.738806

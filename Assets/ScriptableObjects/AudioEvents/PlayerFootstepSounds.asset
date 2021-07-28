@@ -13,16 +13,15 @@ MonoBehaviour:
   m_Name: PlayerFootstepSounds
   m_EditorClassIdentifier: 
   _clips:
-  - {fileID: 8300000, guid: cdf725b18489ba645958d83fa5a02520, type: 3}
-  - {fileID: 8300000, guid: 70f3c85c0511f9f4c93d62cc71dab124, type: 3}
-  - {fileID: 8300000, guid: 62f4de52e93e7e9408f60c9d05bbf2ab, type: 3}
-  - {fileID: 8300000, guid: f871e0f1b9d8f734cb20c89e6ba00118, type: 3}
+  - {fileID: 8300000, guid: 4c6fa14faaa26454eb43c4e503e42a22, type: 3}
+  - {fileID: 8300000, guid: d0c88b72285c00e458eb00b81482441b, type: 3}
+  - {fileID: 8300000, guid: f86761061dbbcfc4ca6a6af40a70cded, type: 3}
   volume:
-    minValue: 0.7791655
-    maxValue: 0.83703935
+    minValue: 0.61125505
+    maxValue: 0.7574627
   pitch:
-    minValue: 0.7052156
-    maxValue: 0.8696146
+    minValue: 0.75
+    maxValue: 1
   _distance:
     minValue: 1
     maxValue: 107.14313
