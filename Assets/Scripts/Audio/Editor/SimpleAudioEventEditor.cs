@@ -4,8 +4,11 @@ using UnityEngine;
 [CustomEditor(typeof(SimpleAudioEvent))]
 public class SimpleAudioEventEditor : Editor
 {
+    #region Private Fields
     private AudioSource _previewSource;
+    #endregion
 
+    #region Standard Unity Methods
     public void OnEnable()
     {
         var audioObject = EditorUtility.CreateGameObjectWithHideFlags(
@@ -33,5 +36,6 @@ public class SimpleAudioEventEditor : Editor
         }
 
         EditorGUI.EndDisabledGroup();
-    }
+    } 
+    #endregion
 }

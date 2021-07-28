@@ -38,6 +38,7 @@ public class CursorBehaviour : MonoBehaviour
 
     private void OnDestroy()
     {
+        UnlockAndShowMouseCursor();
         GameManager.Instance.OnGameOver -= CursorBehaviour_OnGameOver;
     }
     #endregion

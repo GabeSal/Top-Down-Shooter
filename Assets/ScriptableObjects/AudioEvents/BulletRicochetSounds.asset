@@ -23,5 +23,5 @@ MonoBehaviour:
     maxValue: 1.28125
   _distance:
     minValue: 1
-    maxValue: 31.250065
+    maxValue: 82.27046
   _mixer: {fileID: 6759820404976056971, guid: 7ef3cd21aec11ee47ab69c73deda6c9f, type: 2}

@@ -81,29 +81,23 @@ public class Weapon : MonoBehaviour
             else
                 _weaponSway = _previousWeaponSway;
 
-            // Check if player is holding button down
+            // Check if player is holding the fire button down
             if (Input.GetButton("Fire1"))
             {
                 if (CanFire() && _isFullAuto == true)
-                {
                     FireWeapon();
-                }
             }
 
-            // Check if player just pressed button
+            // Check if player just pressed fire button
             if (Input.GetButtonDown("Fire1"))
             {
                 if (CanFire() && _isFullAuto == false)
-                {
                     FireWeapon();
-                }
             }
 
             // Play the ammo clicks event when out of ammo
-            if (Input.GetButtonDown("Fire1") && _ammo.IsAmmoReady() == false)
-            {
+            if (Input.GetButtonDown("Fire1") && _ammo.HasAmmo() == false)
                 OutOfAmmo?.Invoke();
-            }
         }
     }
     #endregion
@@ -115,7 +109,7 @@ public class Weapon : MonoBehaviour
     /// <returns>True if there is enough ammo in the current weapons clip and _fireTimer is greater than _fireDelay.</returns>
     private bool CanFire()
     {
-        if (_ammo != null && _ammo.IsAmmoReady() == false)
+        if (_ammo != null && _ammo.HasAmmo() == false)
             return false;
 
         return _fireTimer >= _fireDelay;

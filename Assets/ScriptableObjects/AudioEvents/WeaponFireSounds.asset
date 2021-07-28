@@ -15,12 +15,12 @@ MonoBehaviour:
   _clips:
   - {fileID: 8300000, guid: 530362a337d4b5c4d849b81833f16e1b, type: 3}
   volume:
-    minValue: 0.38775533
-    maxValue: 0.6428573
+    minValue: 0.7448981
+    maxValue: 0.84693885
   pitch:
     minValue: 0.59183687
     maxValue: 1
   _distance:
     minValue: 1
-    maxValue: 107.14313
+    maxValue: 158.16351
   _mixer: {fileID: -2476616618268136997, guid: 7ef3cd21aec11ee47ab69c73deda6c9f, type: 2}

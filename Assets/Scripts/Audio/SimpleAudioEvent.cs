@@ -4,6 +4,7 @@ using UnityEngine.Audio;
 [CreateAssetMenu(menuName = "Audio Events/Simple")]
 public class SimpleAudioEvent : ScriptableObject
 {
+    #region Serialized Fields
     [SerializeField]
     private AudioClip[] _clips = new AudioClip[0];
     [SerializeField]
@@ -12,19 +13,21 @@ public class SimpleAudioEvent : ScriptableObject
     [MinMaxRange(0f, 2f)]
     private RangedFloat pitch = new RangedFloat(1, 1);
 
-    internal void Play(object audioSource)
-    {
-        throw new System.NotImplementedException();
-    }
-
     [SerializeField]
     [MinMaxRange(0f, 1000f)]
     private RangedFloat _distance = new RangedFloat(1, 1000);
     [SerializeField]
     private AudioMixerGroup _mixer;
+    #endregion
 
-
-    public void Play(AudioSource source)
+    #region Class Defined Methods
+    /// <summary>
+    /// Plays a random clip from the list of assigned audio clips from the SimpleAudioEvent editor.
+    /// </summary>
+    /// <param name="source">AudioSource object passed from the gameobject that receives an audio Action event.</param>
+    /// <param name="isOneShot">Bool value that determines if the audio clip will be played as a OneShot defined
+    /// in Unitys AudioSource API.</param>
+    public void Play(AudioSource source, bool isOneShot = false)
     {
         source.outputAudioMixerGroup = _mixer;
 
@@ -37,6 +40,10 @@ public class SimpleAudioEvent : ScriptableObject
         source.minDistance = _distance.minValue;
         source.maxDistance = _distance.maxValue;
 
-        source.Play();
-    }
+        if (isOneShot)
+            source.PlayOneShot(source.clip);
+        else
+            source.Play();
+    } 
+    #endregion
 }

@@ -35,14 +35,14 @@ public class UIPlayerHealth : MonoBehaviour
         if (currentHealth <= 0)
         {
             OnPlayerDied?.Invoke();
-            RemoveEvent();
+            RemoveHealthEvent();
         }
     }
 
     /// <summary>
     /// This method de-registers the UIPlayerHealth_OnHealthChanged() method associated with the OnHealthChanged() event.
     /// </summary>
-    private void RemoveEvent()
+    private void RemoveHealthEvent()
     {
         var player = FindObjectOfType<PlayerMovement>().GetComponent<Health>();
         player.OnHealthChanged -= UIPlayerHealth_OnHealthChanged;

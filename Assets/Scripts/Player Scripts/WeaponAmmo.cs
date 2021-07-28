@@ -16,26 +16,22 @@ public class WeaponAmmo : MonoBehaviour
     [SerializeField]
     [Range(0.25f, 2.2f)]
     private float _reloadSpeed;
-    [SerializeField]
-    private SimpleAudioEvent _reloadSound;
     #endregion
 
     #region Private Fields
     private int _ammoInClip;
     private int _ammoNotInClip;
     private Weapon _weapon;
-    private AudioSource _audioSource;
     #endregion
 
     #region Action Events
     public event Action OnAmmoChanged;
+    public event Action OnReload;
     #endregion
 
     #region Standard Unity Methods
     private void Awake()
     {
-        _audioSource = GetComponent<AudioSource>();
-
         _ammoInClip = _clipSize;
         _ammoNotInClip = _maxAmmo - _ammoInClip;
 
@@ -92,7 +88,7 @@ public class WeaponAmmo : MonoBehaviour
         int ammoMissingFromClip = _clipSize - _ammoInClip;
         int ammoToReload = Math.Min(ammoMissingFromClip, _ammoNotInClip);
 
-        _reloadSound.Play(_audioSource);
+        OnReload?.Invoke();
 
         if (_infiniteAmmo)
             ammoToReload = _clipSize;
@@ -108,7 +104,7 @@ public class WeaponAmmo : MonoBehaviour
     }
 
     #region Public Methods
-    public bool IsAmmoReady()
+    public bool HasAmmo()
     {
         return _ammoInClip > 0;
     }
