@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class FootstepSounds : MonoBehaviour
@@ -17,24 +18,38 @@ public class FootstepSounds : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
 
         if (transform.CompareTag("Player"))
-        {
             GetComponent<PlayerMovement>().OnPlayerStep += FootstepSounds_OnPlayerStep;
-        }
+
+        if (transform.CompareTag("Enemy"))
+            GetComponent<EnemyMovement>().OnEnemyStep += FootstepSounds_OnEnemyStep;
     }
 
     private void OnDisable()
     {
-        GetComponent<PlayerMovement>().OnPlayerStep -= FootstepSounds_OnPlayerStep;
+        if (transform.CompareTag("Player"))
+            GetComponent<PlayerMovement>().OnPlayerStep -= FootstepSounds_OnPlayerStep;
+
+        if (transform.CompareTag("Enemy"))
+            GetComponent<EnemyMovement>().OnEnemyStep -= FootstepSounds_OnEnemyStep;
     }
 
     private void OnDestroy()
     {
-        GetComponent<PlayerMovement>().OnPlayerStep -= FootstepSounds_OnPlayerStep;
+        if (transform.CompareTag("Player"))
+            GetComponent<PlayerMovement>().OnPlayerStep -= FootstepSounds_OnPlayerStep;
+
+        if (transform.CompareTag("Enemy"))
+            GetComponent<EnemyMovement>().OnEnemyStep -= FootstepSounds_OnEnemyStep;
     }
     #endregion
 
     #region Received Event Methods
     private void FootstepSounds_OnPlayerStep()
+    {
+        _footstepEvent.Play(_audioSource, true);
+    }
+
+    private void FootstepSounds_OnEnemyStep()
     {
         _footstepEvent.Play(_audioSource, true);
     }

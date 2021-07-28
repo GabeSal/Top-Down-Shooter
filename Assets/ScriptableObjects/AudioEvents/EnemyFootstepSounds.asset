@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5b3705d216c1ae0408d37e04907b84a4, type: 3}
-  m_Name: FootstepSounds
+  m_Name: EnemyFootstepSounds
   m_EditorClassIdentifier: 
   _clips:
   - {fileID: 8300000, guid: 63b050bb5ad85e54fbd6f079d2dbfcae, type: 3}
@@ -18,12 +18,12 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8225efd5e4442e7409b238e64ed5e220, type: 3}
   - {fileID: 8300000, guid: 823a90ae5e8a69a41825750977415bcd, type: 3}
   volume:
-    minValue: 0.87244904
-    maxValue: 0.9489796
+    minValue: 0.92537314
+    maxValue: 1
   pitch:
-    minValue: 0.7448981
-    maxValue: 0.9489796
+    minValue: 0.738806
+    maxValue: 0.92537314
   _distance:
     minValue: 1
-    maxValue: 107.14313
+    maxValue: 160.44788
   _mixer: {fileID: 4175146889535291192, guid: 7ef3cd21aec11ee47ab69c73deda6c9f, type: 2}

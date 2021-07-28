@@ -3,19 +3,24 @@ using System.Collections.Generic;
 
 public class Pool : MonoBehaviour
 {
+    #region Private Fields
     private static Dictionary<PooledMonoBehaviour, Pool> _pools = new Dictionary<PooledMonoBehaviour, Pool>();
 
     private Queue<PooledMonoBehaviour> _objects = new Queue<PooledMonoBehaviour>();
 
     private PooledMonoBehaviour _prefab;
     private PooledMonoBehaviour _pooledObject;
+    #endregion
 
+    #region Standard Unity Methods
     private void OnDestroy()
     {
         _pooledObject.OnReturnToPool -= AddObjectToAvailableQueue;
         _pools.Clear();
     }
+    #endregion
 
+    #region Class Defined Methods
     public static Pool GetPool(PooledMonoBehaviour prefab)
     {
         if (_pools.ContainsKey(prefab))
@@ -57,5 +62,6 @@ public class Pool : MonoBehaviour
     {
         pooledObject.transform.SetParent(this.transform);
         _objects.Enqueue(pooledObject);
-    }
+    } 
+    #endregion
 }

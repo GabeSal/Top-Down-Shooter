@@ -33,7 +33,7 @@ public class ExplosionSound : MonoBehaviour
     /// </summary>
     private void EnemySelfDestruct_OnExplosion()
     {
-        _explosionEvent.Play(_audioSource);
+        _explosionEvent.Play(_audioSource, true);
     }     
     #endregion
 }

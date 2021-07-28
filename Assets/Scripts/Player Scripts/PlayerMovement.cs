@@ -53,6 +53,7 @@ public class PlayerMovement : MonoBehaviour
     }
     #endregion
 
+    #region Class Defined Methods
     /// <summary>
     /// Checks to see if any of the movement keys assigned from the Unity InputManager are being held down.
     /// </summary>
@@ -69,5 +70,6 @@ public class PlayerMovement : MonoBehaviour
     {
         _stepTimer = 0;
         OnPlayerStep?.Invoke();
-    }
+    } 
+    #endregion
 }

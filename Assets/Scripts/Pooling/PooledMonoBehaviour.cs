@@ -4,19 +4,28 @@ using UnityEngine;
 
 public class PooledMonoBehaviour : MonoBehaviour
 {
+    #region Serialized Fields
     [SerializeField]
     private int _initialPoolSize = 10;
+    #endregion
 
+    #region Action Events
     public event Action<PooledMonoBehaviour> OnReturnToPool;
+    #endregion
 
+    #region Properties
     public int InitialPoolSize { get { return _initialPoolSize; } }
+    #endregion
 
+    #region Standard Unity Methods
     protected virtual void OnDisable()
     {
         if (OnReturnToPool != null)
             OnReturnToPool(this);
     }
+    #endregion
 
+    #region Class Defined Methods
     public T Get<T>(bool enable = true) where T : PooledMonoBehaviour
     {
         var pool = Pool.GetPool(this);
@@ -48,5 +57,6 @@ public class PooledMonoBehaviour : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         gameObject.SetActive(false);
-    }
+    } 
+    #endregion
 }
