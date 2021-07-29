@@ -20,7 +20,7 @@ public class ImpactSound : MonoBehaviour
 
     private void OnEnable()
     {
-        _impactEvent.Play(_audioSource);
+        _impactEvent.Play(_audioSource, true);
     } 
     #endregion
 }

@@ -33,7 +33,16 @@ public class GameManager : MonoBehaviour
     #region Standard Unity Methods
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+        
         _playerIsDead = false;
         _inputsAllowed = true;
     }

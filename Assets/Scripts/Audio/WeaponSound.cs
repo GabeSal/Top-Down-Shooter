@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class WeaponSound : MonoBehaviour
 {
     #region Serialized Fields
@@ -20,7 +21,7 @@ public class WeaponSound : MonoBehaviour
     #region Standard Unity Methods
     private void Awake()
     {
-        _audioSource = GetComponentInParent<AudioSource>();
+        _audioSource = GetComponent<AudioSource>();
         _weapon = GetComponent<Weapon>();
         _weaponAmmo = GetComponent<WeaponAmmo>();
 
@@ -43,7 +44,7 @@ public class WeaponSound : MonoBehaviour
     /// </summary>
     private void Weapon_OutOfAmmo()
     {
-        _outOfAmmoEvent.Play(_audioSource);
+        _outOfAmmoEvent.Play(_audioSource, true);
     }
     /// <summary>
     /// Plays the _firedEvent SimpleAudioEvent object through the audio source when the 
@@ -51,14 +52,14 @@ public class WeaponSound : MonoBehaviour
     /// </summary>
     private void Weapon_OnFire()
     {
-        _firedEvent.Play(_audioSource, true);
+        _firedEvent.Play(_audioSource);
     }
     /// <summary>
     /// Plays the _reloadEvent SimpleAudioEvent object the audio source when the OnReload() event is invoked.
     /// </summary>
     private void WeaponAmmo_OnReload()
     {
-        _reloadEvent.Play(_audioSource);
+        _reloadEvent.Play(_audioSource, true);
     }
     #endregion
 }

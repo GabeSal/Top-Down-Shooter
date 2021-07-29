@@ -17,12 +17,12 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 9158afb6966d445db9caf1dccf7acbcc, type: 3}
   - {fileID: 8300000, guid: e0c70bed5c1a4443083a81de5648c7d5, type: 3}
   volume:
-    minValue: 0.84404564
+    minValue: 1
     maxValue: 1
   pitch:
     minValue: 0.8969072
     maxValue: 1.0773196
   _distance:
     minValue: 1
-    maxValue: 72.164856
+    maxValue: 109.47829
   _mixer: {fileID: -2476616618268136997, guid: 7ef3cd21aec11ee47ab69c73deda6c9f, type: 2}
