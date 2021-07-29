@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     private GameObject _playerUIHealth;
     private GameObject _playerUIAmmo;
     private GameObject _gameOverUI;
+    private GameObject _mainMenuUI;
 
     private bool _playerIsDead;
     private bool _inputsAllowed;
@@ -59,6 +60,14 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Quits the application.
+    /// </summary>
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
+
+    /// <summary>
     /// Coroutine that loads the next scene in the build asynchronously. When the next scene is loaded,
     /// this method will call the SpawnPlayer() method.
     /// </summary>
@@ -78,6 +87,11 @@ public class GameManager : MonoBehaviour
             FindGameUIElements();
             SetGameOverClickEvents();
             _enemyCounter = GetAllActiveEnemiesInScene();
+        }
+        else
+        {
+            _mainMenuUI = FindObjectOfType<Canvas>().gameObject;
+            SetMainMenuClickEvents();
         }
     }
 
@@ -159,6 +173,21 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Finds the main menu ui buttons and sets their respective click event.
+    /// </summary>
+    private void SetMainMenuClickEvents()
+    {
+        Button startButton = GetButtonFromMainMenuCanvas(2);
+        Button quitButton = GetButtonFromMainMenuCanvas(3);
+
+        if (startButton != null && quitButton != null)
+        {
+            startButton.onClick.AddListener(Begin);
+            quitButton.onClick.AddListener(ExitGame);
+        }
+    }
+
+    /// <summary>
     /// Finds the Unity button object at a specified child index and accesses the Button component.
     /// </summary>
     /// <param name="childIndex">int value of the childs index nested in the GameOverUI object</param>
@@ -166,6 +195,17 @@ public class GameManager : MonoBehaviour
     private Button GetButtonFromGameOverUIChildren(int childIndex)
     {
         return _gameOverUI.transform.GetChild(childIndex).GetComponent<Button>();
+    }
+
+    /// <summary>
+    /// Finds the Unity button object within the main menu canvas at a specified child index and accesses the Button component.
+    /// </summary>
+    /// <param name="childIndex">int value of the childs index nested in the Main Menu canvas object.</param>
+    /// <returns>Button that represents the UI element we wish to delegate onClick events for the 
+    /// MainMenu canvas overlay.</returns>
+    private Button GetButtonFromMainMenuCanvas(int childIndex)
+    {
+        return _mainMenuUI.transform.GetChild(childIndex).GetComponent<Button>();
     }
 
     /// <summary>
