@@ -31,8 +31,8 @@ public class EnemyShootingHandler : MonoBehaviour
     [Range(2, 5)]
     private int _shotsPerBurst;
     [SerializeField]
-    [Range(0.05f, 0.15f)]
-    private float _burstTimeUntilNextShot;
+    [Range(0.05f, 0.1f)]
+    private float _timeUntilNextBurstShot;
     [SerializeField]
     [Tooltip("Determines if the enemy can shoot the player while chasing them.")]
     private bool _canShootAndRun;
@@ -217,7 +217,7 @@ public class EnemyShootingHandler : MonoBehaviour
         for (int i = 0; i < _shotsPerBurst; i++)
         {
             ShootPlayer();
-            yield return new WaitForSeconds(_burstTimeUntilNextShot);
+            yield return new WaitForSeconds(_timeUntilNextBurstShot);
         }
     } 
     #endregion

@@ -26,7 +26,8 @@ public class WeaponAmmo : MonoBehaviour
     #endregion
 
     #region Properties
-    public float ReloadTime { get => _reloadTime; } 
+    public float ReloadTime { get => _reloadTime; }
+    public int AmmoInClip { get => _ammoInClip; }
     #endregion
 
     #region Action Events

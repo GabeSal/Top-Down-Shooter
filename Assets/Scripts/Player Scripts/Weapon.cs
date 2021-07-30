@@ -22,6 +22,14 @@ public class Weapon : MonoBehaviour
     [SerializeField]
     private bool _isFullAuto;
     [SerializeField]
+    private bool _isBurstFire;
+    [SerializeField]
+    [Range(2, 5)]
+    private int _shotsPerBurst = 3;
+    [SerializeField]
+    [Range(0.05f, 0.1f)]
+    private float _timeUntilNextBurstShot;
+    [SerializeField]
     [Range(0.04f, 2f)]
     private float _fireDelay;
     [SerializeField]
@@ -45,6 +53,7 @@ public class Weapon : MonoBehaviour
     #region Private Fields
     private float _fireTimer;
     private float _previousWeaponSway;
+    private bool _isFiring;
     private PlayerShooting _playerShooting;
     private WeaponAmmo _ammo;
     #endregion
@@ -82,17 +91,31 @@ public class Weapon : MonoBehaviour
                 _weaponSway = _previousWeaponSway;
 
             // Check if player is holding the fire button down
-            if (Input.GetButton("Fire1"))
+            if (Input.GetButton("Fire1") && _isFiring == false)
             {
-                if (CanFire() && _isFullAuto == true)
+                if (CanFire() && _isFullAuto && _isBurstFire == false)
+                {
                     FireWeapon();
+                }
+
+                if (CanFire() && _isFullAuto && _isBurstFire)
+                {
+                    StartCoroutine(BurstFire());
+                }
             }
 
             // Check if player just pressed fire button
-            if (Input.GetButtonDown("Fire1"))
+            if (Input.GetButtonDown("Fire1") && _isFiring == false)
             {
+                if (CanFire() && _isBurstFire)
+                {
+                    StartCoroutine(BurstFire());
+                }
+
                 if (CanFire() && _isFullAuto == false)
+                {
                     FireWeapon();
+                }                
             }
 
             // Play the ammo clicks event when out of ammo
@@ -148,6 +171,23 @@ public class Weapon : MonoBehaviour
             }
         }
         OnFire?.Invoke();
+    }
+
+    /// <summary>
+    /// Coroutine that begins a for loop that fires a round and delays the next shot in the burst fire 
+    /// until the amount of rounds fired reaches the _shotsPerBurst value.
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator BurstFire()
+    {
+        for (int i = 0; i < _shotsPerBurst && _ammo.AmmoInClip > 0; i++)
+        {
+            FireWeapon();
+            _isFiring = true;
+            yield return new WaitForSeconds(_timeUntilNextBurstShot);
+        }
+
+        _isFiring = false;
     }
 
     /// <summary>
