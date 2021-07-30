@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     private GameObject _playerUIAmmo;
     private GameObject _gameOverUI;
     private GameObject _mainMenuUI;
+    private GameObject _controlsUIOverlay;
 
     private bool _playerIsDead;
     private bool _inputsAllowed;
@@ -46,6 +47,7 @@ public class GameManager : MonoBehaviour
         
         _playerIsDead = false;
         _inputsAllowed = true;
+        FindMainMenuUIElements();
     }
     #endregion
 
@@ -57,6 +59,22 @@ public class GameManager : MonoBehaviour
     public void Begin()
     {
         StartCoroutine(LoadSceneAsyncByName("Tests"));
+    }
+
+    /// <summary>
+    /// Sets the _controlsUIOverlay object to active.
+    /// </summary>
+    public void ShowControls()
+    {
+        _controlsUIOverlay.SetActive(true);
+    }
+
+    /// <summary>
+    /// De-activates/Hides the _controlsUIOverlay object.
+    /// </summary>
+    public void HideControls()
+    {
+        _controlsUIOverlay.SetActive(false);
     }
 
     /// <summary>
@@ -84,13 +102,13 @@ public class GameManager : MonoBehaviour
         if (sceneName != "Main Menu")
         {
             ResetGameSettings();
-            FindGameUIElements();
+            FindLevelUIElements();
             SetGameOverClickEvents();
             _enemyCounter = GetAllActiveEnemiesInScene();
         }
         else
         {
-            _mainMenuUI = FindObjectOfType<Canvas>().gameObject;
+            FindMainMenuUIElements();
             SetMainMenuClickEvents();
         }
     }
@@ -133,7 +151,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Finds and stores the UI elements from the playable game scene into our private UI game object fields.
     /// </summary>
-    private void FindGameUIElements()
+    private void FindLevelUIElements()
     {
         if (_playerUIHealth == null && _playerUIAmmo == null && _gameOverUI == null)
         {
@@ -144,6 +162,16 @@ public class GameManager : MonoBehaviour
             _playerUIHealth.GetComponent<UIPlayerHealth>().OnPlayerDied += GameManager_OnPlayerDied;
             _gameOverUI.SetActive(false);
         }
+    }
+
+    /// <summary>
+    /// Finds and stores the UI elements from the main menu scene into our private UI game object fields.
+    /// </summary>
+    private void FindMainMenuUIElements()
+    {
+        _mainMenuUI = FindObjectOfType<Canvas>().gameObject;
+        _controlsUIOverlay = _mainMenuUI.transform.GetChild(6).gameObject;
+        _controlsUIOverlay.SetActive(false);
     }
 
     /// <summary>
@@ -178,12 +206,18 @@ public class GameManager : MonoBehaviour
     private void SetMainMenuClickEvents()
     {
         Button startButton = GetButtonFromMainMenuCanvas(2);
-        Button quitButton = GetButtonFromMainMenuCanvas(3);
+        Button controlsButton = GetButtonFromMainMenuCanvas(3);
+        Button quitButton = GetButtonFromMainMenuCanvas(4);
+        Button hideControlsButton = _controlsUIOverlay.transform.GetChild(2).GetComponent<Button>();
 
-        if (startButton != null && quitButton != null)
+        bool allButtonsFound = startButton != null && controlsButton != null && quitButton != null && hideControlsButton != null;
+
+        if (allButtonsFound)
         {
             startButton.onClick.AddListener(Begin);
+            controlsButton.onClick.AddListener(ShowControls);
             quitButton.onClick.AddListener(ExitGame);
+            hideControlsButton.onClick.AddListener(HideControls);
         }
     }
 
