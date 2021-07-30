@@ -15,13 +15,18 @@ public class WeaponAmmo : MonoBehaviour
     private bool _infiniteAmmo;
     [SerializeField]
     [Range(0.25f, 2.2f)]
-    private float _reloadSpeed;
+    private float _reloadTime;
     #endregion
 
     #region Private Fields
     private int _ammoInClip;
-    private int _ammoNotInClip;
+    private int _ammoInReserve;
     private Weapon _weapon;
+    private bool _isReloading;
+    #endregion
+
+    #region Properties
+    public float ReloadTime { get => _reloadTime; } 
     #endregion
 
     #region Action Events
@@ -32,8 +37,9 @@ public class WeaponAmmo : MonoBehaviour
     #region Standard Unity Methods
     private void Awake()
     {
+        _isReloading = false;
         _ammoInClip = _clipSize;
-        _ammoNotInClip = _maxAmmo - _ammoInClip;
+        _ammoInReserve = _maxAmmo - _ammoInClip;
 
         _weapon = GetComponent<Weapon>();
         _weapon.OnFire += Weapon_OnFire;
@@ -47,10 +53,23 @@ public class WeaponAmmo : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R) && _maxAmmo > 0 && GameManager.Instance.InputsAllowed)
+        if (GameManager.Instance.InputsAllowed)
         {
-            StartCoroutine(Reload());
-        }
+            if (Input.GetKeyDown(KeyCode.R) && HaveEnoughAmmo() && !_isReloading)
+            {
+                _isReloading = true;
+                StartCoroutine(Reload());
+            }
+        }        
+    }
+
+    private bool HaveEnoughAmmo()
+    {
+        return _ammoInReserve > 0 && _ammoInClip < _clipSize;
+    }
+    private void OnDisable()
+    {
+        _weapon.OnFire -= Weapon_OnFire;
     }
 
     private void OnDestroy()
@@ -86,7 +105,7 @@ public class WeaponAmmo : MonoBehaviour
     private IEnumerator Reload()
     {
         int ammoMissingFromClip = _clipSize - _ammoInClip;
-        int ammoToReload = Math.Min(ammoMissingFromClip, _ammoNotInClip);
+        int ammoToReload = Math.Min(ammoMissingFromClip, _ammoInReserve);
 
         OnReload?.Invoke();
 
@@ -95,12 +114,14 @@ public class WeaponAmmo : MonoBehaviour
 
         if (ammoToReload > 0)
         {
-            yield return new WaitForSeconds(_reloadSpeed);
+            yield return new WaitForSeconds(_reloadTime);
 
             _ammoInClip += ammoToReload;
-            _ammoNotInClip -= ammoToReload;
-            OnAmmoChanged();
+            _ammoInReserve -= ammoToReload;
+            OnAmmoChanged?.Invoke();
         }
+
+        _isReloading = false;
     }
 
     #region Public Methods
@@ -121,7 +142,7 @@ public class WeaponAmmo : MonoBehaviour
         if (_infiniteAmmo)
             return "999";
         else
-            return string.Format("{0}", _ammoNotInClip);
+            return string.Format("{0}", _ammoInReserve);
     }
     #endregion
 

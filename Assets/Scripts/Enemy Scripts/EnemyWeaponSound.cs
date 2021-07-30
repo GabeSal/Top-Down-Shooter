@@ -17,7 +17,7 @@ public class EnemyWeaponSound : MonoBehaviour
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
-        _enemyShootingHandler = GetComponent<EnemyShootingHandler>();
+        _enemyShootingHandler = GetComponentInParent<EnemyShootingHandler>();
 
         _enemyShootingHandler.EnemyOnFire += EnemyShootingHandler_EnemyOnFire;
     }
