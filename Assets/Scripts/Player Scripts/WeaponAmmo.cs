@@ -21,7 +21,7 @@ public class WeaponAmmo : MonoBehaviour
     #region Private Fields
     private int _ammoInClip;
     private int _ammoInReserve;
-    private Weapon _weapon;
+    private BallisticWeapon _ballisticWeapon;
     private bool _isReloading;
     #endregion
 
@@ -42,8 +42,8 @@ public class WeaponAmmo : MonoBehaviour
         _ammoInClip = _clipSize;
         _ammoInReserve = _maxAmmo - _ammoInClip;
 
-        _weapon = GetComponent<Weapon>();
-        _weapon.OnFire += Weapon_OnFire;
+        _ballisticWeapon = GetComponent<BallisticWeapon>();
+        _ballisticWeapon.OnFire += Weapon_OnFire;
     }
 
     private void Start()
@@ -56,7 +56,7 @@ public class WeaponAmmo : MonoBehaviour
     {
         if (GameManager.Instance.InputsAllowed)
         {
-            if (Input.GetKeyDown(KeyCode.R) && HaveEnoughAmmo() && !_isReloading)
+            if (Input.GetKeyDown(KeyCode.R) && HasEnoughAmmo() && !_isReloading)
             {
                 _isReloading = true;
                 StartCoroutine(Reload());
@@ -64,18 +64,19 @@ public class WeaponAmmo : MonoBehaviour
         }        
     }
 
-    private bool HaveEnoughAmmo()
+    private bool HasEnoughAmmo()
     {
         return _ammoInReserve > 0 && _ammoInClip < _clipSize;
     }
+
     private void OnDisable()
     {
-        _weapon.OnFire -= Weapon_OnFire;
+        _ballisticWeapon.OnFire -= Weapon_OnFire;
     }
 
     private void OnDestroy()
     {
-        _weapon.OnFire -= Weapon_OnFire;
+        _ballisticWeapon.OnFire -= Weapon_OnFire;
     }
     #endregion
 
@@ -120,9 +121,8 @@ public class WeaponAmmo : MonoBehaviour
             _ammoInClip += ammoToReload;
             _ammoInReserve -= ammoToReload;
             OnAmmoChanged?.Invoke();
+            _isReloading = false;
         }
-
-        _isReloading = false;
     }
 
     #region Public Methods

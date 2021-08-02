@@ -17,7 +17,7 @@ public class UIAmmoText : MonoBehaviour
     #region Standard Unity Methods
     private void Awake()
     {
-        _currentWeaponAmmo = FindObjectOfType<Weapon>().GetComponent<WeaponAmmo>();
+        _currentWeaponAmmo = FindObjectOfType<BallisticWeapon>().GetComponent<WeaponAmmo>();
 
         _currentWeaponAmmo.OnAmmoChanged += CurrentWeaponAmmo_OnAmmoChanged;
     }

@@ -17,7 +17,7 @@ public class UIPlayerReloadTimer : MonoBehaviour
     #region Standard Unity Methods
     private void Awake()
     {
-        _playerAmmo = FindObjectOfType<Weapon>().GetComponent<WeaponAmmo>();
+        _playerAmmo = FindObjectOfType<BallisticWeapon>().GetComponent<WeaponAmmo>();
 
         _playerAmmo.OnReload += ReloadTimer_OnReload;
         _reloadBarFill.fillAmount = 0f;

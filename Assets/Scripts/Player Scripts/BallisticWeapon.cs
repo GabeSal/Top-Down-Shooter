@@ -2,16 +2,10 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class Weapon : MonoBehaviour
+public class BallisticWeapon : WeaponBase
 {
     #region Serialized Fields
-    [Header("Weapon Settings")]
-    [SerializeField]
-    [Range(1, 15)]
-    private int _weaponDamage;
-    [SerializeField]
-    [Range(40f, 1000f)]
-    private float _weaponRange;
+    [Header("Ballistic Weapon Settings")]
     [SerializeField]
     [Range(0f, 1.5f)]
     [Tooltip("Weapon sway value reduces the accuracy of the weapon if > 0.")]
@@ -29,39 +23,15 @@ public class Weapon : MonoBehaviour
     [SerializeField]
     [Range(0.05f, 0.1f)]
     private float _timeUntilNextBurstShot;
-    [SerializeField]
-    [Range(0.04f, 2f)]
-    private float _fireDelay;
-    [SerializeField]
-    private LayerMask _collisionLayers;
 
-    [Header("Weapon Prefabs")]
-    [SerializeField]
-    [Tooltip("Used to specify the origin of which to draw the raycast for the weapon.")]
-    private Transform _firePoint;
-    [SerializeField]
-    private PooledMonoBehaviour _bulletImpactParticle;
+    [Header("Ballistic Weapon Prefabs")]
     [SerializeField]
     private LineRenderer _bulletTrail;
-
-    [SerializeField]
-    [Tooltip("Assign the key to be pressed to select the weapon component defined in the editor.")]
-    private KeyCode _weaponHotKey;    
-    
     #endregion
 
     #region Private Fields
-    private float _fireTimer;
     private float _previousWeaponSway;
     private bool _isFiring;
-    private PlayerShooting _playerShooting;
-    private WeaponAmmo _ammo;
-    #endregion
-
-    #region Properties
-    public bool IsFullAuto { get => _isFullAuto; }
-    public bool IsFiring { get => CanFire(); }
-    public KeyCode WeaponHotKey { get => _weaponHotKey; }
     #endregion
 
     #region Action Events
@@ -70,12 +40,10 @@ public class Weapon : MonoBehaviour
     #endregion
 
     #region Standard Unity Methods
-    private void Awake()
+    protected override void Awake()
     {
         _previousWeaponSway = _weaponSway;
-
-        _ammo = GetComponent<WeaponAmmo>();
-        _playerShooting = GetComponentInParent<PlayerShooting>();
+        base.Awake();
     }
 
     private void Update()
@@ -119,25 +87,13 @@ public class Weapon : MonoBehaviour
             }
 
             // Play the ammo clicks event when out of ammo
-            if (Input.GetButtonDown("Fire1") && _ammo.HasAmmo() == false)
+            if (Input.GetButtonDown("Fire1") && _weaponAmmo.HasAmmo() == false)
                 OutOfAmmo?.Invoke();
         }
     }
     #endregion
 
     #region Class Defined Methods
-    /// <summary>
-    /// Checks if the player has sufficient ammo in the clip and if the _fireTimer has surpassed the _fireDelay value.
-    /// </summary>
-    /// <returns>True if there is enough ammo in the current weapons clip and _fireTimer is greater than _fireDelay.</returns>
-    private bool CanFire()
-    {
-        if (_ammo != null && _ammo.HasAmmo() == false)
-            return false;
-
-        return _fireTimer >= _fireDelay;
-    }
-
     /// <summary>
     /// Method that resets the _fireTimer and creates a 2D raycast to collide with objects of interest. 
     /// Once hit, the targets will have their TakeHit() and Spawn__Particle() methods called, if they are
@@ -174,13 +130,44 @@ public class Weapon : MonoBehaviour
     }
 
     /// <summary>
+    /// Method that activates a member of the _bulletImpactParticle pool at a specified origin and orientation
+    /// then deactivating the member after a specified amount of time (in seconds).
+    /// </summary>
+    /// <param name="origin">Vector2 passed from the FireWeapon() method using the hitInfo2D.point property.</param>
+    /// <param name="direction">Vector2 passed from the FireWeapon() method using the hitInfo2D.normal property.</param>
+    private void SpawnBulletImpactParticle(Vector2 origin, Vector2 direction)
+    {
+        var particle = _projectileImpactParticle.Get<PooledMonoBehaviour>(origin, Quaternion.LookRotation(-direction));
+        particle.ReturnToPool(1f);
+    }
+
+    /// <summary>
+    /// Coroutine that visualizes the bullet path of the weapon. First the method enables the line renderer 
+    /// component of the _bulletTrail object, then sets the positions of the line renderer to match the trajectory
+    /// of the raycast/bullet path, and finally disables the line renderer after a short duration.
+    /// </summary>
+    /// <param name="hit2D"></param>
+    /// <returns></returns>
+    private IEnumerator DrawBulletTrailAtHitPoint(RaycastHit2D hit2D)
+    {
+        _bulletTrail.enabled = true;
+
+        _bulletTrail.SetPosition(0, _firePoint.position);
+        _bulletTrail.SetPosition(1, hit2D.point);
+
+        yield return new WaitForSeconds(0.03f);
+
+        _bulletTrail.enabled = false;
+    }
+
+    /// <summary>
     /// Coroutine that begins a for loop that fires a round and delays the next shot in the burst fire 
     /// until the amount of rounds fired reaches the _shotsPerBurst value.
     /// </summary>
     /// <returns></returns>
     private IEnumerator BurstFire()
     {
-        for (int i = 0; i < _shotsPerBurst && _ammo.AmmoInClip > 0; i++)
+        for (int i = 0; i < _shotsPerBurst && _weaponAmmo.AmmoInClip > 0; i++)
         {
             FireWeapon();
             _isFiring = true;
@@ -203,6 +190,18 @@ public class Weapon : MonoBehaviour
     }
 
     /// <summary>
+    /// Checks if the player has sufficient ammo in the clip and if the _fireTimer has surpassed the _fireDelay value.
+    /// </summary>
+    /// <returns>True if there is enough ammo in the current weapons clip and _fireTimer is greater than _fireDelay.</returns>
+    private bool CanFire()
+    {
+        if (_weaponAmmo != null && _weaponAmmo.HasAmmo() == false)
+            return false;
+
+        return _fireTimer >= _fireDelay;
+    }
+
+    /// <summary>
     /// Method that checks if the target is tagged with the "Enemy" label.
     /// </summary>
     /// <param name="target">Collider2D object that is passed from the FireWeapon() 
@@ -211,37 +210,6 @@ public class Weapon : MonoBehaviour
     private bool IsEnemy(Collider2D target)
     {
         return target.CompareTag("Enemy");
-    }
-
-    /// <summary>
-    /// Method that activates a member of the _bulletImpactParticle pool at a specified origin and orientation
-    /// then deactivating the member after a specified amount of time (in seconds).
-    /// </summary>
-    /// <param name="origin">Vector2 passed from the FireWeapon() method using the hitInfo2D.point property.</param>
-    /// <param name="direction">Vector2 passed from the FireWeapon() method using the hitInfo2D.normal property.</param>
-    private void SpawnBulletImpactParticle(Vector2 origin, Vector2 direction)
-    {
-        var particle = _bulletImpactParticle.Get<PooledMonoBehaviour>(origin, Quaternion.LookRotation(-direction));
-        particle.ReturnToPool(1f);
-    }
-
-    /// <summary>
-    /// Coroutine that visualizes the bullet path of the weapon. First the method enables the line renderer 
-    /// component of the _bulletTrail object, then sets the positions of the line renderer to match the trajectory
-    /// of the raycast/bullet path, and finally disables the line renderer after a short duration.
-    /// </summary>
-    /// <param name="hit2D"></param>
-    /// <returns></returns>
-    private IEnumerator DrawBulletTrailAtHitPoint(RaycastHit2D hit2D)
-    {
-        _bulletTrail.enabled = true;
-
-        _bulletTrail.SetPosition(0, _firePoint.position);
-        _bulletTrail.SetPosition(1, hit2D.point);
-
-        yield return new WaitForSeconds(0.03f);
-
-        _bulletTrail.enabled = false;
     }
     #endregion
 }

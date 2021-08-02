@@ -155,9 +155,9 @@ public class GameManager : MonoBehaviour
     {
         if (_playerUIHealth == null && _playerUIAmmo == null && _gameOverUI == null)
         {
-            _playerUIHealth = GetGameObjectFromTransformChildIndex(0);
-            _playerUIAmmo = GetGameObjectFromTransformChildIndex(1);
-            _gameOverUI = GetGameObjectFromTransformChildIndex(2);
+            _playerUIHealth = GetGameObjectFromTransformChildOf((int)EGui.playerHealth);
+            _playerUIAmmo = GetGameObjectFromTransformChildOf((int)EGui.playerAmmo);
+            _gameOverUI = GetGameObjectFromTransformChildOf((int)EGui.gameOver);
 
             _playerUIHealth.GetComponent<UIPlayerHealth>().OnPlayerDied += GameManager_OnPlayerDied;
             _gameOverUI.SetActive(false);
@@ -180,7 +180,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     /// <param name="index">int value of the childs index nested in the Canvas object</param>
     /// <returns>GameObject that represents the UI element we wish to reference throughout this module.</returns>
-    private static GameObject GetGameObjectFromTransformChildIndex(int index)
+    private static GameObject GetGameObjectFromTransformChildOf(int index)
     {
         return FindObjectOfType<Canvas>().transform.GetChild(index).gameObject;
     }

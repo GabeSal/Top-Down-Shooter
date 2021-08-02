@@ -10,13 +10,13 @@ public class WeaponMuzzleFlash : MonoBehaviour
     #endregion
 
     #region Private Fields
-    private Weapon _weapon;
+    private BallisticWeapon _weapon;
     #endregion
 
     #region Standard Unity Methods
     private void Awake()
     {
-        _weapon = GetComponentInParent<Weapon>();
+        _weapon = GetComponentInParent<BallisticWeapon>();
 
         _weapon.OnFire += Weapon_OnFire;
     }

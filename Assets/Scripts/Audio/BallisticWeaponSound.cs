@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
-public class WeaponSound : MonoBehaviour
+public class BallisticWeaponSound : MonoBehaviour
 {
     #region Serialized Fields
     [SerializeField]
@@ -14,7 +14,7 @@ public class WeaponSound : MonoBehaviour
 
     #region Private Fields
     private AudioSource _audioSource;
-    private Weapon _weapon;
+    private BallisticWeapon _ballisticWeapon;
     private WeaponAmmo _weaponAmmo;
     #endregion
 
@@ -22,18 +22,18 @@ public class WeaponSound : MonoBehaviour
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
-        _weapon = GetComponent<Weapon>();
+        _ballisticWeapon = GetComponent<BallisticWeapon>();
         _weaponAmmo = GetComponent<WeaponAmmo>();
 
-        _weapon.OnFire += Weapon_OnFire;
-        _weapon.OutOfAmmo += Weapon_OutOfAmmo;
+        _ballisticWeapon.OnFire += Weapon_OnFire;
+        _ballisticWeapon.OutOfAmmo += Weapon_OutOfAmmo;
         _weaponAmmo.OnReload += WeaponAmmo_OnReload;
     }
 
     private void OnDestroy()
     {
-        _weapon.OnFire -= Weapon_OnFire;
-        _weapon.OutOfAmmo -= Weapon_OutOfAmmo;
+        _ballisticWeapon.OnFire -= Weapon_OnFire;
+        _ballisticWeapon.OutOfAmmo -= Weapon_OutOfAmmo;
     }
     #endregion
 
