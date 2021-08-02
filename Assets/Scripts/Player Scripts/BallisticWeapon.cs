@@ -18,11 +18,16 @@ public class BallisticWeapon : WeaponBase
     [SerializeField]
     private bool _isBurstFire;
     [SerializeField]
+    private bool _isShotgun;
+    [SerializeField]
     [Range(2, 5)]
     private int _shotsPerBurst = 3;
     [SerializeField]
     [Range(0.05f, 0.1f)]
     private float _timeUntilNextBurstShot;
+    [SerializeField]
+    [Range(6, 12)]
+    private int _pelletsPerShotgunBlast;
     [SerializeField]
     [Tooltip("Assign the key to be pressed to select the weapon component defined in the editor.")]
     private KeyCode _weaponHotKey;
@@ -46,6 +51,7 @@ public class BallisticWeapon : WeaponBase
     #region Action Events
     public event Action OnFire;
     public event Action OutOfAmmo;
+    public event Action OnShotgunPump;
     #endregion
 
     #region Standard Unity Methods
@@ -68,37 +74,47 @@ public class BallisticWeapon : WeaponBase
             else
                 _weaponSway = _previousWeaponSway;
 
+            // Play out of ammo sound event
+            if (Input.GetButtonDown("Fire1") && _weaponAmmo.HasAmmo() == false)
+                OutOfAmmo?.Invoke();
+
             // Check if player is holding the fire button down
-            if (Input.GetButton("Fire1") && _isFiring == false)
+            if (Input.GetButton("Fire1") && _isFiring == false && _isFullAuto)
             {
-                if (CanFire() && _isFullAuto && _isBurstFire == false)
+                if (CanFire() && !_isShotgun && !_isBurstFire)
                 {
                     FireWeapon();
                 }
 
-                if (CanFire() && _isFullAuto && _isBurstFire)
+                if (CanFire() && !_isShotgun && _isBurstFire)
                 {
                     StartCoroutine(BurstFire());
+                }
+
+                if (CanFire() && _isShotgun && !_isBurstFire)
+                {
+                    FireShotgun();
                 }
             }
 
             // Check if player just pressed fire button
-            if (Input.GetButtonDown("Fire1") && _isFiring == false)
+            if (Input.GetButtonDown("Fire1") && _isFiring == false && _isFullAuto == false)
             {
-                if (CanFire() && _isBurstFire)
+                if (CanFire() && !_isShotgun && !_isBurstFire)
+                {
+                    FireWeapon();
+                }
+
+                if (CanFire() && !_isShotgun && _isBurstFire)
                 {
                     StartCoroutine(BurstFire());
                 }
 
-                if (CanFire() && _isFullAuto == false)
+                if (CanFire() && _isShotgun && !_isBurstFire)
                 {
-                    FireWeapon();
-                }                
+                    FireShotgun();
+                }
             }
-
-            // Play the ammo clicks event when out of ammo
-            if (Input.GetButtonDown("Fire1") && _weaponAmmo.HasAmmo() == false)
-                OutOfAmmo?.Invoke();
         }
     }
     #endregion
@@ -138,6 +154,41 @@ public class BallisticWeapon : WeaponBase
             }
         }
         OnFire?.Invoke();
+    }
+
+    private void FireShotgun()
+    {
+        _fireTimer = 0;
+
+        for (int pellets = 0; pellets < _pelletsPerShotgunBlast; pellets++)
+        {
+            Vector2 shootingDirection = _playerShootingHandler.SetShootingDirection
+            (GetRandomValueFromWeaponSway(), GetRandomValueFromWeaponSway());
+
+            RaycastHit2D hitInfo2D = Physics2D.Raycast(_playerShootingHandler.FirePoint.position, shootingDirection,
+                _weaponRange, _collisionLayers);
+
+            Collider2D target = hitInfo2D.collider;
+
+            if (target != null && IsEnemy(target))
+            {
+                target.GetComponent<Health>().TakeHit(_weaponDamage);
+                target.GetComponent<EnemyStatus>().SpawnBloodSplatterParticle(hitInfo2D.point, hitInfo2D.normal);
+            }
+            else
+            {
+                SpawnBulletImpactParticle(hitInfo2D.point, hitInfo2D.normal);
+            }
+        }
+        OnFire?.Invoke();
+        StartCoroutine(ShotgunPump());
+    }
+
+    private IEnumerator ShotgunPump()
+    {
+        yield return new WaitForSeconds(0.25f);
+
+        OnShotgunPump?.Invoke();
     }
 
     /// <summary>

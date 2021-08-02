@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5b3705d216c1ae0408d37e04907b84a4, type: 3}
-  m_Name: BulletRicochetSounds
+  m_Name: ShotgunFireSounds
   m_EditorClassIdentifier: 
   _clips:
-  - {fileID: 8300000, guid: 4031e628cfc564d93ac39f8955afbbda, type: 3}
-  - {fileID: 8300000, guid: e8210ab1fe6784e7eb15956b135716c9, type: 3}
+  - {fileID: 8300000, guid: 713e0c9152e37da4887d8fab3ddbccc3, type: 3}
+  - {fileID: 8300000, guid: 764c9bf8b1880274db42792186b5095b, type: 3}
   volume:
-    minValue: 0.64221907
-    maxValue: 0.74489766
+    minValue: 1
+    maxValue: 1
   pitch:
-    minValue: 0.78125
-    maxValue: 1.28125
+    minValue: 0.84693885
+    maxValue: 1.0510204
   _distance:
     minValue: 1
-    maxValue: 107.780655
-  _mixer: {fileID: 6759820404976056971, guid: 7ef3cd21aec11ee47ab69c73deda6c9f, type: 2}
+    maxValue: 336.73486
+  _mixer: {fileID: -2476616618268136997, guid: 7ef3cd21aec11ee47ab69c73deda6c9f, type: 2}
