@@ -23,6 +23,9 @@ public class BallisticWeapon : WeaponBase
     [SerializeField]
     [Range(0.05f, 0.1f)]
     private float _timeUntilNextBurstShot;
+    [SerializeField]
+    [Tooltip("Assign the key to be pressed to select the weapon component defined in the editor.")]
+    private KeyCode _weaponHotKey;
 
     [Header("Ballistic Weapon Prefabs")]
     [SerializeField]
@@ -30,8 +33,14 @@ public class BallisticWeapon : WeaponBase
     #endregion
 
     #region Private Fields
+    private PlayerShooting _playerShootingHandler;
+    private WeaponAmmo _weaponAmmo;
     private float _previousWeaponSway;
     private bool _isFiring;
+    #endregion
+
+    #region Properties
+    public KeyCode WeaponHotKey { get => _weaponHotKey; }
     #endregion
 
     #region Action Events
@@ -40,10 +49,11 @@ public class BallisticWeapon : WeaponBase
     #endregion
 
     #region Standard Unity Methods
-    protected override void Awake()
+    private void Awake()
     {
         _previousWeaponSway = _weaponSway;
-        base.Awake();
+        _playerShootingHandler = GetComponentInParent<PlayerShooting>();
+        _weaponAmmo = GetComponent<WeaponAmmo>();
     }
 
     private void Update()
@@ -104,10 +114,11 @@ public class BallisticWeapon : WeaponBase
     {
         _fireTimer = 0;
 
-        Vector2 shootingDirection = _playerShooting.SetShootingDirection
+        Vector2 shootingDirection = _playerShootingHandler.SetShootingDirection
             (GetRandomValueFromWeaponSway(), GetRandomValueFromWeaponSway());
 
-        RaycastHit2D hitInfo2D = Physics2D.Raycast(_firePoint.position, shootingDirection, _weaponRange, _collisionLayers);
+        RaycastHit2D hitInfo2D = Physics2D.Raycast(_playerShootingHandler.FirePoint.position, shootingDirection, 
+            _weaponRange, _collisionLayers);
 
         Collider2D target = hitInfo2D.collider;
 
@@ -152,7 +163,7 @@ public class BallisticWeapon : WeaponBase
     {
         _bulletTrail.enabled = true;
 
-        _bulletTrail.SetPosition(0, _firePoint.position);
+        _bulletTrail.SetPosition(0, _playerShootingHandler.FirePoint.position);
         _bulletTrail.SetPosition(1, hit2D.point);
 
         yield return new WaitForSeconds(0.03f);

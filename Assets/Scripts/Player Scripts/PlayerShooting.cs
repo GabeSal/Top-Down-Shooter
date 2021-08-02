@@ -7,6 +7,10 @@ public class PlayerShooting : MonoBehaviour
     private Transform _firePoint;
     #endregion
 
+    #region Properties
+    public Transform FirePoint { get => _firePoint; }
+    #endregion
+
     #region Class Defined Methods
     /// <summary>
     /// Generates a normalized Vector3 that takes the difference between the mouse position and the _firePoint position

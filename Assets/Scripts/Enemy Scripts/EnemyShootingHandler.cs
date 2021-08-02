@@ -6,47 +6,13 @@ using Pathfinding;
 public class EnemyShootingHandler : MonoBehaviour
 {
     #region Serialized Fields
-    [Header("Enemy Weapon Settings")]
-    [SerializeField]
-    [Range(2, 12)]
-    private int _damage;
     [SerializeField]
     [Range(5.5f, 16f)]
     [Tooltip("Determines the range in which the enemy is allowed to fire their weapon.")]
-    private float _range;
+    private float _fireRange;
     [SerializeField]
-    [Range(50f, 1000f)]
-    [Tooltip("Determines the actual distance (for the raycast) in which the enemy weapon can shoot.")]
-    private float _weaponRange;
-    [SerializeField]
-    [Range(0, 1.5f)]
-    private float _weaponSwayAmount;
-    [SerializeField]
-    [Range(0.04f, 2f)]
-    private float _timeUntilNextShot;
-    [SerializeField]
-    [Tooltip("Determines if the enemy weapon is fired in bursts rather than semi or fully automatic.")]
-    private bool _isBurstFire;
-    [SerializeField]
-    [Range(2, 5)]
-    private int _shotsPerBurst;
-    [SerializeField]
-    [Range(0.05f, 0.1f)]
-    private float _timeUntilNextBurstShot;
-    [SerializeField]
-    [Tooltip("Determines if the enemy can shoot the player while chasing them.")]
-    private bool _canShootAndRun;
-    [SerializeField]
-    [Tooltip("Determines which game object layers the bullets can collide with.")]
-    private LayerMask _collisionLayers;
-
-    [Header("Enemy Weapon Prefabs")]
-    [SerializeField]
+    [Tooltip("Used to specify the origin of which to draw the raycast for the weapon.")]
     private Transform _firePoint;
-    [SerializeField]
-    private PooledMonoBehaviour _bulletImpactParticle;
-    [SerializeField]
-    private LineRenderer _bulletTrail;
     #endregion
 
     #region Private Fields
@@ -54,6 +20,7 @@ public class EnemyShootingHandler : MonoBehaviour
     private AIPath _aiPath;
     private LayerMask _playerLayerMask;
     private Transform _target;
+    private EnemyWeapon _enemyWeapon;
     #endregion
 
     #region Action Events
@@ -65,21 +32,22 @@ public class EnemyShootingHandler : MonoBehaviour
     {
         _aiPath = GetComponent<AIPath>();
         _playerLayerMask = LayerMask.GetMask("Player");
+        _enemyWeapon = GetComponentInChildren<EnemyWeapon>();
     }
 
     private void Update()
     {
-        if (_aiPath.reachedDestination || _canShootAndRun)
+        if (_aiPath.reachedDestination || _enemyWeapon.canShootAndRun)
         {
             _shootingTimer += Time.deltaTime;
 
             if (_target != null)
                 LookAtTarget();
 
-            if (_shootingTimer >= _timeUntilNextShot && _isBurstFire == false)
+            if (_shootingTimer >= _enemyWeapon.TimeUntilNextShot && !_enemyWeapon.isBurstFire)
                 ShootPlayer();
 
-            if (_shootingTimer >= _timeUntilNextShot && _isBurstFire)
+            if (_shootingTimer >= _enemyWeapon.TimeUntilNextShot && _enemyWeapon.isBurstFire)
             {
                 StartCoroutine(BurstFire());
             }
@@ -113,7 +81,7 @@ public class EnemyShootingHandler : MonoBehaviour
     {
         _shootingTimer = 0;
 
-        Collider2D player = Physics2D.OverlapCircle(transform.position, _range, _playerLayerMask);
+        Collider2D player = Physics2D.OverlapCircle(transform.position, _fireRange, _playerLayerMask);
 
         if (player != null)
         {
@@ -127,17 +95,18 @@ public class EnemyShootingHandler : MonoBehaviour
 
         Vector2 shootingDirection = AimAtPlayer(player);
 
-        RaycastHit2D target = Physics2D.Raycast(transform.position, shootingDirection, _weaponRange, _collisionLayers);
+        RaycastHit2D target = Physics2D.Raycast(transform.position, shootingDirection, 
+            _enemyWeapon.Range, _enemyWeapon.CollisionLayers);
 
         if (target.collider != null)
         {
-            if (_bulletTrail != null)
+            if (_enemyWeapon.bulletTrail != null)
                 StartCoroutine(DrawBulletTrail(target));            
 
             if (target.collider.CompareTag("Player"))
             {
                 target.collider.GetComponent<HandlePlayerImpact>().SpawnBloodSplatterParticle(target.point, target.normal);
-                target.collider.GetComponent<Health>().TakeHit(_damage);
+                target.collider.GetComponent<Health>().TakeHit(_enemyWeapon.Damage);
             }
             else
             {
@@ -156,7 +125,7 @@ public class EnemyShootingHandler : MonoBehaviour
     /// <param name="direction">Vector2 that sets the orientation of the particle at the origin.</param>
     private void SpawnBulletRicochetParticle(Vector2 origin, Vector2 direction)
     {
-        var ricochet = _bulletImpactParticle.Get<PooledMonoBehaviour>(origin, Quaternion.LookRotation(-direction));
+        var ricochet = _enemyWeapon.ImpactParticle.Get<PooledMonoBehaviour>(origin, Quaternion.LookRotation(-direction));
         ricochet.ReturnToPool(1f);
     }
 
@@ -183,7 +152,7 @@ public class EnemyShootingHandler : MonoBehaviour
     /// of the weapon.</returns>
     private float GetRandomValueFromWeaponSway()
     {
-        float randomlyGeneratedValue = UnityEngine.Random.Range(-_weaponSwayAmount, _weaponSwayAmount);
+        float randomlyGeneratedValue = UnityEngine.Random.Range(-_enemyWeapon.weaponSwayAmount, _enemyWeapon.weaponSwayAmount);
         return randomlyGeneratedValue;
     }
 
@@ -197,14 +166,14 @@ public class EnemyShootingHandler : MonoBehaviour
     /// <returns></returns>
     private IEnumerator DrawBulletTrail(RaycastHit2D target)
     {
-        _bulletTrail.enabled = true;
+        _enemyWeapon.bulletTrail.enabled = true;
 
-        _bulletTrail.SetPosition(0, _firePoint.position);
-        _bulletTrail.SetPosition(1, target.point);
+        _enemyWeapon.bulletTrail.SetPosition(0, _firePoint.position);
+        _enemyWeapon.bulletTrail.SetPosition(1, target.point);
 
-        yield return new WaitForSeconds(0.05f);
+        yield return new WaitForSeconds(0.04f);
 
-        _bulletTrail.enabled = false;
+        _enemyWeapon.bulletTrail.enabled = false;
     }
 
     /// <summary>
@@ -214,10 +183,10 @@ public class EnemyShootingHandler : MonoBehaviour
     /// <returns></returns>
     private IEnumerator BurstFire()
     {
-        for (int i = 0; i < _shotsPerBurst; i++)
+        for (int i = 0; i < _enemyWeapon.shotsPerBurst; i++)
         {
             ShootPlayer();
-            yield return new WaitForSeconds(_timeUntilNextBurstShot);
+            yield return new WaitForSeconds(_enemyWeapon.timeUntilNextBurstShot);
         }
     } 
     #endregion
