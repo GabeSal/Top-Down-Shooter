@@ -16,7 +16,7 @@ public class WeaponAmmo : MonoBehaviour
     [SerializeField]
     private bool _manualReload;
     [SerializeField]
-    [Range(0.2f, 2.2f)]
+    [Range(0.4f, 2.2f)]
     private float _reloadTime;
     #endregion
 
@@ -35,6 +35,7 @@ public class WeaponAmmo : MonoBehaviour
     #region Action Events
     public event Action OnAmmoChanged;
     public event Action OnReload;
+    public event Action OnReloadFinish;
     public event Action OnReloadCancel;
     public event Action OnManualReload;
     public event Action OnManualReloadFinish;
@@ -71,6 +72,7 @@ public class WeaponAmmo : MonoBehaviour
             if (Input.GetButtonDown("Fire1") && _isReloading)
             {
                 _isReloading = false;
+                StopAllCoroutines();
                 OnReloadCancel?.Invoke();
             }
         }        
@@ -159,6 +161,7 @@ public class WeaponAmmo : MonoBehaviour
             OnReload?.Invoke();
             yield return new WaitForSeconds(_reloadTime);
             MoveAmmo(ammoToReload);
+            OnReloadFinish?.Invoke();
             _isReloading = false;
         }        
     }

@@ -11,6 +11,7 @@ public class UIPlayerReloadTimer : MonoBehaviour
 
     #region Private Fields
     private WeaponAmmo _playerAmmo;
+    private float _reloadBarRefreshTime = 0.01f;
     #endregion
 
     #region Standard Unity Methods
@@ -93,8 +94,8 @@ public class UIPlayerReloadTimer : MonoBehaviour
     {
         do
         {
-            yield return new WaitForSeconds(Time.deltaTime);
-            _reloadBarFill.fillAmount += (Time.deltaTime * 5) / _playerAmmo.ReloadTime;
+            yield return new WaitForSeconds(_reloadBarRefreshTime);
+            _reloadBarFill.fillAmount += 1.25f / (_playerAmmo.ReloadTime / _reloadBarRefreshTime);
         } while (_reloadBarFill.fillAmount < 1f);
 
         ResetReloadUI();

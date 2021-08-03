@@ -21,6 +21,7 @@ public class UIAmmoText : MonoBehaviour
 
         _currentWeaponAmmo.OnAmmoChanged += CurrentWeaponAmmo_OnAmmoChanged;
         _currentWeaponAmmo.OnReload += CurrentWeaponAmmo_OnReload;
+        _currentWeaponAmmo.OnReloadFinish += CurrentWeaponAmmo_OnReloadFinish;
         _currentWeaponAmmo.OnReloadCancel += CurrentWeaponAmmo_OnReloadCancel;
         _currentWeaponAmmo.OnManualReload += CurrentWeaponAmmo_OnManualReload;
         _currentWeaponAmmo.OnManualReloadFinish += CurrentWeaponAmmo_OnManualReloadFinish;
@@ -30,6 +31,7 @@ public class UIAmmoText : MonoBehaviour
     {
         _currentWeaponAmmo.OnAmmoChanged -= CurrentWeaponAmmo_OnAmmoChanged;
         _currentWeaponAmmo.OnReload -= CurrentWeaponAmmo_OnReload;
+        _currentWeaponAmmo.OnReloadFinish -= CurrentWeaponAmmo_OnReloadFinish;
         _currentWeaponAmmo.OnReloadCancel -= CurrentWeaponAmmo_OnReloadCancel;
         _currentWeaponAmmo.OnManualReload -= CurrentWeaponAmmo_OnManualReload;
         _currentWeaponAmmo.OnManualReloadFinish -= CurrentWeaponAmmo_OnManualReloadFinish;
@@ -39,6 +41,7 @@ public class UIAmmoText : MonoBehaviour
     {
         _currentWeaponAmmo.OnAmmoChanged -= CurrentWeaponAmmo_OnAmmoChanged;
         _currentWeaponAmmo.OnReload -= CurrentWeaponAmmo_OnReload;
+        _currentWeaponAmmo.OnReloadFinish -= CurrentWeaponAmmo_OnReloadFinish;
         _currentWeaponAmmo.OnReloadCancel -= CurrentWeaponAmmo_OnReloadCancel;
         _currentWeaponAmmo.OnManualReload -= CurrentWeaponAmmo_OnManualReload;
         _currentWeaponAmmo.OnManualReloadFinish -= CurrentWeaponAmmo_OnManualReloadFinish;
@@ -61,6 +64,13 @@ public class UIAmmoText : MonoBehaviour
     private void CurrentWeaponAmmo_OnReload()
     {
         HideAmmoText();
+    }
+    /// <summary>
+    /// Method called when OnReloadFinish() event is invoked.
+    /// </summary>
+    private void CurrentWeaponAmmo_OnReloadFinish()
+    {
+        ShowAmmoText();
     }
     /// <summary>
     /// Method called when OnManualReload() event is invoked.
