@@ -47,8 +47,9 @@ public class WeaponAmmo : MonoBehaviour
         _ammoInClip = _clipSize;
         _ammoInReserve = _maxAmmo - _ammoInClip;
 
+        GameManager.Instance.OnGameOver += GameManagerInstance_OnGameOver;
         _ballisticWeapon = GetComponent<BallisticWeapon>();
-        _ballisticWeapon.OnFire += Weapon_OnFire;
+        _ballisticWeapon.OnFire += BallisticWeapon_OnFire;
     }
 
     private void Start()
@@ -77,12 +78,14 @@ public class WeaponAmmo : MonoBehaviour
 
     private void OnDisable()
     {
-        _ballisticWeapon.OnFire -= Weapon_OnFire;
+        _ballisticWeapon.OnFire -= BallisticWeapon_OnFire;
+        GameManager.Instance.OnGameOver -= GameManagerInstance_OnGameOver;
     }
 
     private void OnDestroy()
     {
-        _ballisticWeapon.OnFire -= Weapon_OnFire;
+        _ballisticWeapon.OnFire -= BallisticWeapon_OnFire;
+        GameManager.Instance.OnGameOver -= GameManagerInstance_OnGameOver;
     }
     #endregion
 
@@ -99,7 +102,7 @@ public class WeaponAmmo : MonoBehaviour
     /// <summary>
     /// Response method when the OnFire() event is invoked. Calls the RemoveAmmot() method.
     /// </summary>
-    private void Weapon_OnFire()
+    private void BallisticWeapon_OnFire()
     {
         RemoveAmmo();
     }
@@ -170,6 +173,12 @@ public class WeaponAmmo : MonoBehaviour
         _ammoInClip += ammoToReload;
         _ammoInReserve -= ammoToReload;
         OnAmmoChanged?.Invoke();
+    }
+
+    private void GameManagerInstance_OnGameOver()
+    {
+        _isReloading = false;
+        StopAllCoroutines();
     }
 
     #region Public Methods

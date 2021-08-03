@@ -15,7 +15,7 @@ public class UIAmmoText : MonoBehaviour
     #endregion
 
     #region Standard Unity Methods
-    private void Start()
+    private void Awake()
     {
         _currentWeaponAmmo = FindObjectOfType<BallisticWeapon>().GetComponent<WeaponAmmo>();
 
@@ -96,8 +96,8 @@ public class UIAmmoText : MonoBehaviour
     /// </summary>
     private void HideAmmoText()
     {
-        _ammoInClipText.gameObject.SetActive(true);
-        _ammoInReserve.gameObject.SetActive(true);
+        _ammoInClipText.gameObject.SetActive(false);
+        _ammoInReserve.gameObject.SetActive(false);
     }
     #endregion
 }

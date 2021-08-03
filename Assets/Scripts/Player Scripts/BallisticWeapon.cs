@@ -155,7 +155,12 @@ public class BallisticWeapon : WeaponBase
         }
         OnFire?.Invoke();
     }
-
+    /// <summary>
+    /// Method that resets the _fireTimer and creates a numerous amount of 2D raycasts with a for loop to collide with 
+    /// objects of interest. Once hit, the targets will have their TakeHit() and Spawn__Particle() methods called,
+    /// if they are an enemy, or simply spawn a particle in the environment for hit confirmation.
+    /// Then the OnFire() event will invoke whatever gameobject is receiving the broadcast.
+    /// </summary>
     private void FireShotgun()
     {
         _fireTimer = 0;
@@ -181,12 +186,14 @@ public class BallisticWeapon : WeaponBase
             }
         }
         OnFire?.Invoke();
-        StartCoroutine(ShotgunPump());
+
+        if (!_isFullAuto)
+            StartCoroutine(InvokeAfterYieldShotgunPump());        
     }
 
-    private IEnumerator ShotgunPump()
+    private IEnumerator InvokeAfterYieldShotgunPump()
     {
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(0.3f);
 
         OnShotgunPump?.Invoke();
     }

@@ -14,7 +14,7 @@ public class UIPlayerHealth : MonoBehaviour
     #endregion
 
     #region Standard Unity Methods
-    private void Start()
+    private void Awake()
     {
         var player = FindObjectOfType<PlayerMovement>().GetComponent<Health>();
         player.OnHealthChanged += UIPlayerHealth_OnHealthChanged;

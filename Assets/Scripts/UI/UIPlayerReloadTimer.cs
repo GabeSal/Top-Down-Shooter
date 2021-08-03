@@ -14,12 +14,14 @@ public class UIPlayerReloadTimer : MonoBehaviour
     #endregion
 
     #region Standard Unity Methods
-    private void Start()
+    private void Awake()
     {
         _playerAmmo = FindObjectOfType<BallisticWeapon>().GetComponent<WeaponAmmo>();
         _playerAmmo.OnReload += ReloadUI_OnReload;
         _playerAmmo.OnManualReload += ReloadUI_OnManualReload;
         _playerAmmo.OnReloadCancel += ReloadUI_OnReloadCancel;
+
+        GameManager.Instance.OnGameOver += GameManagerInstance_OnGameOver;
 
         ResetReloadUI();
     }
@@ -29,6 +31,8 @@ public class UIPlayerReloadTimer : MonoBehaviour
         _playerAmmo.OnReload -= ReloadUI_OnReload;
         _playerAmmo.OnManualReload -= ReloadUI_OnManualReload;
         _playerAmmo.OnReloadCancel -= ReloadUI_OnReloadCancel;
+
+        GameManager.Instance.OnGameOver -= GameManagerInstance_OnGameOver;
     }
     #endregion
 
@@ -74,6 +78,12 @@ public class UIPlayerReloadTimer : MonoBehaviour
         this.gameObject.SetActive(false);
     }
 
+    private void GameManagerInstance_OnGameOver()
+    {
+        StopAllCoroutines();
+        ResetReloadUI();
+    }
+
     /// <summary>
     /// Method that scales the fill of the reload bar image by the _playerAmmo.ReloadTime property. After the image has been
     /// filled, the fill for the reload bar is reset to 0 and the Canvas for this UI is then deactivated.
@@ -83,8 +93,8 @@ public class UIPlayerReloadTimer : MonoBehaviour
     {
         do
         {
-            yield return new WaitForSeconds(0.00725f);
-            _reloadBarFill.fillAmount += 1 / (_playerAmmo.ReloadTime * 100);
+            yield return new WaitForSeconds(Time.deltaTime);
+            _reloadBarFill.fillAmount += (Time.deltaTime * 5) / _playerAmmo.ReloadTime;
         } while (_reloadBarFill.fillAmount < 1f);
 
         ResetReloadUI();
