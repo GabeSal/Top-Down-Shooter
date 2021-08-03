@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class CursorBehaviour : MonoBehaviour
 {
@@ -25,11 +24,6 @@ public class CursorBehaviour : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(_escapeKey))
-        {
-            UnlockAndShowMouseCursor();
-        }
-
         if (Input.GetMouseButtonDown(_leftMouseClick))
         {
             Cursor.lockState = CursorLockMode.Confined;

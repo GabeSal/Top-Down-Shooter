@@ -95,7 +95,12 @@ public class UIPlayerReloadTimer : MonoBehaviour
         do
         {
             yield return new WaitForSeconds(_reloadBarRefreshTime);
-            _reloadBarFill.fillAmount += 1.25f / (_playerAmmo.ReloadTime / _reloadBarRefreshTime);
+
+            if (_playerAmmo.ReloadTime > 0.6f)
+                _reloadBarFill.fillAmount += 1.3f / (_playerAmmo.ReloadTime / _reloadBarRefreshTime);
+            else
+                _reloadBarFill.fillAmount += 1.75f / (_playerAmmo.ReloadTime / _reloadBarRefreshTime);
+            
         } while (_reloadBarFill.fillAmount < 1f);
 
         ResetReloadUI();
