@@ -13,7 +13,7 @@ public class CursorBehaviour : MonoBehaviour
     #endregion
 
     #region Standard Unity Methods
-    private void Awake()
+    private void Start()
     {
         Vector2 centerPivot = new Vector2(crosshair.width / 2, crosshair.height / 2);
 

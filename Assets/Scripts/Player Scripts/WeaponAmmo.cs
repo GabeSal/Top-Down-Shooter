@@ -184,12 +184,12 @@ public class WeaponAmmo : MonoBehaviour
     #endregion
 
     #region Internal Class Methods
-    internal string GetCurrentAmmoText()
+    internal string GetCurrentClipAmmoText()
     {
         return string.Format("{0}/", _ammoInClip);
     }
 
-    internal string GetNewMaxAmmoText()
+    internal string GetNewReserveAmmoText()
     {
         if (_infiniteAmmo)
             return "999";

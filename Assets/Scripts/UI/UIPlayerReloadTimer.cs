@@ -1,7 +1,6 @@
-using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class UIPlayerReloadTimer : MonoBehaviour
 {
@@ -15,15 +14,14 @@ public class UIPlayerReloadTimer : MonoBehaviour
     #endregion
 
     #region Standard Unity Methods
-    private void Awake()
+    private void Start()
     {
         _playerAmmo = FindObjectOfType<BallisticWeapon>().GetComponent<WeaponAmmo>();
         _playerAmmo.OnReload += ReloadUI_OnReload;
         _playerAmmo.OnManualReload += ReloadUI_OnManualReload;
         _playerAmmo.OnReloadCancel += ReloadUI_OnReloadCancel;
 
-        _reloadBarFill.fillAmount = 0f;
-        this.gameObject.SetActive(false);
+        ResetReloadUI();
     }
 
     private void OnDestroy()

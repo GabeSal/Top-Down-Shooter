@@ -9,7 +9,9 @@ public class UIPlayerHealth : MonoBehaviour
     private Image _healthFillBar;
     #endregion
 
+    #region Action Events
     public event Action OnPlayerDied;
+    #endregion
 
     #region Standard Unity Methods
     private void Start()
