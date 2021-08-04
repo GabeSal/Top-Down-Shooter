@@ -30,7 +30,18 @@ public class BallisticWeaponSound : MonoBehaviour
 
         _ballisticWeapon = GetComponent<BallisticWeapon>();
         _weaponAmmo = GetComponent<WeaponAmmo>();
+        SubscribeToWeaponEvents();
+    }
 
+    private void OnDestroy()
+    {
+        UnsubscribeToWeaponEvents();
+    }
+    #endregion
+
+    #region Class Defined Methods
+    private void SubscribeToWeaponEvents()
+    {
         _ballisticWeapon.OnFire += Weapon_OnFire;
         _ballisticWeapon.OutOfAmmo += Weapon_OutOfAmmo;
         _ballisticWeapon.OnShotgunPump += BallisticWeapon_OnShotgunPump;
@@ -39,7 +50,7 @@ public class BallisticWeaponSound : MonoBehaviour
         _weaponAmmo.OnManualReloadFinish += WeaponAmmo_OnManualReloadFinish;
     }
 
-    private void OnDisable()
+    private void UnsubscribeToWeaponEvents()
     {
         _ballisticWeapon.OnFire -= Weapon_OnFire;
         _ballisticWeapon.OutOfAmmo -= Weapon_OutOfAmmo;
@@ -48,17 +59,6 @@ public class BallisticWeaponSound : MonoBehaviour
         _weaponAmmo.OnManualReload -= WeaponAmmo_OnManualReload;
         _weaponAmmo.OnManualReloadFinish -= WeaponAmmo_OnManualReloadFinish;
     }
-
-    private void OnDestroy()
-    {
-        _ballisticWeapon.OnFire -= Weapon_OnFire;
-        _ballisticWeapon.OutOfAmmo -= Weapon_OutOfAmmo;
-        _ballisticWeapon.OnShotgunPump -= BallisticWeapon_OnShotgunPump;
-        _weaponAmmo.OnReload -= WeaponAmmo_OnReload;
-        _weaponAmmo.OnManualReload -= WeaponAmmo_OnManualReload;
-        _weaponAmmo.OnManualReloadFinish -= WeaponAmmo_OnManualReloadFinish;
-    }
-    #endregion
 
     #region Received Event Methods
     /// <summary>
@@ -107,5 +107,6 @@ public class BallisticWeaponSound : MonoBehaviour
     {
         _reloadEvent.Play(_reloadSource, true);
     }
+    #endregion
     #endregion
 }

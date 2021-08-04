@@ -17,12 +17,7 @@ public class WeaponMuzzleFlash : MonoBehaviour
     private void Awake()
     {
         _weapon = GetComponentInParent<BallisticWeapon>();
-
         _weapon.OnFire += Weapon_OnFire;
-    }
-    private void OnDisable()
-    {
-        _weapon.OnFire -= Weapon_OnFire;
     }
 
     private void OnDestroy()

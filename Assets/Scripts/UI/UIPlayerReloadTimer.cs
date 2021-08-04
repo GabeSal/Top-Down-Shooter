@@ -11,33 +11,80 @@ public class UIPlayerReloadTimer : MonoBehaviour
 
     #region Private Fields
     private WeaponAmmo _playerAmmo;
+    private WeaponInventory _weaponInventory;
     private float _reloadBarRefreshTime = 0.01f;
     #endregion
 
     #region Standard Unity Methods
     private void Awake()
     {
-        _playerAmmo = FindObjectOfType<BallisticWeapon>().GetComponent<WeaponAmmo>();
-        _playerAmmo.OnReload += ReloadUI_OnReload;
-        _playerAmmo.OnManualReload += ReloadUI_OnManualReload;
-        _playerAmmo.OnReloadCancel += ReloadUI_OnReloadCancel;
+        _weaponInventory = FindObjectOfType<WeaponInventory>();
+        _weaponInventory.OnWeaponChanged += ReloadUI_OnWeaponChanged;
 
         GameManager.Instance.OnGameOver += GameManagerInstance_OnGameOver;
 
+        FindActivePlayerWeaponInScene();
         ResetReloadUI();
     }
 
     private void OnDestroy()
     {
-        _playerAmmo.OnReload -= ReloadUI_OnReload;
-        _playerAmmo.OnManualReload -= ReloadUI_OnManualReload;
-        _playerAmmo.OnReloadCancel -= ReloadUI_OnReloadCancel;
-
         GameManager.Instance.OnGameOver -= GameManagerInstance_OnGameOver;
+        _weaponInventory.OnWeaponChanged -= ReloadUI_OnWeaponChanged;
+        UnsubscribeToPlayerAmmoEvents();
     }
     #endregion
 
     #region Class Defined Methods
+
+    /// <summary>
+    /// Uses a foreach loop to find the active transform object in the players weapon inventory object. Once
+    /// an active weapon is found, we subscribe to it's weapon ammo events.
+    /// </summary>
+    private void FindActivePlayerWeaponInScene()
+    {
+        if (_playerAmmo != null)
+            UnsubscribeToPlayerAmmoEvents();        
+
+        foreach (var weapon in _weaponInventory.WeaponsInInventory)
+        {
+            if (weapon.gameObject.activeInHierarchy)
+            {
+                _playerAmmo = weapon.GetComponent<WeaponAmmo>();
+                break;
+            }
+        }
+
+        SubscribeToPlayerAmmoEvents();
+    }
+
+    /// <summary>
+    /// Subscribes to all of the necessary _playerAmmo events to make the appropriate UI updates.
+    /// </summary>
+    private void SubscribeToPlayerAmmoEvents()
+    {
+        _playerAmmo.OnReload += ReloadUI_OnReload;
+        _playerAmmo.OnManualReload += ReloadUI_OnManualReload;
+        _playerAmmo.OnReloadCancel += ReloadUI_OnReloadCancel;
+    }
+
+    /// <summary>
+    /// Unsubscribes to all of the necessary _playerAmmo events.
+    /// </summary>
+    private void UnsubscribeToPlayerAmmoEvents()
+    {
+        _playerAmmo.OnReload -= ReloadUI_OnReload;
+        _playerAmmo.OnManualReload -= ReloadUI_OnManualReload;
+        _playerAmmo.OnReloadCancel -= ReloadUI_OnReloadCancel;
+    }
+
+    /// <summary>
+    /// Called method when the WeaponInventory component has invoked the OnWeaponChanged() event.
+    /// </summary>
+    private void ReloadUI_OnWeaponChanged()
+    {
+        FindActivePlayerWeaponInScene();
+    }
 
     /// <summary>
     /// Called method when the WeaponAmmo component has invoked the OnReload() event.

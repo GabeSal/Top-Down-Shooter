@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -12,13 +13,50 @@ public class UIAmmoText : MonoBehaviour
 
     #region Private Fields
     private WeaponAmmo _currentWeaponAmmo;
+    private WeaponInventory _weaponInventory;
     #endregion
 
     #region Standard Unity Methods
     private void Awake()
     {
-        _currentWeaponAmmo = FindObjectOfType<BallisticWeapon>().GetComponent<WeaponAmmo>();
+        _weaponInventory = FindObjectOfType<WeaponInventory>();
+        _weaponInventory.OnWeaponChanged += WeaponInventory_OnWeaponChanged;
 
+        FindActivePlayerWeaponInScene();        
+    }
+
+    private void OnDestroy()
+    {
+        UnsubscribeToWeaponAmmoEvents();
+        _weaponInventory.OnWeaponChanged -= WeaponInventory_OnWeaponChanged;
+    }
+    #endregion
+
+    #region Class Defined Methods
+
+    /// <summary>
+    /// Uses a foreach loop to find the active transform object in the players weapon inventory object. Once
+    /// an active weapon is found, we subscribe to it's weapon ammo events.
+    /// </summary>
+    private void FindActivePlayerWeaponInScene()
+    {
+        foreach (var weapon in _weaponInventory.WeaponsInInventory)
+        {
+            if (weapon.gameObject.activeInHierarchy)
+            {
+                _currentWeaponAmmo = weapon.GetComponent<WeaponAmmo>();
+                break;
+            }
+        }
+
+        SubscribeToWeaponAmmoEvents();
+    }
+
+    /// <summary>
+    /// Subscribes to all of the necessary _currentWeaponAmmo events to make the appropriate UI updates.
+    /// </summary>
+    private void SubscribeToWeaponAmmoEvents()
+    {
         _currentWeaponAmmo.OnAmmoChanged += CurrentWeaponAmmo_OnAmmoChanged;
         _currentWeaponAmmo.OnReload += CurrentWeaponAmmo_OnReload;
         _currentWeaponAmmo.OnReloadFinish += CurrentWeaponAmmo_OnReloadFinish;
@@ -27,7 +65,10 @@ public class UIAmmoText : MonoBehaviour
         _currentWeaponAmmo.OnManualReloadFinish += CurrentWeaponAmmo_OnManualReloadFinish;
     }
 
-    private void OnDisable()
+    /// <summary>
+    /// Unsubscribes to all of the necessary _currentWeaponAmmo events.
+    /// </summary>
+    private void UnsubscribeToWeaponAmmoEvents()
     {
         _currentWeaponAmmo.OnAmmoChanged -= CurrentWeaponAmmo_OnAmmoChanged;
         _currentWeaponAmmo.OnReload -= CurrentWeaponAmmo_OnReload;
@@ -37,18 +78,15 @@ public class UIAmmoText : MonoBehaviour
         _currentWeaponAmmo.OnManualReloadFinish -= CurrentWeaponAmmo_OnManualReloadFinish;
     }
 
-    private void OnDestroy()
+    /// <summary>
+    /// Invoked when the OnWeaponChanged in the WeaponInventory object is called.
+    /// </summary>
+    private void WeaponInventory_OnWeaponChanged()
     {
-        _currentWeaponAmmo.OnAmmoChanged -= CurrentWeaponAmmo_OnAmmoChanged;
-        _currentWeaponAmmo.OnReload -= CurrentWeaponAmmo_OnReload;
-        _currentWeaponAmmo.OnReloadFinish -= CurrentWeaponAmmo_OnReloadFinish;
-        _currentWeaponAmmo.OnReloadCancel -= CurrentWeaponAmmo_OnReloadCancel;
-        _currentWeaponAmmo.OnManualReload -= CurrentWeaponAmmo_OnManualReload;
-        _currentWeaponAmmo.OnManualReloadFinish -= CurrentWeaponAmmo_OnManualReloadFinish;
+        UnsubscribeToWeaponAmmoEvents();
+        FindActivePlayerWeaponInScene();
     }
-    #endregion
 
-    #region Class Defined Methods
     /// <summary>
     /// Invoked when the OnAmmoChanged() event is called. Sets the _ammoInClipText and _ammoRemainingText
     /// text components to their appropriate values when the player weapon is fired and reloaded.

@@ -23,8 +23,9 @@ public class WeaponAmmo : MonoBehaviour
     #region Private Fields
     private int _ammoInClip;
     private int _ammoInReserve;
-    private BallisticWeapon _ballisticWeapon;
     private bool _isReloading;
+    private BallisticWeapon _ballisticWeapon;
+    private WeaponInventory _weaponInventory;
     #endregion
 
     #region Properties
@@ -49,6 +50,10 @@ public class WeaponAmmo : MonoBehaviour
         _ammoInReserve = _maxAmmo - _ammoInClip;
 
         GameManager.Instance.OnGameOver += GameManagerInstance_OnGameOver;
+
+        _weaponInventory = GetComponentInParent<WeaponInventory>();
+        _weaponInventory.OnWeaponChanged += WeaponAmmo_OnWeaponChanged;
+
         _ballisticWeapon = GetComponent<BallisticWeapon>();
         _ballisticWeapon.OnFire += BallisticWeapon_OnFire;
     }
@@ -76,12 +81,6 @@ public class WeaponAmmo : MonoBehaviour
                 OnReloadCancel?.Invoke();
             }
         }        
-    }
-
-    private void OnDisable()
-    {
-        _ballisticWeapon.OnFire -= BallisticWeapon_OnFire;
-        GameManager.Instance.OnGameOver -= GameManagerInstance_OnGameOver;
     }
 
     private void OnDestroy()
@@ -178,10 +177,21 @@ public class WeaponAmmo : MonoBehaviour
         OnAmmoChanged?.Invoke();
     }
 
+    /// <summary>
+    /// Invoked method that's called when the GameManager sends the OnGameOver() event.
+    /// </summary>
     private void GameManagerInstance_OnGameOver()
     {
         _isReloading = false;
         StopAllCoroutines();
+    }
+
+    /// <summary>
+    /// Method that is invoked when the WeaponInventory object calls the OnWeaponChanged() event.
+    /// </summary>
+    private void WeaponAmmo_OnWeaponChanged()
+    {
+        OnAmmoChanged?.Invoke();
     }
 
     #region Public Methods

@@ -1,14 +1,23 @@
+using System;
 using UnityEngine;
 
 public class PlayerShooting : MonoBehaviour
 {
-    #region Serialized Fields
-    [SerializeField]
+    #region Private Fields
     private Transform _firePoint;
+    private WeaponInventory _weaponInventory;
     #endregion
 
     #region Properties
     public Transform FirePoint { get => _firePoint; }
+    #endregion
+
+    #region Standard Unity Methods
+    private void Awake()
+    {
+        _weaponInventory = GetComponentInChildren<WeaponInventory>();
+        FindActiveWeaponInWeaponInventory();
+    }
     #endregion
 
     #region Class Defined Methods
@@ -40,6 +49,24 @@ public class PlayerShooting : MonoBehaviour
         mousePosition.z = 0f;
 
         return mousePosition;
-    } 
+    }
+
+    /// <summary>
+    /// Loops through all of the transforms in the _weaponInventory array and checks which one is currently
+    /// active in the scene. If the weapon is active, then we set the _firePoint to the firepoint object
+    /// nested in the weapon transform.
+    /// </summary>
+    private void FindActiveWeaponInWeaponInventory()
+    {
+        for (int i = 0; i < _weaponInventory.transform.childCount; i++)
+        {
+            var weapon = _weaponInventory.transform.GetChild(i);
+            if (weapon.gameObject.activeInHierarchy)
+            {
+                _firePoint = weapon.GetChild(0);
+                break;
+            }
+        }
+    }
     #endregion
 }
