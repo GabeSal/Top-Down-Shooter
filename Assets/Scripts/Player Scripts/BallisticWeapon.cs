@@ -69,17 +69,17 @@ public class BallisticWeapon : WeaponBase
             _fireTimer += Time.deltaTime;
 
             // Change weapon sway value if player is "aiming"
-            if (Input.GetButton("Fire2"))
+            if (Input.GetKey((KeyCode)PlayerControls.aim))
                 _weaponSway = _aimedWeaponSway;
             else
                 _weaponSway = _previousWeaponSway;
 
             // Play out of ammo sound event
-            if (Input.GetButtonDown("Fire1") && _weaponAmmo.HasAmmo() == false)
+            if (Input.GetKeyDown((KeyCode)PlayerControls.fireWeapon) && _weaponAmmo.HasAmmo() == false)
                 OutOfAmmo?.Invoke();
 
             // Check if player is holding the fire button down
-            if (Input.GetButton("Fire1") && _isFiring == false && _isFullAuto)
+            if (Input.GetKey((KeyCode)PlayerControls.fireWeapon) && _isFiring == false && _isFullAuto)
             {
                 if (CanFire() && !_isShotgun && !_isBurstFire)
                 {
@@ -98,7 +98,7 @@ public class BallisticWeapon : WeaponBase
             }
 
             // Check if player just pressed fire button
-            if (Input.GetButtonDown("Fire1") && _isFiring == false && _isFullAuto == false)
+            if (Input.GetKeyDown((KeyCode)PlayerControls.fireWeapon) && _isFiring == false && _isFullAuto == false)
             {
                 if (CanFire() && !_isShotgun && !_isBurstFire)
                 {

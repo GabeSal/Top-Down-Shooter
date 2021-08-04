@@ -38,14 +38,14 @@ public class PlayerMovement : MonoBehaviour
             _movement.x = Input.GetAxisRaw("Horizontal");
             _movement.y = Input.GetAxisRaw("Vertical");
 
-            if (PlayerIsMoving() && !Input.GetKey(_sprintKey) && _stepTimer >= _walkDelayTimer)
+            if (PlayerIsMoving() && !Input.GetKey((KeyCode)PlayerControls.sprint) && _stepTimer >= _walkDelayTimer)
                 SendPlayerStepEvent();
             
-            if (PlayerIsMoving() && Input.GetKey(_sprintKey) && _stepTimer >= _runDelayTimer)
+            if (PlayerIsMoving() && Input.GetKey((KeyCode)PlayerControls.sprint) && _stepTimer >= _runDelayTimer)
                 SendPlayerStepEvent();
 
             // Check if the sprint key is held down
-            if (Input.GetKey(_sprintKey))
+            if (Input.GetKey((KeyCode)PlayerControls.sprint))
                     transform.position += _movement * _movementSpeed * _sprintSpeedMultiplier * Time.deltaTime;
                 else
                     transform.position += _movement * _movementSpeed * Time.deltaTime;
@@ -60,7 +60,10 @@ public class PlayerMovement : MonoBehaviour
     /// <returns>True if the player is moving horizontally or vertically</returns>
     private bool PlayerIsMoving()
     {
-        return Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D);
+        return Input.GetKey((KeyCode)PlayerControls.moveUp) || 
+            Input.GetKey((KeyCode)PlayerControls.moveLeft) || 
+            Input.GetKey((KeyCode)PlayerControls.moveDown) || 
+            Input.GetKey((KeyCode)PlayerControls.moveRight);
     }
 
     /// <summary>

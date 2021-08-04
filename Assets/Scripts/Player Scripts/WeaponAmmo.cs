@@ -63,13 +63,13 @@ public class WeaponAmmo : MonoBehaviour
     {
         if (GameManager.Instance.InputsAllowed)
         {
-            if (Input.GetKeyDown(KeyCode.R) && HasEnoughAmmo() && !_isReloading)
+            if (Input.GetKeyDown((KeyCode)PlayerControls.reload) && HasEnoughAmmo() && !_isReloading)
             {
                 StartCoroutine(Reload());
             }
 
             // Cancel manual reload if there is enough ammo in clip
-            if (Input.GetButtonDown("Fire1") && _isReloading)
+            if (Input.GetKeyDown((KeyCode)PlayerControls.fireWeapon) && _isReloading)
             {
                 _isReloading = false;
                 StopAllCoroutines();

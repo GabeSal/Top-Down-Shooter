@@ -53,7 +53,7 @@ public class WeaponMuzzleFlash : MonoBehaviour
         Light2D lightFlash = _muzzleLight.GetComponent<Light2D>();
         lightFlash.enabled = true;
 
-        yield return new WaitForSeconds(0.02f);
+        yield return new WaitForSeconds(0.08f);
 
         lightFlash.enabled = false;
     } 

@@ -7,6 +7,8 @@ TagManager:
   - Enemy
   - Retry Button
   - Menu Button
+  - End Point
+  - Checkpoint
   layers:
   - Default
   - TransparentFX
@@ -17,7 +19,7 @@ TagManager:
   - Object
   - Enemy
   - EnemySpace
-  - 
+  - Checkpoints
   - 
   - 
   - 
@@ -46,4 +48,13 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 2148446945
+    locked: 0
+  - name: Objects
+    uniqueID: 1655507063
+    locked: 0
+  - name: Enemies
+    uniqueID: 2006869065
+    locked: 0
+  - name: Background
+    uniqueID: 1402280877
     locked: 0

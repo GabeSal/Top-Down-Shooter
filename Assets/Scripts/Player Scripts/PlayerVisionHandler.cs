@@ -11,9 +11,8 @@ public class PlayerVisionHandler : MonoBehaviour
     #endregion
 
     #region Private Fields
-    private float _angleOffset = 90f;
-    private int _mouseRightClick = 1;    
-    private bool _isAiming { get => Input.GetMouseButtonDown(_mouseRightClick); }
+    private float _angleOffset = 90f;  
+    private bool _isAiming { get => Input.GetKeyDown((KeyCode)PlayerControls.aim); }
     #endregion
 
     #region Standard Unity Methods
@@ -24,12 +23,12 @@ public class PlayerVisionHandler : MonoBehaviour
             float angle = ConvertMousePositionToLookAngle();
             transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
-            if (Input.GetMouseButtonDown(_mouseRightClick))
+            if (Input.GetKeyDown((KeyCode)PlayerControls.aim))
             {
                 SwitchVisionCone();
             }
 
-            if (Input.GetMouseButtonUp(_mouseRightClick))
+            if (Input.GetKeyUp((KeyCode)PlayerControls.aim))
             {
                 SwitchVisionCone();
             }

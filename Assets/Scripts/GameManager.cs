@@ -7,9 +7,6 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    #region Serialized Fields
-    #endregion
-
     #region Private Fields
     private GameObject _playerUIHealth;
     private GameObject _playerUIAmmo;
@@ -58,7 +55,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void Begin()
     {
-        StartCoroutine(LoadSceneAsyncByName("Tests"));
+        StartCoroutine(LoadSceneAsyncByName("Tutorial Level"));
     }
 
     /// <summary>
@@ -93,6 +90,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator LoadSceneAsyncByName(string sceneName)
     {
         DontDestroyOnLoad(this);
+        DesubscribeFromAllEvents();
 
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
         // Wait until the asynchronous scene fully loads
@@ -103,8 +101,13 @@ public class GameManager : MonoBehaviour
         {
             ResetGameSettings();
             FindLevelUIElements();
+            //FindCheckpoints();
+            SubscribeToLevelEndPointEvents();
             SetGameOverClickEvents();
-            _enemyCounter = GetAllActiveEnemiesInScene();
+            if (sceneName == "Survival Level" || sceneName == "Tests")
+            {
+                _enemyCounter = GetAllActiveEnemiesInScene();
+            }            
         }
         else
         {
@@ -162,6 +165,55 @@ public class GameManager : MonoBehaviour
             _playerUIHealth.GetComponent<UIPlayerHealth>().OnPlayerDied += GameManager_OnPlayerDied;
             _gameOverUI.SetActive(false);
         }
+    }
+
+    /// <summary>
+    /// Finds the endpoint game object and subscribes to the event in which to transition to the next level
+    /// when the player interacts with it.
+    /// </summary>
+    private void SubscribeToLevelEndPointEvents()
+    {
+        var endpoint = FindObjectOfType<EndPoint>();
+        if (endpoint != null)
+        {
+            endpoint.OnEndPointInteraction += GameManager_OnEndPointInteraction;
+        }
+        else
+        {
+            return;
+        }        
+    }
+
+    private void DesubscribeFromAllEvents()
+    {
+        var endPoint = FindObjectOfType<EndPoint>();
+        //var checkpoints = FindObjectsOfType<Checkpoint>();
+
+        if (endPoint != null)
+        {
+            endPoint.OnEndPointInteraction -= GameManager_OnEndPointInteraction;
+        }
+
+        //if (checkpoints.length != 0)
+        //{
+        //    foreach (checkpoint in checkpoints) 
+        //    {
+        //        checkpoint.OnCheckpointInteraction -= GameManager_OnCheckpointInteraction;
+        //    }
+        //}
+
+        if (_playerUIHealth != null)
+        {
+            _playerUIHealth.GetComponent<UIPlayerHealth>().OnPlayerDied -= GameManager_OnPlayerDied;
+        }
+    }
+
+    /// <summary>
+    /// Calls the LoadSceneAsyncByName() method
+    /// </summary>
+    private void GameManager_OnEndPointInteraction(string sceneName)
+    {
+        StartCoroutine(LoadSceneAsyncByName(sceneName));
     }
 
     /// <summary>
