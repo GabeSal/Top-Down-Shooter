@@ -7,12 +7,18 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    #region Serialized Fields
+    [SerializeField]
+    private GameObject _sceneLoader;
+    #endregion
+
     #region Private Fields
     private GameObject _playerUIHealth;
     private GameObject _playerUIAmmo;
     private GameObject _gameOverUI;
     private GameObject _mainMenuUI;
     private GameObject _controlsUIOverlay;
+    private Image _loadingBar;
 
     private bool _playerIsDead;
     private bool _inputsAllowed;
@@ -41,14 +47,25 @@ public class GameManager : MonoBehaviour
             Destroy(this.gameObject);
             return;
         }
-        
-        _playerIsDead = false;
-        _inputsAllowed = true;
+
+        InitializeLoadingScreen();
+        ResetGameSettings();
         FindMainMenuUIElements();
     }
     #endregion
 
     #region Class Defined Methods
+
+    /// <summary>
+    /// Hides the loading screen and sets the fill amount of the loading bar image to 0.
+    /// </summary>
+    private void InitializeLoadingScreen()
+    {
+        _sceneLoader.gameObject.SetActive(false);
+
+        _loadingBar = _sceneLoader.transform.GetChild(0).transform.GetChild(1).GetComponent<Image>();
+        _loadingBar.fillAmount = 0f;
+    }
 
     /// <summary>
     /// Initiates the StartGame() coroutine.
@@ -92,10 +109,17 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(this);
         DesubscribeFromAllEvents();
 
+        _sceneLoader.SetActive(true);
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
         // Wait until the asynchronous scene fully loads
         while (!operation.isDone)
+        {
+            float progress = Mathf.Clamp01(operation.progress / 0.9f);
+            _loadingBar.fillAmount = progress;
             yield return null;
+        }
+
+        _sceneLoader.SetActive(false);
 
         if (sceneName != "Main Menu")
         {
@@ -116,6 +140,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Set the player to be alive/not dead and inputs are allowed.
+    /// </summary>
     private void ResetGameSettings()
     {
         _playerIsDead = false;
@@ -221,7 +248,14 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void FindMainMenuUIElements()
     {
-        _mainMenuUI = FindObjectOfType<Canvas>().gameObject;
+        var canvases = FindObjectsOfType<Canvas>();
+
+        foreach (var canvas in canvases)
+        {
+            if (canvas.name == "Main Menu")
+                _mainMenuUI = canvas.transform.gameObject;
+        }
+
         _controlsUIOverlay = _mainMenuUI.transform.GetChild(6).gameObject;
         _controlsUIOverlay.SetActive(false);
     }
