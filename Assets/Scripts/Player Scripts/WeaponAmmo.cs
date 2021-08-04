@@ -76,9 +76,7 @@ public class WeaponAmmo : MonoBehaviour
             // Cancel manual reload if there is enough ammo in clip
             if (Input.GetKeyDown((KeyCode)PlayerControls.fireWeapon) && _isReloading)
             {
-                _isReloading = false;
-                StopAllCoroutines();
-                OnReloadCancel?.Invoke();
+                CancelReload();
             }
         }        
     }
@@ -165,6 +163,13 @@ public class WeaponAmmo : MonoBehaviour
         }        
     }
 
+    private void CancelReload()
+    {
+        _isReloading = false;
+        StopAllCoroutines();
+        OnReloadCancel?.Invoke();
+    }
+
     /// <summary>
     /// Moves the specified amount of ammo to the weapon clip and subtract from the weapons reserves.
     /// </summary>
@@ -191,6 +196,9 @@ public class WeaponAmmo : MonoBehaviour
     /// </summary>
     private void WeaponAmmo_OnWeaponChanged()
     {
+        if (_isReloading)
+            CancelReload();
+        
         OnAmmoChanged?.Invoke();
     }
 

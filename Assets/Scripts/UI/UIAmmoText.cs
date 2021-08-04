@@ -83,6 +83,7 @@ public class UIAmmoText : MonoBehaviour
     /// </summary>
     private void WeaponInventory_OnWeaponChanged()
     {
+        ShowAmmoText();
         UnsubscribeToWeaponAmmoEvents();
         FindActivePlayerWeaponInScene();
     }
