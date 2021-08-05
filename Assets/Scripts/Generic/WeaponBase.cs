@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WeaponBase : MonoBehaviour
 {
@@ -26,5 +27,9 @@ public class WeaponBase : MonoBehaviour
 
     #region Protected Fields
     protected float _fireTimer;
+    #endregion
+
+    #region Public Field
+    public Image weaponUIImage;
     #endregion
 }

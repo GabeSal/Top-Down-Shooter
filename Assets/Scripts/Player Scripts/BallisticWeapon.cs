@@ -136,13 +136,13 @@ public class BallisticWeapon : WeaponBase
         RaycastHit2D hitInfo2D = Physics2D.Raycast(_playerShootingHandler.FirePoint.position, shootingDirection, 
             _weaponRange, _collisionLayers);
 
+        if (_bulletTrail != null)
+            StartCoroutine(DrawBulletTrailAtHitPoint(hitInfo2D, shootingDirection));
+
         Collider2D target = hitInfo2D.collider;
 
         if (target != null)
         {
-            if (_bulletTrail != null)
-                StartCoroutine(DrawBulletTrailAtHitPoint(hitInfo2D));
-            
             if (IsEnemy(target))
             {
                 target.GetComponent<Health>().TakeHit(_weaponDamage);
@@ -217,14 +217,22 @@ public class BallisticWeapon : WeaponBase
     /// </summary>
     /// <param name="hit2D"></param>
     /// <returns></returns>
-    private IEnumerator DrawBulletTrailAtHitPoint(RaycastHit2D hit2D)
+    private IEnumerator DrawBulletTrailAtHitPoint(RaycastHit2D hit2D, Vector3 shotDirection)
     {
         _bulletTrail.enabled = true;
 
         _bulletTrail.SetPosition(0, _playerShootingHandler.FirePoint.position);
-        _bulletTrail.SetPosition(1, hit2D.point);
+        if (hit2D.point != Vector2.zero)
+        {
+            _bulletTrail.SetPosition(1, hit2D.point);
+        }
+        else
+        {
+            _bulletTrail.SetPosition(1, _playerShootingHandler.FirePoint.position + (shotDirection * _weaponRange));
+        }
+        
 
-        yield return new WaitForSeconds(0.03f);
+        yield return new WaitForSeconds(0.05f);
 
         _bulletTrail.enabled = false;
     }
