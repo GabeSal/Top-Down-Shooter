@@ -14,11 +14,7 @@ public class CursorBehaviour : MonoBehaviour
     #region Standard Unity Methods
     private void Start()
     {
-        Vector2 centerPivot = new Vector2(crosshair.width / 2, crosshair.height / 2);
-
-        Cursor.lockState = CursorLockMode.Confined;
-        Cursor.SetCursor(crosshair, centerPivot, CursorMode.Auto);
-
+        LockAndSetCursorImage();
         GameManager.Instance.OnGameOver += CursorBehaviour_OnGameOver;
     }
 
@@ -26,7 +22,11 @@ public class CursorBehaviour : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(_leftMouseClick))
         {
-            Cursor.lockState = CursorLockMode.Confined;
+            LockAndSetCursorImage();
+        }
+        if (Input.GetKeyDown((KeyCode)PlayerControls.pauseGame))
+        {
+            UnlockAndShowMouseCursor();
         }
     }
 
@@ -53,6 +53,18 @@ public class CursorBehaviour : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-    } 
+    }
+
+    /// <summary>
+    /// Restrains the mouse cursor within the window and shows the crosshair texture to replace the default
+    /// mouse cursor image.
+    /// </summary>
+    private void LockAndSetCursorImage()
+    {
+        Vector2 centerPivot = new Vector2(crosshair.width / 2, crosshair.height / 2);
+
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.SetCursor(crosshair, centerPivot, CursorMode.Auto);
+    }
     #endregion
 }

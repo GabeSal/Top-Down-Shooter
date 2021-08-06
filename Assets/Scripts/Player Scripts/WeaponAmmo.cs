@@ -66,7 +66,7 @@ public class WeaponAmmo : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.Instance.InputsAllowed)
+        if (GameManager.Instance.InputsAllowed && GameManager.GameIsPaused == false)
         {
             if (Input.GetKeyDown((KeyCode)PlayerControls.reload) && HasEnoughAmmo() && !_isReloading)
             {

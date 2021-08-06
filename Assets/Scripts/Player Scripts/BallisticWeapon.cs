@@ -64,7 +64,7 @@ public class BallisticWeapon : WeaponBase
 
     private void Update()
     {
-        if (GameManager.Instance.InputsAllowed)
+        if (GameManager.Instance.InputsAllowed && GameManager.GameIsPaused == false)
         {
             _fireTimer += Time.deltaTime;
 

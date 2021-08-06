@@ -19,83 +19,36 @@ public class WeaponInventory : MonoBehaviour
     #region Standard Unity Methods
     private void Update()
     {
-        foreach (var weapon in _weapons)
+        if (GameManager.Instance.InputsAllowed && GameManager.GameIsPaused == false)
         {
-            BallisticWeapon ballisticWeapon = weapon.GetComponent<BallisticWeapon>();
-            //ProjectileWeapon projectileWeapon = weapon.GetComponent<ProjectileWeapon>();
-            //ExperimentalWeapon experimentalWeapon = weapon.GetComponent<ExperimentalWeapon>();
-
-            if (ballisticWeapon != null)
+            foreach (var weapon in _weapons)
             {
-                if (Input.GetKeyDown((KeyCode)PlayerControls.lightWeapon) &&
-                CompareWeaponKeyCodeWithPlayerControls(PlayerControls.lightWeapon, ballisticWeapon.WeaponHotKey))
-                {
-                    SwitchToWeapon(weapon);
-                    break;
-                }
+                BallisticWeapon ballisticWeapon = weapon.GetComponent<BallisticWeapon>();
 
-                if (Input.GetKeyDown((KeyCode)PlayerControls.mediumWeapon) &&
-                    CompareWeaponKeyCodeWithPlayerControls(PlayerControls.mediumWeapon, ballisticWeapon.WeaponHotKey))
+                if (ballisticWeapon != null)
                 {
-                    SwitchToWeapon(weapon);
-                    break;
-                }
+                    if (Input.GetKeyDown((KeyCode)PlayerControls.lightWeapon) &&
+                    CompareWeaponKeyCodeWithPlayerControls(PlayerControls.lightWeapon, ballisticWeapon.WeaponHotKey))
+                    {
+                        SwitchToWeapon(weapon);
+                        break;
+                    }
 
-                if (Input.GetKeyDown((KeyCode)PlayerControls.heavyWeapon) &&
-                    CompareWeaponKeyCodeWithPlayerControls(PlayerControls.heavyWeapon, ballisticWeapon.WeaponHotKey))
-                {
-                    SwitchToWeapon(weapon);
-                    break;
+                    if (Input.GetKeyDown((KeyCode)PlayerControls.mediumWeapon) &&
+                        CompareWeaponKeyCodeWithPlayerControls(PlayerControls.mediumWeapon, ballisticWeapon.WeaponHotKey))
+                    {
+                        SwitchToWeapon(weapon);
+                        break;
+                    }
+
+                    if (Input.GetKeyDown((KeyCode)PlayerControls.heavyWeapon) &&
+                        CompareWeaponKeyCodeWithPlayerControls(PlayerControls.heavyWeapon, ballisticWeapon.WeaponHotKey))
+                    {
+                        SwitchToWeapon(weapon);
+                        break;
+                    }
                 }
             }
-
-            //if (projectileWeapon != null)
-            //{
-            //    if (Input.GetKeyDown((KeyCode)PlayerControls.lightWeapon) &&
-            //    CompareWeaponKeyCodeWithPlayerControls(PlayerControls.lightWeapon, projectileWeapon.WeaponHotKey))
-            //    {
-            //        SwitchToWeapon(weapon);
-            //        break;
-            //    }
-
-            //    if (Input.GetKeyDown((KeyCode)PlayerControls.mediumWeapon) &&
-            //        CompareWeaponKeyCodeWithPlayerControls(PlayerControls.mediumWeapon, projectileWeapon.WeaponHotKey))
-            //    {
-            //        SwitchToWeapon(weapon);
-            //        break;
-            //    }
-
-            //    if (Input.GetKeyDown((KeyCode)PlayerControls.heavyWeapon) &&
-            //        CompareWeaponKeyCodeWithPlayerControls(PlayerControls.heavyWeapon, projectileWeapon.WeaponHotKey))
-            //    {
-            //        SwitchToWeapon(weapon);
-            //        break;
-            //    }
-            //}
-
-            //if (experimentalWeapon != null)
-            //{
-            //    if (Input.GetKeyDown((KeyCode)PlayerControls.lightWeapon) &&
-            //    CompareWeaponKeyCodeWithPlayerControls(PlayerControls.lightWeapon, experimentalWeapon.WeaponHotKey))
-            //    {
-            //        SwitchToWeapon(weapon);
-            //        break;
-            //    }
-
-            //    if (Input.GetKeyDown((KeyCode)PlayerControls.mediumWeapon) &&
-            //        CompareWeaponKeyCodeWithPlayerControls(PlayerControls.mediumWeapon, experimentalWeapon.WeaponHotKey))
-            //    {
-            //        SwitchToWeapon(weapon);
-            //        break;
-            //    }
-
-            //    if (Input.GetKeyDown((KeyCode)PlayerControls.heavyWeapon) &&
-            //        CompareWeaponKeyCodeWithPlayerControls(PlayerControls.heavyWeapon, experimentalWeapon.WeaponHotKey))
-            //    {
-            //        SwitchToWeapon(weapon);
-            //        break;
-            //    }
-            //}
         }
     }
     #endregion

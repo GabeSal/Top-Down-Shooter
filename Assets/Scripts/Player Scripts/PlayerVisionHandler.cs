@@ -18,7 +18,7 @@ public class PlayerVisionHandler : MonoBehaviour
     #region Standard Unity Methods
     private void Update()
     {
-        if (GameManager.Instance.InputsAllowed)
+        if (GameManager.Instance.InputsAllowed && GameManager.GameIsPaused == false)
         {
             float angle = ConvertMousePositionToLookAngle();
             transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);

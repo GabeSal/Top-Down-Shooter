@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     private GameObject _playerUIAmmo;
     private GameObject _gameOverUI;
     private GameObject _mainMenuUI;
+    private GameObject _pauseMenu;
     private GameObject _controlsUIOverlay;
     private Image _loadingBar;
 
@@ -26,10 +27,11 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Action Events
-    public event Action OnGameOver; 
+    public event Action OnGameOver;
     #endregion
 
     #region Properties
+    public static bool GameIsPaused;
     public static GameManager Instance { get; private set; }
     public bool PlayerIsDead { get => _playerIsDead; }
     public bool InputsAllowed { get => _inputsAllowed; }
@@ -48,6 +50,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        InitializePauseMenu();
         InitializeLoadingScreen();
         ResetGameSettings();
         FindMainMenuUIElements();
@@ -61,10 +64,42 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void InitializeLoadingScreen()
     {
-        _sceneLoader.gameObject.SetActive(false);
+        _sceneLoader.SetActive(false);
 
         _loadingBar = _sceneLoader.transform.GetChild(0).transform.GetChild(1).GetComponent<Image>();
         _loadingBar.fillAmount = 0f;
+    }
+
+    private void InitializePauseMenu()
+    {
+        _pauseMenu = GetComponent<PauseMenu>().pauseMenu;
+
+        GetComponent<PauseMenu>().OnGamePaused += GameManager_OnGamePaused;
+        GetComponent<PauseMenu>().OnGameResume += GameManager_OnGameResume;
+    }
+
+    private void GameManager_OnGamePaused()
+    {
+        GameIsPaused = true;
+    }
+
+    private void GameManager_OnGameResume()
+    {
+        GameIsPaused = false;
+    }
+
+    /// <summary>
+    /// Loads the very first scene in the build ("Main Menu")
+    /// </summary>
+    public void ReturnToMenu()
+    {
+        if (Time.timeScale < 1f)
+        {
+            Time.timeScale = 1f;
+            _pauseMenu.SetActive(false);
+        }
+
+        StartCoroutine(LoadSceneAsyncByName("Main Menu"));
     }
 
     /// <summary>
@@ -99,6 +134,11 @@ public class GameManager : MonoBehaviour
         Application.Quit();
     }
 
+    public bool SceneIsPlayable()
+    {
+        return SceneManager.GetActiveScene().name != "Main Menu";
+    }
+
     /// <summary>
     /// Coroutine that loads the next scene in the build asynchronously. When the next scene is loaded,
     /// this method will call the SpawnPlayer() method.
@@ -107,7 +147,8 @@ public class GameManager : MonoBehaviour
     private IEnumerator LoadSceneAsyncByName(string sceneName)
     {
         DontDestroyOnLoad(this);
-        DesubscribeFromAllEvents();
+        DontDestroyOnLoad(_pauseMenu);
+        UnsubscribeFromAllEvents();
 
         _sceneLoader.SetActive(true);
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
@@ -121,7 +162,7 @@ public class GameManager : MonoBehaviour
 
         _sceneLoader.SetActive(false);
 
-        if (sceneName != "Main Menu")
+        if (SceneIsPlayable())
         {
             ResetGameSettings();
             FindLevelUIElements();
@@ -211,7 +252,7 @@ public class GameManager : MonoBehaviour
         }        
     }
 
-    private void DesubscribeFromAllEvents()
+    private void UnsubscribeFromAllEvents()
     {
         var endPoint = FindObjectOfType<EndPoint>();
         //var checkpoints = FindObjectsOfType<Checkpoint>();
@@ -336,14 +377,6 @@ public class GameManager : MonoBehaviour
     {
         string currentScene = SceneManager.GetActiveScene().name;
         StartCoroutine(LoadSceneAsyncByName(currentScene));
-    }
-
-    /// <summary>
-    /// Loads the very first scene in the build ("Main Menu")
-    /// </summary>
-    private void ReturnToMenu()
-    {
-        StartCoroutine(LoadSceneAsyncByName("Main Menu"));
     }
 
     /// <summary>
