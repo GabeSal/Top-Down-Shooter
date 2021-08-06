@@ -19,9 +19,15 @@ public class Health : MonoBehaviour
     #endregion
 
     #region Standard Unity Methods
-    private void OnEnable()
+
+    private void Awake()
     {
-        _currentHealth = _maxHealth;
+        _currentHealth = 75;
+    }
+
+    private void OnGUI()
+    {
+        OnHealthChanged?.Invoke(_currentHealth, _maxHealth);
     }
     #endregion
 
@@ -46,6 +52,16 @@ public class Health : MonoBehaviour
     }
 
     /// <summary>
+    /// Public method that's called from the HealingItem object when the player interacts with the item to regain
+    /// their lost health.
+    /// </summary>
+    /// <param name="healAmount">Int value that's passed from the healing item to modify the health.</param>
+    public void Heal(int healAmount)
+    {
+        ModifyHealth(healAmount);
+    }
+
+    /// <summary>
     /// Can either increase or decrease the _currentHealth amount depending on the sign of the passed int
     /// parameter, amount. After adding or subtracting from _currentHealth, the OnHealthChanged() event is
     /// invoked to update the Player Health UI elements.
@@ -53,8 +69,13 @@ public class Health : MonoBehaviour
     /// <param name="amount">Int value that is added to the _currentHealth.</param>
     private void ModifyHealth(int amount)
     {
-        if (_currentHealth <= _maxHealth)
+        if (_currentHealth < _maxHealth)
+        {
             _currentHealth += amount;
+
+            if (_currentHealth > _maxHealth)
+                _currentHealth = _maxHealth;
+        }
         else
             _currentHealth = _maxHealth;
         

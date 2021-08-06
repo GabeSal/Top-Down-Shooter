@@ -60,7 +60,8 @@ public class UIPlayerWeaponInventory : MonoBehaviour
             Sprite playerWeaponSprite = _playerWeapons.WeaponsInInventory[i]
                 .GetComponent<BallisticWeapon>().weaponUIImage.sprite;
 
-            weaponImage.sprite = playerWeaponSprite;            
+            weaponImage.sprite = playerWeaponSprite;
+            weaponImage.preserveAspect = true;
         }
         FadeNonEquippedWeapons();
     }
