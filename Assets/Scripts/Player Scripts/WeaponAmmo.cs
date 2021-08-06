@@ -45,7 +45,6 @@ public class WeaponAmmo : MonoBehaviour
     #region Standard Unity Methods
     private void Awake()
     {
-        _isReloading = false;
         _ammoInClip = _clipSize;
         _ammoInReserve = _maxAmmo - _ammoInClip;
 
@@ -210,6 +209,26 @@ public class WeaponAmmo : MonoBehaviour
     public bool HasAmmo()
     {
         return _ammoInClip > 0;
+    }
+
+    /// <summary>
+    /// Called from the AmmoDrop game object when the player interacts and picks up the ammo. Ammo in reserve will
+    /// increase as long as the value is less than that of the "true max ammo" value.
+    /// </summary>
+    /// <param name="amount">Int value that is added to the _ammoInReserve object.</param>
+    public void AddAmmo(int amount)
+    {
+        int trueMaxAmmo = _maxAmmo - _ammoInClip;
+
+        if (_ammoInReserve < trueMaxAmmo)
+        {
+            _ammoInReserve += amount;
+            if (_ammoInReserve > trueMaxAmmo)
+                _ammoInReserve = trueMaxAmmo;
+        }
+
+        OnAmmoChanged?.Invoke();
+        
     }
     #endregion
 
