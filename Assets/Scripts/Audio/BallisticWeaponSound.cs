@@ -12,12 +12,15 @@ public class BallisticWeaponSound : MonoBehaviour
     private SimpleAudioEvent _manualReloadEvent;
     [SerializeField]
     private SimpleAudioEvent _reloadEvent;
+    [SerializeField]
+    private SimpleAudioEvent _changeWeaponEvent;
     #endregion
 
     #region Private Fields
     private AudioSource _shootSource;
     private AudioSource _reloadSource;
     private BallisticWeapon _ballisticWeapon;
+    private WeaponInventory _weaponInventory;
     private WeaponAmmo _weaponAmmo;
     #endregion
 
@@ -29,6 +32,7 @@ public class BallisticWeaponSound : MonoBehaviour
         _reloadSource = audioSources[1];
 
         _ballisticWeapon = GetComponent<BallisticWeapon>();
+        _weaponInventory = GetComponentInParent<WeaponInventory>();
         _weaponAmmo = GetComponent<WeaponAmmo>();
         SubscribeToWeaponEvents();
     }
@@ -42,22 +46,24 @@ public class BallisticWeaponSound : MonoBehaviour
     #region Class Defined Methods
     private void SubscribeToWeaponEvents()
     {
-        _ballisticWeapon.OnFire += Weapon_OnFire;
-        _ballisticWeapon.OutOfAmmo += Weapon_OutOfAmmo;
-        _ballisticWeapon.OnShotgunPump += BallisticWeapon_OnShotgunPump;
-        _weaponAmmo.OnReload += WeaponAmmo_OnReload;
-        _weaponAmmo.OnManualReload += WeaponAmmo_OnManualReload;
-        _weaponAmmo.OnManualReloadFinish += WeaponAmmo_OnManualReloadFinish;
+        _ballisticWeapon.OnFire += BallisticWeaponSound_OnFire;
+        _ballisticWeapon.OutOfAmmo += BallisticWeaponSound_OutOfAmmo;
+        _ballisticWeapon.OnShotgunPump += BallisticWeaponSound_OnShotgunPump;
+        _weaponInventory.OnWeaponChanged += BallisticWeaponSound_OnWeaponChanged;
+        _weaponAmmo.OnReload += BallisticWeaponSound_OnReload;
+        _weaponAmmo.OnManualReload += BallisticWeaponSound_OnManualReload;
+        _weaponAmmo.OnManualReloadFinish += BallisticWeaponSound_OnManualReloadFinish;
     }
 
     private void UnsubscribeToWeaponEvents()
     {
-        _ballisticWeapon.OnFire -= Weapon_OnFire;
-        _ballisticWeapon.OutOfAmmo -= Weapon_OutOfAmmo;
-        _ballisticWeapon.OnShotgunPump -= BallisticWeapon_OnShotgunPump;
-        _weaponAmmo.OnReload -= WeaponAmmo_OnReload;
-        _weaponAmmo.OnManualReload -= WeaponAmmo_OnManualReload;
-        _weaponAmmo.OnManualReloadFinish -= WeaponAmmo_OnManualReloadFinish;
+        _ballisticWeapon.OnFire -= BallisticWeaponSound_OnFire;
+        _ballisticWeapon.OutOfAmmo -= BallisticWeaponSound_OutOfAmmo;
+        _ballisticWeapon.OnShotgunPump -= BallisticWeaponSound_OnShotgunPump;
+        _weaponInventory.OnWeaponChanged -= BallisticWeaponSound_OnWeaponChanged;
+        _weaponAmmo.OnReload -= BallisticWeaponSound_OnReload;
+        _weaponAmmo.OnManualReload -= BallisticWeaponSound_OnManualReload;
+        _weaponAmmo.OnManualReloadFinish -= BallisticWeaponSound_OnManualReloadFinish;
     }
 
     #region Received Event Methods
@@ -65,7 +71,7 @@ public class BallisticWeaponSound : MonoBehaviour
     /// Plays the _outOfAmmoEvent SimpleAudioEvent object through the audio source when the 
     /// OutOfAmmo() event is invoked.
     /// </summary>
-    private void Weapon_OutOfAmmo()
+    private void BallisticWeaponSound_OutOfAmmo()
     {
         _outOfAmmoEvent.Play(_shootSource, true);
     }
@@ -73,7 +79,7 @@ public class BallisticWeaponSound : MonoBehaviour
     /// Plays the _firedEvent SimpleAudioEvent object through the audio source when the 
     /// OnFire() event is invoked.
     /// </summary>
-    private void Weapon_OnFire()
+    private void BallisticWeaponSound_OnFire()
     {
         _firedEvent.Play(_shootSource);
     }
@@ -81,14 +87,14 @@ public class BallisticWeaponSound : MonoBehaviour
     /// Plays the appropriate _reloadEvent SimpleAudioEvent object through the audio source when the 
     /// OnShotgunPump() event is invoked to simulate the shotgun being cocked after a shot.
     /// </summary>
-    private void BallisticWeapon_OnShotgunPump()
+    private void BallisticWeaponSound_OnShotgunPump()
     {
         _reloadEvent.Play(_reloadSource, true);
     }
     /// <summary>
     /// Plays the _manualReloadEvent SimpleAudioEvent object the audio source when the OnManualReload() event is invoked.
     /// </summary>
-    private void WeaponAmmo_OnManualReload()
+    private void BallisticWeaponSound_OnManualReload()
     {
         _manualReloadEvent.Play(_reloadSource, true);
     }
@@ -96,16 +102,21 @@ public class BallisticWeaponSound : MonoBehaviour
     /// Plays the appropriate _reloadEvent SimpleAudioEvent object through the audio source when the OnManualReloadFinish() 
     /// event is invoked to simulate the shotgun being cocked after all shells are reloaded.
     /// </summary>
-    private void WeaponAmmo_OnManualReloadFinish()
+    private void BallisticWeaponSound_OnManualReloadFinish()
     {
         _reloadEvent.Play(_reloadSource, true);
     }
     /// <summary>
     /// Plays the _reloadEvent SimpleAudioEvent object the audio source when the OnReload() event is invoked.
     /// </summary>
-    private void WeaponAmmo_OnReload()
+    private void BallisticWeaponSound_OnReload()
     {
         _reloadEvent.Play(_reloadSource, true);
+    }
+
+    private void BallisticWeaponSound_OnWeaponChanged()
+    {
+        _changeWeaponEvent.Play(_shootSource, true);
     }
     #endregion
     #endregion

@@ -10,19 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5b3705d216c1ae0408d37e04907b84a4, type: 3}
-  m_Name: AmmoPickupSounds
+  m_Name: PistolWeaponChangeSound
   m_EditorClassIdentifier: 
   _clips:
-  - {fileID: 8300000, guid: d27a0079dbada29478e96da8db13b437, type: 3}
-  - {fileID: 8300000, guid: 13e0e82c2172883429205d932282d8ab, type: 3}
-  - {fileID: 8300000, guid: bc6b2005eda0d004a8eca0ee2b034fb6, type: 3}
+  - {fileID: 8300000, guid: 62910bb78b8c44c47b054676157ba4cf, type: 3}
   volume:
-    minValue: 0.89795923
+    minValue: 0.87244904
     maxValue: 1
   pitch:
     minValue: 0.84693885
     maxValue: 1.0510204
   _distance:
     minValue: 1
-    maxValue: 56.12274
-  _mixer: {fileID: -7106147715042027711, guid: 7ef3cd21aec11ee47ab69c73deda6c9f, type: 2}
+    maxValue: 81.632935
+  _mixer: {fileID: -2476616618268136997, guid: 7ef3cd21aec11ee47ab69c73deda6c9f, type: 2}
