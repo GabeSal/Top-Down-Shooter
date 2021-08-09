@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using System.Collections;
 
 [RequireComponent(typeof(AudioSource))]
 public class AmmoPickupSound : MonoBehaviour
@@ -18,15 +16,19 @@ public class AmmoPickupSound : MonoBehaviour
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
+    }
+
+    private void OnEnable()
+    {
         GetComponent<AmmoDrop>().OnAmmoPickup += AmmoPickupSound_OnAmmoPickup;
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         GetComponent<AmmoDrop>().OnAmmoPickup -= AmmoPickupSound_OnAmmoPickup;
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         GetComponent<AmmoDrop>().OnAmmoPickup -= AmmoPickupSound_OnAmmoPickup;
     }
@@ -37,18 +39,7 @@ public class AmmoPickupSound : MonoBehaviour
     {
         _ammoPickupSoundEvent.Play(_audioSource, true);
 
-        StartCoroutine(DisableAmmoDrop());
-    }
-
-    /// <summary>
-    /// Coroutine that waits until the audio clip has finished playing before disabling the ammo drop
-    /// object in the scene.
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator DisableAmmoDrop()
-    {
-        yield return new WaitForSeconds(_audioSource.clip.length);
-        this.gameObject.SetActive(false);
+        this.GetComponent<PooledMonoBehaviour>().ReturnToPool(2f);
     }
     #endregion
 }

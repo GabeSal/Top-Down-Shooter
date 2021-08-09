@@ -10,7 +10,7 @@ public class UIAmmoPickup : MonoBehaviour
     #endregion
 
     #region Standard Unity Methods
-    private void Awake()
+    private void Start()
     {
         _animator = GetComponentInChildren<Animator>();
         _text = GetComponentInChildren<TextMeshProUGUI>();
@@ -23,12 +23,14 @@ public class UIAmmoPickup : MonoBehaviour
 
     private void OnDisable()
     {
-        UnsubscribeFromAmmoDropEvents();
+        if (NotEmpty())
+            UnsubscribeFromAmmoDropEvents();
     }
 
     private void OnDestroy()
     {
-        UnsubscribeFromAmmoDropEvents();
+        if (NotEmpty())
+            UnsubscribeFromAmmoDropEvents();
     }
     #endregion
 
@@ -37,6 +39,7 @@ public class UIAmmoPickup : MonoBehaviour
     {
         _ammoDrop.OnMaxAmmoReached -= UIAmmoPickup_OnMaxAmmoReached;
         _ammoDrop.OnAmmoPickup -= UIAmmoPickup_OnAmmoPickup;
+        _ammoDrop.OnLeavingAmmoPickup -= UIAmmoDrop_OnLeavingAmmoPickup;
     }
 
     private void ShowAndPlayTextAnimation()
@@ -49,6 +52,15 @@ public class UIAmmoPickup : MonoBehaviour
     {
         _text.alpha = 0f;
         _animator.Play("Default");
+    }
+
+    /// <summary>
+    /// Checks to see if we have stored the necessary components.
+    /// </summary>
+    /// <returns>True if we have stored the animator, textmeshpro text object, and AmmoDrop component in this object.</returns>
+    private bool NotEmpty()
+    {
+        return _animator != null && _text != null && _ammoDrop != null;
     }
 
     private void UIAmmoPickup_OnAmmoPickup()

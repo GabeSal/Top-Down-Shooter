@@ -21,7 +21,6 @@ public class EndPoint : MonoBehaviour
     {
         if (_collidingWithPlayer && PlayerInteracted())
         {
-            Debug.Log(string.Format("Transitioning to {0}...", _sceneToTransitionTo));
             OnEndPointInteraction?.Invoke(_sceneToTransitionTo);
         }
     }

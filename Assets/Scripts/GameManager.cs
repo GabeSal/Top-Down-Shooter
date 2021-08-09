@@ -58,7 +58,6 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Class Defined Methods
-
     /// <summary>
     /// Hides the loading screen and sets the fill amount of the loading bar image to 0.
     /// </summary>

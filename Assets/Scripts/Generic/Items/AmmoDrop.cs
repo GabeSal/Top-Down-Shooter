@@ -49,7 +49,7 @@ public class AmmoDrop : Item
             {
                 WeaponToAddAmmo = weapon;
                 var currentWeaponAmmo = weapon.GetComponent<WeaponAmmo>();
-                if (currentWeaponAmmo.AmmoInReserve == currentWeaponAmmo.TrueMaxAmmo)
+                if (currentWeaponAmmo.AmmoInReserve >= currentWeaponAmmo.TrueMaxAmmo)
                 {
                     OnMaxAmmoReached?.Invoke();
                     break;
