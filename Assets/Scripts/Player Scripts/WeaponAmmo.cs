@@ -23,6 +23,7 @@ public class WeaponAmmo : MonoBehaviour
     #region Private Fields
     private int _ammoInClip;
     private int _ammoInReserve;
+    private int _trueMaxAmmo;
     private bool _isReloading;
     private BallisticWeapon _ballisticWeapon;
     private WeaponInventory _weaponInventory;
@@ -30,6 +31,8 @@ public class WeaponAmmo : MonoBehaviour
 
     #region Properties
     public int AmmoInClip { get => _ammoInClip; }
+    public int AmmoInReserve { get => _ammoInReserve; }
+    public int TrueMaxAmmo { get => _trueMaxAmmo; }
     public float ReloadTime { get => _reloadTime; }
     #endregion
 
@@ -46,7 +49,8 @@ public class WeaponAmmo : MonoBehaviour
     private void Awake()
     {
         _ammoInClip = _clipSize;
-        _ammoInReserve = _maxAmmo - _ammoInClip;
+        _trueMaxAmmo = _maxAmmo - _ammoInClip;
+        _ammoInReserve = _trueMaxAmmo;
 
         GameManager.Instance.OnGameOver += GameManagerInstance_OnGameOver;
 

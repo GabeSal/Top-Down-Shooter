@@ -230,7 +230,6 @@ public class BallisticWeapon : WeaponBase
         {
             _bulletTrail.SetPosition(1, _playerShootingHandler.FirePoint.position + (shotDirection * _weaponRange));
         }
-        
 
         yield return new WaitForSeconds(0.05f);
 

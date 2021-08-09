@@ -98,11 +98,11 @@ public class EnemyShootingHandler : MonoBehaviour
         RaycastHit2D target = Physics2D.Raycast(transform.position, shootingDirection, 
             _enemyWeapon.Range, _enemyWeapon.CollisionLayers);
 
+        if (_enemyWeapon.bulletTrail != null)
+            StartCoroutine(DrawBulletTrail(target, shootingDirection));
+
         if (target.collider != null)
         {
-            if (_enemyWeapon.bulletTrail != null)
-                StartCoroutine(DrawBulletTrail(target));            
-
             if (target.collider.CompareTag("Player"))
             {
                 target.collider.GetComponent<HandlePlayerImpact>().SpawnBloodSplatterParticle(target.point, target.normal);
@@ -163,13 +163,22 @@ public class EnemyShootingHandler : MonoBehaviour
     /// </summary>
     /// <param name="target">RaycastHit2D object passed from the ShootPlayer() method where the
     /// ray collided with some object of interest (player or environment).</param>
+    /// /// <param name="shotDirection">Vector3 that is passed from the shootingDirection variable from the
+    /// ShootPlayer() method.</param>
     /// <returns></returns>
-    private IEnumerator DrawBulletTrail(RaycastHit2D target)
+    private IEnumerator DrawBulletTrail(RaycastHit2D target, Vector3 shotDirection)
     {
         _enemyWeapon.bulletTrail.enabled = true;
 
         _enemyWeapon.bulletTrail.SetPosition(0, _firePoint.position);
-        _enemyWeapon.bulletTrail.SetPosition(1, target.point);
+        if (target.point != Vector2.zero)
+        {
+            _enemyWeapon.bulletTrail.SetPosition(1, target.point);
+        }
+        else
+        {
+            _enemyWeapon.bulletTrail.SetPosition(1, _firePoint.position + (shotDirection * _enemyWeapon.Range));
+        }
 
         yield return new WaitForSeconds(0.04f);
 

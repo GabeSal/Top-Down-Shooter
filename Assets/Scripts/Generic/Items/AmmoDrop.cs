@@ -10,15 +10,14 @@ public class AmmoDrop : Item
 
     #region Action Events
     public event Action OnAmmoPickup;
+    public event Action OnMaxAmmoReached;
     #endregion
 
     #region Standard Unity Methods
     private void Update()
     {
         if (_isTouchingPlayer && PlayerInteracted())
-        {
             GivePlayerAmmo();
-        }
     }
     #endregion
 
@@ -38,14 +37,20 @@ public class AmmoDrop : Item
             if (weapon.gameObject.activeInHierarchy)
             {
                 var currentWeaponAmmo = weapon.GetComponent<WeaponAmmo>();
-                currentWeaponAmmo.AddAmmo(_ammoAmountInDrop);
-                OnAmmoPickup?.Invoke();
-                break;
+                if (currentWeaponAmmo.AmmoInReserve < currentWeaponAmmo.TrueMaxAmmo)
+                {
+                    currentWeaponAmmo.AddAmmo(_ammoAmountInDrop);
+                    OnAmmoPickup?.Invoke();
+                    break;
+                }
+                else
+                {
+                    OnMaxAmmoReached?.Invoke();
+                }                
             }
         }        
 
         HideSprite();
     }
     #endregion
-
 }

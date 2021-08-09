@@ -19,15 +19,9 @@ public class Health : MonoBehaviour
     #endregion
 
     #region Standard Unity Methods
-
-    private void Awake()
+    private void OnEnable()
     {
-        _currentHealth = 75;
-    }
-
-    private void OnGUI()
-    {
-        OnHealthChanged?.Invoke(_currentHealth, _maxHealth);
+        _currentHealth = _maxHealth;
     }
     #endregion
 
@@ -69,14 +63,9 @@ public class Health : MonoBehaviour
     /// <param name="amount">Int value that is added to the _currentHealth.</param>
     private void ModifyHealth(int amount)
     {
-        if (_currentHealth < _maxHealth)
-        {
-            _currentHealth += amount;
+        _currentHealth += amount;
 
-            if (_currentHealth > _maxHealth)
-                _currentHealth = _maxHealth;
-        }
-        else
+        if (_currentHealth > _maxHealth)
             _currentHealth = _maxHealth;
         
         OnHealthChanged?.Invoke(_currentHealth, _maxHealth);
