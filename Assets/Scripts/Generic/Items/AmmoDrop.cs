@@ -5,19 +5,30 @@ public class AmmoDrop : Item
 {
     #region Serialized Fields
     [SerializeField]
-    private int _ammoAmountInDrop;
+    private int _ammoAmount;
+    #endregion
+
+    #region Properties
+    public int AmmoAmount { get => _ammoAmount; }
+    public Transform WeaponToAddAmmo { get; private set; }
     #endregion
 
     #region Action Events
     public event Action OnAmmoPickup;
     public event Action OnMaxAmmoReached;
+    public event Action OnLeavingAmmoPickup;
     #endregion
 
     #region Standard Unity Methods
     private void Update()
     {
-        if (_isTouchingPlayer && PlayerInteracted())
+        if (_isTouchingPlayer)
             GivePlayerAmmo();
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        OnLeavingAmmoPickup?.Invoke();
     }
     #endregion
 
@@ -36,21 +47,27 @@ public class AmmoDrop : Item
         {
             if (weapon.gameObject.activeInHierarchy)
             {
+                WeaponToAddAmmo = weapon;
                 var currentWeaponAmmo = weapon.GetComponent<WeaponAmmo>();
-                if (currentWeaponAmmo.AmmoInReserve < currentWeaponAmmo.TrueMaxAmmo)
+                if (currentWeaponAmmo.AmmoInReserve == currentWeaponAmmo.TrueMaxAmmo)
                 {
-                    currentWeaponAmmo.AddAmmo(_ammoAmountInDrop);
-                    OnAmmoPickup?.Invoke();
+                    OnMaxAmmoReached?.Invoke();
                     break;
                 }
                 else
                 {
-                    OnMaxAmmoReached?.Invoke();
-                }                
-            }
-        }        
+                    int ammoReserveDifferenceFromTrueMax = currentWeaponAmmo.TrueMaxAmmo - currentWeaponAmmo.AmmoInReserve;
+                    // Changes the value of the _ammoAmount to ensure we don't go over the max ammo for the weapon.
+                    if (_ammoAmount > ammoReserveDifferenceFromTrueMax)
+                        _ammoAmount = ammoReserveDifferenceFromTrueMax;
 
-        HideSprite();
+                    currentWeaponAmmo.AddAmmo(_ammoAmount);
+                    OnAmmoPickup?.Invoke();
+                    HideSprite();
+                    break;
+                }
+            }
+        }
     }
     #endregion
 }

@@ -309,7 +309,13 @@ public class GameManager : MonoBehaviour
     /// <returns>GameObject that represents the UI element we wish to reference throughout this module.</returns>
     private static GameObject GetGameObjectFromTransformChildOf(int index)
     {
-        return FindObjectOfType<Canvas>().transform.GetChild(index).gameObject;
+        var canvases = FindObjectsOfType<Canvas>();
+        foreach (var canvas in canvases)
+        {
+            if (canvas.name == "PlayerUI")
+                return canvas.transform.GetChild(index).gameObject;
+        }
+        return null;
     }
 
     /// <summary>

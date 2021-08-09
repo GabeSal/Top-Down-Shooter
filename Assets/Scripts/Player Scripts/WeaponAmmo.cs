@@ -222,17 +222,19 @@ public class WeaponAmmo : MonoBehaviour
     /// <param name="amount">Int value that is added to the _ammoInReserve object.</param>
     public void AddAmmo(int amount)
     {
-        int trueMaxAmmo = _maxAmmo - _ammoInClip;
-
-        if (_ammoInReserve < trueMaxAmmo)
+        if (_ammoInReserve < _trueMaxAmmo)
         {
             _ammoInReserve += amount;
-            if (_ammoInReserve > trueMaxAmmo)
-                _ammoInReserve = trueMaxAmmo;
-        }
 
-        OnAmmoChanged?.Invoke();
-        
+            if (_ammoInReserve > _trueMaxAmmo)
+                _ammoInReserve = _trueMaxAmmo;
+
+            OnAmmoChanged?.Invoke();
+        }
+        else
+        {
+            return;
+        }
     }
     #endregion
 
