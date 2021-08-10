@@ -41,16 +41,18 @@ public class EnemyShootingHandler : MonoBehaviour
         {
             _shootingTimer += Time.deltaTime;
 
-            if (_target != null)
+            if (CheckForPlayerInRange())
+            {
                 LookAtTarget();
 
-            if (_shootingTimer >= _enemyWeapon.TimeUntilNextShot && !_enemyWeapon.isBurstFire)
-                ShootPlayer();
+                if (_shootingTimer >= _enemyWeapon.TimeUntilNextShot && !_enemyWeapon.isBurstFire)
+                    ShootPlayer();
 
-            if (_shootingTimer >= _enemyWeapon.TimeUntilNextShot && _enemyWeapon.isBurstFire)
-            {
-                StartCoroutine(BurstFire());
-            }
+                if (_shootingTimer >= _enemyWeapon.TimeUntilNextShot && _enemyWeapon.isBurstFire)
+                {
+                    StartCoroutine(BurstFire());
+                }
+            }            
         }
         else
         {
@@ -71,6 +73,18 @@ public class EnemyShootingHandler : MonoBehaviour
         transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
     }
 
+    private bool CheckForPlayerInRange()
+    {
+        Collider2D player = Physics2D.OverlapCircle(transform.position, _fireRange, _playerLayerMask);
+
+        if (player != null)
+            _target = player.transform;
+        else
+            _target = null;
+
+        return _target != null;
+    }
+
     /// <summary>
     /// Resets the shooting timer and checks to see if the player is within range. Once the player has been
     /// targeted, the raycast for the enemy weapon will call AimAtPlayer() method to generate a direction
@@ -81,19 +95,7 @@ public class EnemyShootingHandler : MonoBehaviour
     {
         _shootingTimer = 0;
 
-        Collider2D player = Physics2D.OverlapCircle(transform.position, _fireRange, _playerLayerMask);
-
-        if (player != null)
-        {
-            _target = player.transform;
-        }
-        else
-        {
-            _target = null;
-            return;
-        }
-
-        Vector2 shootingDirection = AimAtPlayer(player);
+        Vector2 shootingDirection = AimAtPlayer(_target.GetComponent<Collider2D>());
 
         RaycastHit2D target = Physics2D.Raycast(transform.position, shootingDirection, 
             _enemyWeapon.Range, _enemyWeapon.CollisionLayers);

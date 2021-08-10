@@ -233,7 +233,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _weaponDamage: 10
   _weaponRange: 1000
-  _fireDelay: 1.75
+  _fireDelay: 1.25
   _collisionLayers:
     serializedVersion: 2
     m_Bits: 73
@@ -1016,13 +1016,13 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 3.6770687, y: 19.012829}
+    - - {x: 5.9270687, y: 17.762829}
       - {x: -0.20578575, y: 20.1286}
-      - {x: -4.1412525, y: 18.944883}
-      - {x: -7.5247393, y: 16.960602}
+      - {x: -6.351679, y: 17.87778}
+      - {x: -11.524739, y: 12.960602}
       - {x: -0.3247599, y: 0.3917569}
       - {x: 0.31332362, y: 0.40319252}
-      - {x: 7.1704865, y: 16.839207}
+      - {x: 11.670486, y: 13.089207}
 --- !u!114 &1676431753212109120
 MonoBehaviour:
   m_ObjectHideFlags: 0

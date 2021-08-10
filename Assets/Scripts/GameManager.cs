@@ -243,7 +243,7 @@ public class GameManager : MonoBehaviour
         var endpoint = FindObjectOfType<EndPoint>();
         if (endpoint != null)
         {
-            endpoint.OnEndPointInteraction += GameManager_OnEndPointInteraction;
+            endpoint.OnEndPointLevelTransition += GameManager_OnEndPointInteraction;
         }
         else
         {
@@ -258,7 +258,7 @@ public class GameManager : MonoBehaviour
 
         if (endPoint != null)
         {
-            endPoint.OnEndPointInteraction -= GameManager_OnEndPointInteraction;
+            endPoint.OnEndPointLevelTransition -= GameManager_OnEndPointInteraction;
         }
 
         //if (checkpoints.length != 0)

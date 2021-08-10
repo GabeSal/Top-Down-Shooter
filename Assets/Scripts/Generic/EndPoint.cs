@@ -9,33 +9,34 @@ public class EndPoint : MonoBehaviour
     #endregion
 
     #region Private Fields
-    private bool _collidingWithPlayer;
+    private bool _isTouchingPlayer;
     #endregion
 
     #region Action Events
-    public event Action<string> OnEndPointInteraction;
+    public event Action OnEndPointCollision;
+    public event Action OnLeavingEndPointCollision;
+    public event Action<string> OnEndPointLevelTransition;
     #endregion
 
     #region Standard Unity Methods
     private void Update()
     {
-        if (_collidingWithPlayer && PlayerInteracted())
+        if (_isTouchingPlayer && PlayerInteracted())
         {
-            OnEndPointInteraction?.Invoke(_sceneToTransitionTo);
+            OnEndPointLevelTransition?.Invoke(_sceneToTransitionTo);
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision != null)
-        {
-            _collidingWithPlayer = true;
-        }
+        _isTouchingPlayer = true;
+        OnEndPointCollision?.Invoke();
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        _collidingWithPlayer = false;
+        _isTouchingPlayer = false;
+        OnLeavingEndPointCollision?.Invoke();
     }
     #endregion
 

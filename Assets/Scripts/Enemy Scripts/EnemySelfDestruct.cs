@@ -25,12 +25,14 @@ public class EnemySelfDestruct : MonoBehaviour
     #region Private Fields
     private bool _isShaking;
     private LayerMask _layerMask;
+    private EnemyMovementSoundHandler _enemyMovementSoundHandler;
     #endregion
 
     #region Standard Unity Methods
     private void Start()
     {
         _layerMask = LayerMask.GetMask("Player");
+        _enemyMovementSoundHandler = GetComponent<EnemyMovementSoundHandler>();
     }
     private void Update()
     {
@@ -111,6 +113,7 @@ public class EnemySelfDestruct : MonoBehaviour
     /// </summary>
     internal void BeginCountdown()
     {
+        _enemyMovementSoundHandler.enabled = false;
         StartCoroutine(ShakeEnemy());
     } 
     #endregion

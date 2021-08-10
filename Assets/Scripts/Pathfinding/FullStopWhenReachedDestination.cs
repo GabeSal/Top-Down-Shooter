@@ -10,6 +10,7 @@ public class FullStopWhenReachedDestination : MonoBehaviour
     private AIPath _aiPath;
     private AIDestinationSetter _aiDestinationSetter;
     private EnemySelfDestruct _enemySelfDestruct;
+    private EnemyMovementSoundHandler _enemyMovementSoundHandler;
 
     private Vector3 _targetPosition;
     #endregion
@@ -28,7 +29,6 @@ public class FullStopWhenReachedDestination : MonoBehaviour
 
         if (_aiPath.destination == _targetPosition && _aiPath.reachedDestination)
         {
-            _aiPath.enabled = false;
             _aiDestinationSetter.enabled = false;
             _aiPath.isStopped = true;
 
