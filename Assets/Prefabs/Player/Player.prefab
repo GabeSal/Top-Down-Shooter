@@ -1033,7 +1033,7 @@ MonoBehaviour:
   - {x: 0.013736367, y: -0.5269331, z: 0}
   m_ShapePathHash: 1802896499
   m_Mesh: {fileID: 0}
-  m_InstanceId: -19764
+  m_InstanceId: 146806
 --- !u!1 &6112683548684349702
 GameObject:
   m_ObjectHideFlags: 0
@@ -1465,7 +1465,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6112683549038245253}
   - component: {fileID: 6112683549038245258}
-  m_Layer: 3
+  m_Layer: 12
   m_Name: Player Vision Aimed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1861,7 +1861,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6112683549416938031}
   - component: {fileID: 6112683549416938028}
-  m_Layer: 3
+  m_Layer: 12
   m_Name: Player Vision Default
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -90,14 +90,18 @@ public class PatrolDestinationSetter : MonoBehaviour
     {
         this.enabled = true;
         _aiDestinationSetter.enabled = false;
-        _enemyShootingHandler.enabled = false;
+
+        if (_enemyShootingHandler != null)
+            _enemyShootingHandler.enabled = false;
     }
 
     private void TurnOnAggressiveBehaviour()
     {
         this.enabled = false;
         _aiDestinationSetter.enabled = true;
-        _enemyShootingHandler.enabled = true;
+
+        if (_enemyShootingHandler != null)
+            _enemyShootingHandler.enabled = true;
     }
 
     private void AIBehaviour_OnPlayerInVision()

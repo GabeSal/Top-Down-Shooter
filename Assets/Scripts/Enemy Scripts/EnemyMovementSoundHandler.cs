@@ -31,7 +31,7 @@ public class EnemyMovementSoundHandler : MonoBehaviour
     {
         _stepTimer += Time.deltaTime;
 
-        if (_stepTimer >= _stepDelayTimer && !_aiPath.isStopped && 
+        if (_stepTimer >= _stepDelayTimer && _aiPath.isStopped == false && 
             (!_aiPath.reachedEndOfPath || !_aiPath.reachedDestination))
         {
             _stepTimer = 0;

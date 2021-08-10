@@ -1,6 +1,5 @@
-using System;
-using System.Collections;
 using UnityEngine;
+using System.Collections;
 
 public class EnemySelfDestruct : MonoBehaviour
 {
@@ -28,16 +27,11 @@ public class EnemySelfDestruct : MonoBehaviour
     private LayerMask _layerMask;
     #endregion
 
-    #region Action Events
-    public event Action OnExplosion;
-    #endregion
-
     #region Standard Unity Methods
     private void Start()
     {
         _layerMask = LayerMask.GetMask("Player");
     }
-
     private void Update()
     {
         if (_isShaking)
@@ -84,8 +78,7 @@ public class EnemySelfDestruct : MonoBehaviour
         }
 
         var explosion = _explosionParticle.Get<PooledMonoBehaviour>(transform.position, Quaternion.identity);
-        explosion.ReturnToPool(_explosionParticle.GetComponent<ParticleSystem>().main.duration);
-        OnExplosion?.Invoke();
+        explosion.ReturnToPool(explosion.GetComponent<AudioSource>().clip.length);
     }
 
     /// <summary>
@@ -106,9 +99,8 @@ public class EnemySelfDestruct : MonoBehaviour
         transform.position = originalPosition;
 
         SelfDestruct();
-        float explosionLifetime = 6f;
 
-        yield return new WaitForSeconds(explosionLifetime);
+        yield return new WaitForSeconds(0.5f);
         this.GetComponent<Health>().TakeHit(9999999);
     }
     #endregion
