@@ -197,6 +197,6 @@ public class EnemyShootingHandler : MonoBehaviour
             ShootPlayer();
             yield return new WaitForSeconds(_enemyWeapon.timeUntilNextBurstShot);
         }
-    } 
+    }
     #endregion
 }

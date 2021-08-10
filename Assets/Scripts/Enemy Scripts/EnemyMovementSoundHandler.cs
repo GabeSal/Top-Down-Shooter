@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Pathfinding;
 
-public class EnemyMovement : MonoBehaviour
+public class EnemyMovementSoundHandler : MonoBehaviour
 {
     #region Serialized Fields
     [SerializeField]
@@ -31,7 +31,8 @@ public class EnemyMovement : MonoBehaviour
     {
         _stepTimer += Time.deltaTime;
 
-        if (_stepTimer >= _stepDelayTimer && _aiPath.canMove && _aiPath.reachedDestination == false)
+        if (_stepTimer >= _stepDelayTimer && !_aiPath.isStopped && 
+            (!_aiPath.reachedEndOfPath || !_aiPath.reachedDestination))
         {
             _stepTimer = 0;
             OnEnemyStep?.Invoke();

@@ -44,13 +44,11 @@ public class UIAmmoPickup : MonoBehaviour
 
     private void ShowAndPlayTextAnimation()
     {
-        _text.alpha = 1f;
         _animator.SetTrigger("TouchPlayer");
     }
 
     private void HideText()
     {
-        _text.alpha = 0f;
         _animator.Play("Default");
     }
 

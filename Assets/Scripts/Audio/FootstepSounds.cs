@@ -21,7 +21,7 @@ public class FootstepSounds : MonoBehaviour
             GetComponent<PlayerMovement>().OnPlayerStep += FootstepSounds_OnPlayerStep;
 
         if (transform.CompareTag("Enemy"))
-            GetComponent<EnemyMovement>().OnEnemyStep += FootstepSounds_OnEnemyStep;
+            GetComponent<EnemyMovementSoundHandler>().OnEnemyStep += FootstepSounds_OnEnemyStep;
     }
 
     private void OnDisable()
@@ -30,7 +30,7 @@ public class FootstepSounds : MonoBehaviour
             GetComponent<PlayerMovement>().OnPlayerStep -= FootstepSounds_OnPlayerStep;
 
         if (transform.CompareTag("Enemy"))
-            GetComponent<EnemyMovement>().OnEnemyStep -= FootstepSounds_OnEnemyStep;
+            GetComponent<EnemyMovementSoundHandler>().OnEnemyStep -= FootstepSounds_OnEnemyStep;
     }
 
     private void OnDestroy()
@@ -39,7 +39,7 @@ public class FootstepSounds : MonoBehaviour
             GetComponent<PlayerMovement>().OnPlayerStep -= FootstepSounds_OnPlayerStep;
 
         if (transform.CompareTag("Enemy"))
-            GetComponent<EnemyMovement>().OnEnemyStep -= FootstepSounds_OnEnemyStep;
+            GetComponent<EnemyMovementSoundHandler>().OnEnemyStep -= FootstepSounds_OnEnemyStep;
     }
     #endregion
 
