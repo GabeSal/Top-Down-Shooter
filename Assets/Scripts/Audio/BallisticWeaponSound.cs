@@ -13,6 +13,8 @@ public class BallisticWeaponSound : MonoBehaviour
     [SerializeField]
     private SimpleAudioEvent _reloadEvent;
     [SerializeField]
+    private SimpleAudioEvent _manualActionEvent;
+    [SerializeField]
     private SimpleAudioEvent _changeWeaponEvent;
     #endregion
 
@@ -48,7 +50,7 @@ public class BallisticWeaponSound : MonoBehaviour
     {
         _ballisticWeapon.OnFire += BallisticWeaponSound_OnFire;
         _ballisticWeapon.OutOfAmmo += BallisticWeaponSound_OutOfAmmo;
-        _ballisticWeapon.OnShotgunPump += BallisticWeaponSound_OnShotgunPump;
+        _ballisticWeapon.OnManualAction += BallisticWeaponSound_OnManualAction;
         _weaponInventory.OnWeaponChanged += BallisticWeaponSound_OnWeaponChanged;
         _weaponAmmo.OnReload += BallisticWeaponSound_OnReload;
         _weaponAmmo.OnManualReload += BallisticWeaponSound_OnManualReload;
@@ -59,7 +61,7 @@ public class BallisticWeaponSound : MonoBehaviour
     {
         _ballisticWeapon.OnFire -= BallisticWeaponSound_OnFire;
         _ballisticWeapon.OutOfAmmo -= BallisticWeaponSound_OutOfAmmo;
-        _ballisticWeapon.OnShotgunPump -= BallisticWeaponSound_OnShotgunPump;
+        _ballisticWeapon.OnManualAction -= BallisticWeaponSound_OnManualAction;
         _weaponInventory.OnWeaponChanged -= BallisticWeaponSound_OnWeaponChanged;
         _weaponAmmo.OnReload -= BallisticWeaponSound_OnReload;
         _weaponAmmo.OnManualReload -= BallisticWeaponSound_OnManualReload;
@@ -87,9 +89,9 @@ public class BallisticWeaponSound : MonoBehaviour
     /// Plays the appropriate _reloadEvent SimpleAudioEvent object through the audio source when the 
     /// OnShotgunPump() event is invoked to simulate the shotgun being cocked after a shot.
     /// </summary>
-    private void BallisticWeaponSound_OnShotgunPump()
+    private void BallisticWeaponSound_OnManualAction()
     {
-        _reloadEvent.Play(_reloadSource, true);
+        _manualActionEvent.Play(_reloadSource, true);
     }
     /// <summary>
     /// Plays the _manualReloadEvent SimpleAudioEvent object the audio source when the OnManualReload() event is invoked.
@@ -119,5 +121,6 @@ public class BallisticWeaponSound : MonoBehaviour
         _changeWeaponEvent.Play(_shootSource, true);
     }
     #endregion
+
     #endregion
 }

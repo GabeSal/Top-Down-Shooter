@@ -5,7 +5,7 @@ using UnityEngine;
 public class BallisticWeapon : WeaponBase
 {
     #region Serialized Fields
-    [Header("Ballistic Weapon Settings")]
+    [Header("Accuracy Settings")]
     [SerializeField]
     [Range(0f, 1.5f)]
     [Tooltip("Weapon sway value reduces the accuracy of the weapon if > 0.")]
@@ -13,10 +13,13 @@ public class BallisticWeapon : WeaponBase
     [SerializeField]
     [Range(0f, 1f)]
     private float _aimedWeaponSway;
+    [Header("Fire Mode Settings")]
     [SerializeField]
     private bool _isFullAuto;
     [SerializeField]
     private bool _isBurstFire;
+    [SerializeField]
+    private bool _isBoltAction;
     [SerializeField]
     private bool _isShotgun;
     [SerializeField]
@@ -28,6 +31,8 @@ public class BallisticWeapon : WeaponBase
     [SerializeField]
     [Range(6, 12)]
     private int _pelletsPerShotgunBlast;
+    [SerializeField]
+    private float _manualActionDelay;
     [SerializeField]
     [Tooltip("Assign the key to be pressed to select the weapon component defined in the editor.")]
     private KeyCode _weaponHotKey;
@@ -51,7 +56,7 @@ public class BallisticWeapon : WeaponBase
     #region Action Events
     public event Action OnFire;
     public event Action OutOfAmmo;
-    public event Action OnShotgunPump;
+    public event Action OnManualAction;
     #endregion
 
     #region Standard Unity Methods
@@ -80,7 +85,7 @@ public class BallisticWeapon : WeaponBase
                 OutOfAmmo?.Invoke();
 
             // Check if player is holding the fire button down
-            if (Input.GetKey((KeyCode)PlayerControls.fireWeapon) && _isFiring == false && _isFullAuto)
+            if (Input.GetKey((KeyCode)PlayerControls.fireWeapon) && _isFullAuto && !_isFiring && !_isBoltAction)
             {
                 if (CanFire() && !_isShotgun && !_isBurstFire)
                 {
@@ -99,7 +104,7 @@ public class BallisticWeapon : WeaponBase
             }
 
             // Check if player just pressed fire button
-            if (Input.GetKeyDown((KeyCode)PlayerControls.fireWeapon) && _isFiring == false && _isFullAuto == false)
+            if (Input.GetKeyDown((KeyCode)PlayerControls.fireWeapon) && !_isFullAuto && !_isFiring)
             {
                 if (CanFire() && !_isShotgun && !_isBurstFire)
                 {
@@ -155,6 +160,9 @@ public class BallisticWeapon : WeaponBase
             }
         }
         OnFire?.Invoke();
+
+        if (_isBoltAction && !_isFullAuto)
+            StartCoroutine(InvokeManualWeaponAction());
     }
     /// <summary>
     /// Method that resets the _fireTimer and creates a numerous amount of 2D raycasts with a for loop to collide with 
@@ -189,14 +197,14 @@ public class BallisticWeapon : WeaponBase
         OnFire?.Invoke();
 
         if (!_isFullAuto)
-            StartCoroutine(InvokeAfterYieldShotgunPump());        
+            StartCoroutine(InvokeManualWeaponAction());        
     }
 
-    private IEnumerator InvokeAfterYieldShotgunPump()
+    private IEnumerator InvokeManualWeaponAction()
     {
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(_manualActionDelay);
 
-        OnShotgunPump?.Invoke();
+        OnManualAction?.Invoke();
     }
 
     /// <summary>

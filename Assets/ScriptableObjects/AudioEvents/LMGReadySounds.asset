@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5b3705d216c1ae0408d37e04907b84a4, type: 3}
-  m_Name: PistolWeaponChangeSound
+  m_Name: LMGReadySounds
   m_EditorClassIdentifier: 
   _clips:
-  - {fileID: 8300000, guid: 62910bb78b8c44c47b054676157ba4cf, type: 3}
+  - {fileID: 8300000, guid: 677fb69df313ff54e801d07c65d408f1, type: 3}
   volume:
-    minValue: 0.87244904
+    minValue: 1
     maxValue: 1
   pitch:
-    minValue: 0.84693885
-    maxValue: 1.0510204
+    minValue: 0.84648037
+    maxValue: 0.9850208
   _distance:
     minValue: 1
-    maxValue: 81.632935
+    maxValue: 75.778854
   _mixer: {fileID: -2476616618268136997, guid: 7ef3cd21aec11ee47ab69c73deda6c9f, type: 2}

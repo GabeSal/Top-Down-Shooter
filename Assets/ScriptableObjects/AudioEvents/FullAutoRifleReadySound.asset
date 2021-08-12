@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5b3705d216c1ae0408d37e04907b84a4, type: 3}
-  m_Name: ShotgunReloadSounds
+  m_Name: FullAutoRifleReadySound
   m_EditorClassIdentifier: 
   _clips:
-  - {fileID: 8300000, guid: d1b153c78cfd42940a5ff906ee132a8b, type: 3}
+  - {fileID: 8300000, guid: 58a8bf361b89a5148a6d3c0915935e15, type: 3}
   volume:
-    minValue: 1
+    minValue: 0.9323652
     maxValue: 1
   pitch:
-    minValue: 0.89795923
-    maxValue: 1.1020408
+    minValue: 0.93681324
+    maxValue: 1.0510204
   _distance:
     minValue: 1
     maxValue: 81.632935

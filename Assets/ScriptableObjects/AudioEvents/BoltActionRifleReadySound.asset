@@ -10,18 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5b3705d216c1ae0408d37e04907b84a4, type: 3}
-  m_Name: ShotgunFireSounds
+  m_Name: BoltActionRifleReadySound
   m_EditorClassIdentifier: 
   _clips:
-  - {fileID: 8300000, guid: 713e0c9152e37da4887d8fab3ddbccc3, type: 3}
-  - {fileID: 8300000, guid: c05dcbf1ee4e17e43a9226a3a42ba69d, type: 3}
+  - {fileID: 8300000, guid: bd5d4d32a7890844285ad805e558e31c, type: 3}
   volume:
-    minValue: 0.5663266
-    maxValue: 0.5663266
+    minValue: 1
+    maxValue: 1
   pitch:
-    minValue: 0.84693885
+    minValue: 0.9511055
     maxValue: 1.0510204
   _distance:
     minValue: 1
-    maxValue: 336.73486
+    maxValue: 55.591286
   _mixer: {fileID: -2476616618268136997, guid: 7ef3cd21aec11ee47ab69c73deda6c9f, type: 2}

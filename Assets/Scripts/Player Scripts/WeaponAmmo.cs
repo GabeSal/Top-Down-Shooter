@@ -12,6 +12,9 @@ public class WeaponAmmo : MonoBehaviour
     [Range(20, 999)]
     private int _maxAmmo;
     [SerializeField]
+    [Range(0, 999)]
+    private int _startingAmmo;
+    [SerializeField]
     private bool _infiniteAmmo;
     [SerializeField]
     private bool _manualReload;
@@ -53,7 +56,7 @@ public class WeaponAmmo : MonoBehaviour
     {
         _ammoInClip = _clipSize;
         _trueMaxAmmo = _maxAmmo - _ammoInClip;
-        _ammoInReserve = _trueMaxAmmo;
+        _ammoInReserve = _startingAmmo;
 
         GameManager.Instance.OnGameOver += GameManagerInstance_OnGameOver;
 

@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5b3705d216c1ae0408d37e04907b84a4, type: 3}
-  m_Name: RifleFireSounds
+  m_Name: BurstRifleReadySound
   m_EditorClassIdentifier: 
   _clips:
-  - {fileID: 8300000, guid: 530362a337d4b5c4d849b81833f16e1b, type: 3}
+  - {fileID: 8300000, guid: 9158afb6966d445db9caf1dccf7acbcc, type: 3}
   volume:
-    minValue: 0.4985533
-    maxValue: 0.4985533
-  pitch:
-    minValue: 0.59183687
+    minValue: 0.87244904
     maxValue: 1
+  pitch:
+    minValue: 0.84693885
+    maxValue: 1.0510204
   _distance:
     minValue: 1
-    maxValue: 158.16351
+    maxValue: 81.632935
   _mixer: {fileID: -2476616618268136997, guid: 7ef3cd21aec11ee47ab69c73deda6c9f, type: 2}

@@ -10,17 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5b3705d216c1ae0408d37e04907b84a4, type: 3}
-  m_Name: RifleClickSounds
+  m_Name: SniperRifleReloadSounds
   m_EditorClassIdentifier: 
   _clips:
-  - {fileID: 8300000, guid: d89bc438b461818479fc6cd8b9f0e41f, type: 3}
+  - {fileID: 8300000, guid: 0b3ea6a26d07df549ad18bc04e70de4f, type: 3}
+  - {fileID: 8300000, guid: ab39e759ba0932b48b39aa1489796df6, type: 3}
   volume:
-    minValue: 0.9636568
+    minValue: 1
     maxValue: 1
   pitch:
-    minValue: 0.9315069
-    maxValue: 1.0684931
+    minValue: 0.8911851
+    maxValue: 0.9904135
   _distance:
     minValue: 1
-    maxValue: 75.342834
+    maxValue: 81.632935
   _mixer: {fileID: -2476616618268136997, guid: 7ef3cd21aec11ee47ab69c73deda6c9f, type: 2}
