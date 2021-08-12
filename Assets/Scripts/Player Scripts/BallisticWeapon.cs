@@ -38,7 +38,7 @@ public class BallisticWeapon : WeaponBase
     #endregion
 
     #region Private Fields
-    private PlayerShooting _playerShootingHandler;
+    private PlayerShootingUtility _playerShootingHandler;
     private WeaponAmmo _weaponAmmo;
     private float _previousWeaponSway;
     private bool _isFiring;
@@ -58,7 +58,7 @@ public class BallisticWeapon : WeaponBase
     private void Awake()
     {
         _previousWeaponSway = _weaponSway;
-        _playerShootingHandler = GetComponentInParent<PlayerShooting>();
+        _playerShootingHandler = GetComponentInParent<PlayerShootingUtility>();
         _weaponAmmo = GetComponent<WeaponAmmo>();
     }
 
@@ -75,7 +75,8 @@ public class BallisticWeapon : WeaponBase
                 _weaponSway = _previousWeaponSway;
 
             // Play out of ammo sound event
-            if (Input.GetKeyDown((KeyCode)PlayerControls.fireWeapon) && _weaponAmmo.HasAmmo() == false)
+            if (Input.GetKeyDown((KeyCode)PlayerControls.fireWeapon) && _weaponAmmo.HasAmmo() == false &&
+                !_weaponAmmo.IsReloading)
                 OutOfAmmo?.Invoke();
 
             // Check if player is holding the fire button down

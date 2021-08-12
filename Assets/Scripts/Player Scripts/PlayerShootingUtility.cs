@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class PlayerShooting : MonoBehaviour
+public class PlayerShootingUtility : MonoBehaviour
 {
     #region Private Fields
     private Transform _firePoint;

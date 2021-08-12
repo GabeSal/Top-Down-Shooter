@@ -16,6 +16,8 @@ public class WeaponAmmo : MonoBehaviour
     [SerializeField]
     private bool _manualReload;
     [SerializeField]
+    private bool _canCancelReload;
+    [SerializeField]
     [Range(0.4f, 2.2f)]
     private float _reloadTime;
     #endregion
@@ -34,6 +36,7 @@ public class WeaponAmmo : MonoBehaviour
     public int AmmoInReserve { get => _ammoInReserve; }
     public int TrueMaxAmmo { get => _trueMaxAmmo; }
     public float ReloadTime { get => _reloadTime; }
+    public bool IsReloading { get => _isReloading; }
     #endregion
 
     #region Action Events
@@ -77,7 +80,7 @@ public class WeaponAmmo : MonoBehaviour
             }
 
             // Cancel manual reload if there is enough ammo in clip
-            if (Input.GetKeyDown((KeyCode)PlayerControls.fireWeapon) && _isReloading)
+            if (Input.GetKeyDown((KeyCode)PlayerControls.fireWeapon) && _isReloading && _canCancelReload)
             {
                 CancelReload();
             }
