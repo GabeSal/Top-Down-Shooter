@@ -115,6 +115,7 @@ public class WeaponPickup : Item
         }
         _weapon.parent = _playerWeaponInventory.transform;
         playerWeaponInventory.ReplaceWeaponAtIndexOf(weaponToReplace, _weapon, this.transform);
+        _weapon = weaponToReplace.transform;
     }
 
     private void ChangeSpriteToTradedWeapon(Transform weaponToReplace)

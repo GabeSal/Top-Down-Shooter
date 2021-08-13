@@ -155,6 +155,7 @@ public class WeaponInventory : MonoBehaviour
     private void SetNewParentForReplacedWeapon(Transform newParent, int weaponIndex)
     {
         _weapons[weaponIndex].gameObject.SetActive(false);
+        _weapons[weaponIndex].GetComponent<BallisticWeapon>().weaponHotKey = KeyCode.None;
         _weapons[weaponIndex].transform.parent = newParent;
         _weapons[weaponIndex].transform.SetAsFirstSibling();
     }
