@@ -56,12 +56,20 @@ public class UIPlayerWeaponInventory : MonoBehaviour
     {
         for (int i = 0; i < _playerWeapons.WeaponsInInventory.Length; i++)
         {
-            Image weaponImage = _weaponSlots[i].GetComponent<Image>();
-            Sprite playerWeaponSprite = _playerWeapons.WeaponsInInventory[i]
-                .GetComponent<BallisticWeapon>().weaponUIImage.sprite;
+            if (_playerWeapons.WeaponsInInventory[i] != null)
+            {
+                Image weaponImage = _weaponSlots[i].GetComponent<Image>();
+                Sprite playerWeaponSprite = _playerWeapons.WeaponsInInventory[i]
+                    .GetComponent<BallisticWeapon>().weaponUIImage.sprite;
 
-            weaponImage.sprite = playerWeaponSprite;
-            weaponImage.preserveAspect = true;
+                weaponImage.sprite = playerWeaponSprite;
+                weaponImage.preserveAspect = true;
+            }
+            else
+            {
+                break;
+            }
+            
         }
         FadeNonEquippedWeapons();
     }
@@ -96,7 +104,7 @@ public class UIPlayerWeaponInventory : MonoBehaviour
     /// <returns>True if the player weapon is currently active in the scene.</returns>
     private bool PlayerWeaponEquipped(int weaponIndex)
     {
-        if (weaponIndex < _playerWeapons.WeaponsInInventory.Length)
+        if (weaponIndex < _playerWeapons.WeaponsInInventory.Length && _playerWeapons.WeaponsInInventory[weaponIndex] != null)
         {
             GameObject playerWeapon = _playerWeapons.WeaponsInInventory[weaponIndex].gameObject;
 

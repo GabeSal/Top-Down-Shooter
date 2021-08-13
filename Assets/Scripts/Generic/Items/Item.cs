@@ -37,7 +37,7 @@ public class Item : MonoBehaviour
     /// </summary>
     protected void HideSprite()
     {
-        var sprite = this.transform.GetChild(0).gameObject;
+        var sprite = this.transform.GetComponentInChildren<SpriteRenderer>().gameObject;
 
         sprite.SetActive(false);
     }

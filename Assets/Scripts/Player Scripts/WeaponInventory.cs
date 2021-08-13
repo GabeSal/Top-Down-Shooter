@@ -5,7 +5,7 @@ public class WeaponInventory : MonoBehaviour
 {
     #region Serialized Fields
     [SerializeField]
-    private Transform[] _weapons;
+    private Transform[] _weapons = new Transform[3];
     #endregion
 
     #region Action Events
@@ -23,31 +23,34 @@ public class WeaponInventory : MonoBehaviour
         {
             foreach (var weapon in _weapons)
             {
-                BallisticWeapon ballisticWeapon = weapon.GetComponent<BallisticWeapon>();
-
-                if (ballisticWeapon != null)
+                if (weapon != null)
                 {
-                    if (Input.GetKeyDown((KeyCode)PlayerControls.lightWeapon) &&
-                    CompareWeaponKeyCodeWithPlayerControls(PlayerControls.lightWeapon, ballisticWeapon.WeaponHotKey))
-                    {
-                        SwitchToWeapon(weapon);
-                        break;
-                    }
+                    BallisticWeapon ballisticWeapon = weapon.GetComponent<BallisticWeapon>();
 
-                    if (Input.GetKeyDown((KeyCode)PlayerControls.mediumWeapon) &&
-                        CompareWeaponKeyCodeWithPlayerControls(PlayerControls.mediumWeapon, ballisticWeapon.WeaponHotKey))
+                    if (ballisticWeapon != null)
                     {
-                        SwitchToWeapon(weapon);
-                        break;
-                    }
+                        if (Input.GetKeyDown((KeyCode)PlayerControls.lightWeapon) &&
+                        CompareWeaponKeyCodeWithPlayerControls(PlayerControls.lightWeapon, ballisticWeapon.WeaponHotKey))
+                        {
+                            SwitchToWeapon(weapon);
+                            break;
+                        }
 
-                    if (Input.GetKeyDown((KeyCode)PlayerControls.heavyWeapon) &&
-                        CompareWeaponKeyCodeWithPlayerControls(PlayerControls.heavyWeapon, ballisticWeapon.WeaponHotKey))
-                    {
-                        SwitchToWeapon(weapon);
-                        break;
+                        if (Input.GetKeyDown((KeyCode)PlayerControls.mediumWeapon) &&
+                            CompareWeaponKeyCodeWithPlayerControls(PlayerControls.mediumWeapon, ballisticWeapon.WeaponHotKey))
+                        {
+                            SwitchToWeapon(weapon);
+                            break;
+                        }
+
+                        if (Input.GetKeyDown((KeyCode)PlayerControls.heavyWeapon) &&
+                            CompareWeaponKeyCodeWithPlayerControls(PlayerControls.heavyWeapon, ballisticWeapon.WeaponHotKey))
+                        {
+                            SwitchToWeapon(weapon);
+                            break;
+                        }
                     }
-                }
+                }                
             }
         }
     }
