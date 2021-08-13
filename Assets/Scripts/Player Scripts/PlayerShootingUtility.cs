@@ -16,7 +16,16 @@ public class PlayerShootingUtility : MonoBehaviour
     private void Awake()
     {
         _weaponInventory = GetComponentInChildren<WeaponInventory>();
+        if (_weaponInventory != null)
+            _weaponInventory.OnWeaponInventoryUpdate += PlayerFirePoint_OnWeaponInventoryUpdate;
+
         FindActiveWeaponInWeaponInventory();
+    }
+
+    private void OnDestroy()
+    {
+        if (_weaponInventory != null)
+            _weaponInventory.OnWeaponInventoryUpdate -= PlayerFirePoint_OnWeaponInventoryUpdate;
     }
     #endregion
 
@@ -67,6 +76,11 @@ public class PlayerShootingUtility : MonoBehaviour
                 break;
             }
         }
+    }
+
+    private void PlayerFirePoint_OnWeaponInventoryUpdate()
+    {
+        FindActiveWeaponInWeaponInventory();
     }
     #endregion
 }

@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -18,6 +19,7 @@ public class UIWeaponPickup : MonoBehaviour
 
         _weaponPickup.OnLeavingWeaponPickup += WeaponPickupUI_OnLeavingWeaponPickup;
         _weaponPickup.OnWeaponInteraction += WeaponPickupUI_OnWeaponInteraction;
+        _weaponPickup.OnWeaponInventoryFull += WeaponPickupUI_OnWeaponInventoryFull;
     }
 
     private void OnDisable()
@@ -67,6 +69,12 @@ public class UIWeaponPickup : MonoBehaviour
     private void WeaponPickupUI_OnLeavingWeaponPickup()
     {
         HideText();
+    }
+
+    private void WeaponPickupUI_OnWeaponInventoryFull(GameObject weaponToReplace)
+    {
+        ShowAndPlayTextAnimation();
+        _text.text = $"Replace {weaponToReplace.name} for {_weaponPickup.transform.GetChild(0).name}";
     }
     #endregion
 }
