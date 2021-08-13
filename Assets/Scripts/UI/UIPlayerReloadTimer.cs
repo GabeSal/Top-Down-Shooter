@@ -48,7 +48,7 @@ public class UIPlayerReloadTimer : MonoBehaviour
 
         foreach (var weapon in _weaponInventory.WeaponsInInventory)
         {
-            if (weapon.gameObject.activeInHierarchy)
+            if (weapon != null && weapon.gameObject.activeInHierarchy)
             {
                 _playerAmmo = weapon.GetComponent<WeaponAmmo>();
                 break;

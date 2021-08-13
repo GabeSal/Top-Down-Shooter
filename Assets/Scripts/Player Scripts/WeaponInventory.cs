@@ -10,6 +10,7 @@ public class WeaponInventory : MonoBehaviour
 
     #region Action Events
     public event Action OnWeaponChanged;
+    public event Action OnWeaponInventoryUpdate;
     #endregion
 
     #region Properties
@@ -68,8 +69,9 @@ public class WeaponInventory : MonoBehaviour
         {
             if (weapon != null)
                 weapon.gameObject.SetActive(weapon == weaponToSwitchTo);
+
+            OnWeaponChanged?.Invoke();
         }
-        OnWeaponChanged?.Invoke();
     }
 
     /// <summary>
@@ -105,10 +107,12 @@ public class WeaponInventory : MonoBehaviour
                 break;
             }
         }
+        OnWeaponInventoryUpdate?.Invoke();
     }
 
     internal Transform TradeWeaponInCurrentWeaponSlot(Transform weaponToAdd)
     {
+        OnWeaponInventoryUpdate?.Invoke();
         return null;
     }
     #endregion

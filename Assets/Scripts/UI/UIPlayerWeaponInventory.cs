@@ -18,9 +18,14 @@ public class UIPlayerWeaponInventory : MonoBehaviour
         _playerWeapons = FindObjectOfType<PlayerMovement>().GetComponentInChildren<WeaponInventory>();
 
         if (_playerWeapons != null)
+        {
             _playerWeapons.OnWeaponChanged += WeaponInventoryUI_OnWeaponChanged;
+            _playerWeapons.OnWeaponInventoryUpdate += WeaponInventoryUI_OnWeaponInventoryUpdate;
+        }
         else
-            Debug.LogError("There is no weapon inventory component found in the scene.");      
+        {
+            Debug.LogError("There is no weapon inventory component found in the scene.");
+        }
 
         OccupyWeaponSlots();
         SetPlayerWeaponImages();
@@ -28,7 +33,8 @@ public class UIPlayerWeaponInventory : MonoBehaviour
 
     private void OnDestroy()
     {
-        _playerWeapons.OnWeaponChanged += WeaponInventoryUI_OnWeaponChanged;
+        _playerWeapons.OnWeaponChanged -= WeaponInventoryUI_OnWeaponChanged;
+        _playerWeapons.OnWeaponInventoryUpdate -= WeaponInventoryUI_OnWeaponInventoryUpdate;
     }
     #endregion
 
@@ -125,6 +131,12 @@ public class UIPlayerWeaponInventory : MonoBehaviour
     private void WeaponInventoryUI_OnWeaponChanged()
     {
         FadeNonEquippedWeapons();
+    }
+
+    private void WeaponInventoryUI_OnWeaponInventoryUpdate()
+    {
+        OccupyWeaponSlots();
+        SetPlayerWeaponImages();
     }
     #endregion
 }

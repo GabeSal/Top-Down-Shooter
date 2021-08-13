@@ -42,7 +42,7 @@ public class UIAmmoText : MonoBehaviour
     {
         foreach (var weapon in _weaponInventory.WeaponsInInventory)
         {
-            if (weapon.gameObject.activeInHierarchy)
+            if (weapon != null && weapon.gameObject.activeInHierarchy)
             {
                 _currentWeaponAmmo = weapon.GetComponent<WeaponAmmo>();
                 break;
@@ -83,9 +83,9 @@ public class UIAmmoText : MonoBehaviour
     /// </summary>
     private void WeaponInventory_OnWeaponChanged()
     {
-        ShowAmmoText();
         UnsubscribeToWeaponAmmoEvents();
         FindActivePlayerWeaponInScene();
+        ShowAmmoText();
     }
 
     /// <summary>
