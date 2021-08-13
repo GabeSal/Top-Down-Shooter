@@ -31,21 +31,21 @@ public class WeaponInventory : MonoBehaviour
                     if (ballisticWeapon != null)
                     {
                         if (Input.GetKeyDown((KeyCode)PlayerControls.weapon1) &&
-                        CompareWeaponKeyCodeWithPlayerControls(PlayerControls.weapon1, ballisticWeapon.WeaponHotKey))
+                        CompareWeaponKeyCodeWithPlayerControls(PlayerControls.weapon1, ballisticWeapon.weaponHotKey))
                         {
                             SwitchToWeapon(weapon);
                             break;
                         }
 
                         if (Input.GetKeyDown((KeyCode)PlayerControls.weapon2) &&
-                            CompareWeaponKeyCodeWithPlayerControls(PlayerControls.weapon2, ballisticWeapon.WeaponHotKey))
+                            CompareWeaponKeyCodeWithPlayerControls(PlayerControls.weapon2, ballisticWeapon.weaponHotKey))
                         {
                             SwitchToWeapon(weapon);
                             break;
                         }
 
                         if (Input.GetKeyDown((KeyCode)PlayerControls.weapon3) &&
-                            CompareWeaponKeyCodeWithPlayerControls(PlayerControls.weapon3, ballisticWeapon.WeaponHotKey))
+                            CompareWeaponKeyCodeWithPlayerControls(PlayerControls.weapon3, ballisticWeapon.weaponHotKey))
                         {
                             SwitchToWeapon(weapon);
                             break;
@@ -87,13 +87,27 @@ public class WeaponInventory : MonoBehaviour
     }
 
     /// <summary>
-    /// Adds the weaponToAdd object passed from the WeaponPickup item into the WeaponInventories _weapons array
-    /// and then equips the newly added weapon.
+    /// Resets the local position and rotation of the transform holding the weapon components for the player weapon
+    /// being added into the inventory.
     /// </summary>
-    /// <param name="weaponToAdd"></param>
-    internal void AddWeapon(Transform weaponToAdd)
+    /// <param name="weaponToAdd">Transform which holds the coordinates and rotation of the weapon game object
+    /// that will be added to the _weapons array.</param>
+    private static void ResetWeaponPositionAndRotation(Transform weaponToAdd)
     {
         weaponToAdd.localRotation = Quaternion.identity;
+        weaponToAdd.localPosition = Vector3.zero;
+    }
+
+    /// <summary>
+    /// Adds the weaponToAdd object passed from the WeaponPickup item into the _weapons array
+    /// and then equips the newly added weapon. OnWeaponInventoryUpdate will then be invoked to update the UI elements
+    /// in the WeaponInventoryUI canvas group.
+    /// </summary>
+    /// <param name="weaponToAdd">Transform of the weapon game object that will be added to the _weapons array.</param>
+    internal void AddWeapon(Transform weaponToAdd)
+    {
+        ResetWeaponPositionAndRotation(weaponToAdd);
+
         for (int i = 0; i < _weapons.Length; i++)
         {
             if (_weapons[i] != null)
@@ -104,10 +118,23 @@ public class WeaponInventory : MonoBehaviour
             {
                 _weapons[i] = weaponToAdd;
                 SwitchToWeapon(_weapons[i]);
+                AssignHotKeyForAddedWeapon(i);
                 break;
             }
         }
         OnWeaponInventoryUpdate?.Invoke();
+    }
+
+    private void AssignHotKeyForAddedWeapon(int weaponIndex)
+    {
+        if (weaponIndex == 0)
+            _weapons[weaponIndex].GetComponent<BallisticWeapon>().weaponHotKey = (KeyCode)PlayerControls.weapon1;
+
+        if (weaponIndex == 1)
+            _weapons[weaponIndex].GetComponent<BallisticWeapon>().weaponHotKey = (KeyCode)PlayerControls.weapon2;
+
+        if (weaponIndex == 2)
+            _weapons[weaponIndex].GetComponent<BallisticWeapon>().weaponHotKey = (KeyCode)PlayerControls.weapon3;
     }
 
     internal Transform TradeWeaponInCurrentWeaponSlot(Transform weaponToAdd)

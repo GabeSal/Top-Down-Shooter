@@ -18,8 +18,8 @@ MonoBehaviour:
     minValue: 0.7082597
     maxValue: 0.7606863
   pitch:
-    minValue: 0.8614594
-    maxValue: 1
+    minValue: 0.96350014
+    maxValue: 1.2551019
   _distance:
     minValue: 1
     maxValue: 105.73691

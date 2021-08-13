@@ -33,9 +33,6 @@ public class BallisticWeapon : WeaponBase
     private int _pelletsPerShotgunBlast;
     [SerializeField]
     private float _manualActionDelay;
-    [SerializeField]
-    [Tooltip("Assign the key to be pressed to select the weapon component defined in the editor.")]
-    private KeyCode _weaponHotKey;
 
     [Header("Ballistic Weapon Prefabs")]
     [SerializeField]
@@ -50,7 +47,8 @@ public class BallisticWeapon : WeaponBase
     #endregion
 
     #region Properties
-    public KeyCode WeaponHotKey { get => _weaponHotKey; }
+    [Tooltip("Assign the key to be pressed to select the weapon component defined in the editor.")]
+    public KeyCode weaponHotKey;
     #endregion
 
     #region Action Events
