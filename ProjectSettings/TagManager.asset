@@ -9,6 +9,7 @@ TagManager:
   - Menu Button
   - End Point
   - Checkpoint
+  - Weapon
   layers:
   - Default
   - TransparentFX

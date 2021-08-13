@@ -13,8 +13,6 @@ public class WeaponPickup : Item
 
     #region Action Events
     public event Action OnWeaponInteraction;
-    public event Action OnWeaponPickup;
-    public event Action OnWeaponTrade;
     public event Action OnLeavingWeaponPickup;
     #endregion
 
@@ -49,15 +47,35 @@ public class WeaponPickup : Item
     private void AddWeaponToWeaponInventory()
     {
         _isTouchingPlayer = false;
-        var playerWeaponInventory = _player.transform.GetChild(0);
+        var playerWeaponInventory = _player.transform.GetChild(0).GetComponent<WeaponInventory>();
 
-        if (playerWeaponInventory.childCount < 3)
+        if (playerWeaponInventory.transform.childCount < 3)
         {
-            _weapon.parent = playerWeaponInventory;
+            _weapon.parent = playerWeaponInventory.transform;
             _weapon.SetAsLastSibling();
+            playerWeaponInventory.AddWeapon(_weapon.transform);
+            this.gameObject.SetActive(false);
         }
+        else
+        {
+            foreach (var weapon in playerWeaponInventory.WeaponsInInventory)
+            {
+                if (weapon.gameObject.activeInHierarchy)
+                {
+                    var tradedWeapon = playerWeaponInventory.TradeWeaponInCurrentWeaponSlot(_weapon.transform);
+                    tradedWeapon.parent = this.transform;
+                    tradedWeapon.SetAsFirstSibling();
+                    ChangeSpriteToTradedWeapon(tradedWeapon);
+                    break;
+                }
+            }
+        }
+    }
 
-        HideSprite();
+    private void ChangeSpriteToTradedWeapon(Transform tradedWeapon)
+    {
+        var sprite = GetComponentInChildren<SpriteRenderer>().gameObject;
+        return;
     }
     #endregion
 }

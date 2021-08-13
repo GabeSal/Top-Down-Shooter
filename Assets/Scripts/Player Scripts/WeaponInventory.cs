@@ -29,22 +29,22 @@ public class WeaponInventory : MonoBehaviour
 
                     if (ballisticWeapon != null)
                     {
-                        if (Input.GetKeyDown((KeyCode)PlayerControls.lightWeapon) &&
-                        CompareWeaponKeyCodeWithPlayerControls(PlayerControls.lightWeapon, ballisticWeapon.WeaponHotKey))
+                        if (Input.GetKeyDown((KeyCode)PlayerControls.weapon1) &&
+                        CompareWeaponKeyCodeWithPlayerControls(PlayerControls.weapon1, ballisticWeapon.WeaponHotKey))
                         {
                             SwitchToWeapon(weapon);
                             break;
                         }
 
-                        if (Input.GetKeyDown((KeyCode)PlayerControls.mediumWeapon) &&
-                            CompareWeaponKeyCodeWithPlayerControls(PlayerControls.mediumWeapon, ballisticWeapon.WeaponHotKey))
+                        if (Input.GetKeyDown((KeyCode)PlayerControls.weapon2) &&
+                            CompareWeaponKeyCodeWithPlayerControls(PlayerControls.weapon2, ballisticWeapon.WeaponHotKey))
                         {
                             SwitchToWeapon(weapon);
                             break;
                         }
 
-                        if (Input.GetKeyDown((KeyCode)PlayerControls.heavyWeapon) &&
-                            CompareWeaponKeyCodeWithPlayerControls(PlayerControls.heavyWeapon, ballisticWeapon.WeaponHotKey))
+                        if (Input.GetKeyDown((KeyCode)PlayerControls.weapon3) &&
+                            CompareWeaponKeyCodeWithPlayerControls(PlayerControls.weapon3, ballisticWeapon.WeaponHotKey))
                         {
                             SwitchToWeapon(weapon);
                             break;
@@ -66,9 +66,10 @@ public class WeaponInventory : MonoBehaviour
     {
         foreach (var weapon in _weapons)
         {
-            weapon.gameObject.SetActive(weapon == weaponToSwitchTo);
-            OnWeaponChanged?.Invoke();
+            if (weapon != null)
+                weapon.gameObject.SetActive(weapon == weaponToSwitchTo);
         }
+        OnWeaponChanged?.Invoke();
     }
 
     /// <summary>
@@ -81,6 +82,34 @@ public class WeaponInventory : MonoBehaviour
     private static bool CompareWeaponKeyCodeWithPlayerControls(PlayerControls input, KeyCode weaponHotKey)
     {
         return (KeyCode)input == weaponHotKey;
+    }
+
+    /// <summary>
+    /// Adds the weaponToAdd object passed from the WeaponPickup item into the WeaponInventories _weapons array
+    /// and then equips the newly added weapon.
+    /// </summary>
+    /// <param name="weaponToAdd"></param>
+    internal void AddWeapon(Transform weaponToAdd)
+    {
+        weaponToAdd.localRotation = Quaternion.identity;
+        for (int i = 0; i < _weapons.Length; i++)
+        {
+            if (_weapons[i] != null)
+            {
+                continue;
+            }
+            else
+            {
+                _weapons[i] = weaponToAdd;
+                SwitchToWeapon(_weapons[i]);
+                break;
+            }
+        }
+    }
+
+    internal Transform TradeWeaponInCurrentWeaponSlot(Transform weaponToAdd)
+    {
+        return null;
     }
     #endregion
 }
