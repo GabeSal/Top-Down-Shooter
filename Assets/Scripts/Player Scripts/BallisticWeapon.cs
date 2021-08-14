@@ -33,6 +33,9 @@ public class BallisticWeapon : WeaponBase
     private int _pelletsPerShotgunBlast;
     [SerializeField]
     private float _manualActionDelay;
+    [SerializeField]
+    [Range(1, 3)]
+    private int _slotNumber;
 
     [Header("Ballistic Weapon Prefabs")]
     [SerializeField]
@@ -49,6 +52,9 @@ public class BallisticWeapon : WeaponBase
     #region Properties
     [Tooltip("Assign the key to be pressed to select the weapon component defined in the editor.")]
     public KeyCode weaponHotKey;
+
+    public int SlotNumber { get => _slotNumber; }
+
     #endregion
 
     #region Action Events

@@ -22,30 +22,30 @@ public class WeaponPickup : Item
     private void Awake()
     {
         _weapon = transform.GetChild(0);
+
+        _playerWeaponInventory = FindObjectOfType<WeaponInventory>();
+        if(_playerWeaponInventory != null)
+            _playerWeaponInventory.OnWeaponDropped += SwapSpriteOfDroppedWeapon;        
+    }
+
+    private void SwapSpriteOfDroppedWeapon(BallisticWeapon droppedWeapon)
+    {
+        if (_isTouchingPlayer)
+            ChangeSpriteToTradedWeapon(droppedWeapon);
     }
 
     private void Update()
     {
         if (_isTouchingPlayer)
         {
-            if (CheckPlayerWeaponInventorySpace())
-            {
-                if (PlayerInteracted())
-                    AddWeaponToWeaponInventory();
-            }
-            else
-            {
-                if (PlayerInteracted())
-                    TradeWeaponForCurrentlyEquippedWeapon();
-            }
+            if (PlayerInteracted())
+                AddWeaponToWeaponInventory();
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        _player = collision;
-        _isTouchingPlayer = true;
-        _playerWeaponInventory = _player.transform.GetChild(0).GetComponent<WeaponInventory>();        
+        _isTouchingPlayer = true;       
 
         if (CheckPlayerWeaponInventorySpace() == false)
             OnWeaponInventoryFull?.Invoke(_playerWeaponInventory.GetCurrentlyEquippedWeaponGameObject());
@@ -55,7 +55,6 @@ public class WeaponPickup : Item
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        _player = null;
         _isTouchingPlayer = false;
         OnLeavingWeaponPickup?.Invoke();
     }
@@ -69,8 +68,7 @@ public class WeaponPickup : Item
     /// <returns>True if there are less than 3 and greater than 0 children within the Weapon Inventory transform.</returns>
     private bool CheckPlayerWeaponInventorySpace()
     {
-        var playerWeaponInventory = _player.transform.GetChild(0).GetComponent<WeaponInventory>();
-        if (playerWeaponInventory.transform.childCount > 0 && playerWeaponInventory.transform.childCount < 3)
+        if (_playerWeaponInventory.transform.childCount > 0 && _playerWeaponInventory.transform.childCount < 3)
             return true;
         else
             return false;
@@ -82,46 +80,27 @@ public class WeaponPickup : Item
     /// </summary>
     private void AddWeaponToWeaponInventory()
     {
-        _isTouchingPlayer = false;
-        var playerWeaponInventory = _player.transform.GetChild(0).GetComponent<WeaponInventory>();
+        //_isTouchingPlayer = false;
 
-        _weapon.parent = playerWeaponInventory.transform;
-        _weapon.SetAsLastSibling();
-        playerWeaponInventory.AddWeapon(_weapon.transform);
-
-        if (transform.GetChild(0).GetComponent<BallisticWeapon>() == null)
-            this.gameObject.SetActive(false);
-    }
-
-    /// <summary>
-    /// Replaces the currently active weapon within the WeaponInventory's transform children with the
-    /// _weapon transform and "switches" places with the traded weapon (ie equipped weapon is dropped
-    /// while the picked up weapon replaces the weapon slot occupied by previously equipped weapon.)
-    /// </summary>
-    private void TradeWeaponForCurrentlyEquippedWeapon()
-    {
-        _isTouchingPlayer = false;
-        var playerWeaponInventory = _player.transform.GetChild(0).GetComponent<WeaponInventory>();
-        GameObject weaponToReplace = null;
-
-        foreach (var weapon in playerWeaponInventory.WeaponsInInventory)
-        {
-            if (weapon.gameObject.activeInHierarchy)
-            {
-                weaponToReplace = playerWeaponInventory.GetCurrentlyEquippedWeaponGameObject();
-                ChangeSpriteToTradedWeapon(weaponToReplace.transform);
-                break;
-            }
-        }
         _weapon.parent = _playerWeaponInventory.transform;
-        playerWeaponInventory.ReplaceWeaponAtIndexOf(weaponToReplace, _weapon, this.transform);
-        _weapon = weaponToReplace.transform;
+        var weaponIndex = _weapon.GetComponent<BallisticWeapon>().SlotNumber;
+        _weapon.SetSiblingIndex(weaponIndex);
+        _playerWeaponInventory.AddWeapon(_weapon.transform, this.transform);
+
+        if (transform.GetChild(0).GetComponent<BallisticWeapon>() != null)
+        {
+            _weapon = transform.GetChild(0);
+        }
+        else
+        {
+            this.gameObject.SetActive(false);
+        }
     }
 
-    private void ChangeSpriteToTradedWeapon(Transform weaponToReplace)
+    private void ChangeSpriteToTradedWeapon(BallisticWeapon weaponToReplace)
     {
         var sprite = GetComponentInChildren<SpriteRenderer>();
-        sprite.sprite = weaponToReplace.GetComponent<BallisticWeapon>().weaponUIImage.sprite;
+        sprite.sprite = weaponToReplace.weaponUIImage.sprite;
         return;
     }
     #endregion

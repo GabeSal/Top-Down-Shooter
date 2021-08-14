@@ -785,6 +785,7 @@ MonoBehaviour:
   _timeUntilNextBurstShot: 0.05
   _pelletsPerShotgunBlast: 6
   _manualActionDelay: 0.5
+  _slotNumber: 3
   _bulletTrail: {fileID: 0}
   weaponHotKey: 0
 --- !u!114 &7304258316883525185

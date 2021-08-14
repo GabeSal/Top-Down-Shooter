@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class WeaponInventory : MonoBehaviour
@@ -11,6 +12,7 @@ public class WeaponInventory : MonoBehaviour
     #region Action Events
     public event Action OnWeaponChanged;
     public event Action OnWeaponInventoryUpdate;
+    public event Action<BallisticWeapon> OnWeaponDropped;
     #endregion
 
     #region Properties
@@ -104,46 +106,22 @@ public class WeaponInventory : MonoBehaviour
     /// in the WeaponInventoryUI canvas group.
     /// </summary>
     /// <param name="weaponToAdd">Transform of the weapon game object that will be added to the _weapons array.</param>
-    internal void AddWeapon(Transform weaponToAdd)
+    internal void AddWeapon(Transform weaponToAdd, Transform newParent)
     {
+        int slotNumber = weaponToAdd.GetComponent<BallisticWeapon>().SlotNumber - 1;
         ResetWeaponPositionAndRotation(weaponToAdd);
 
-        for (int i = 0; i < _weapons.Length; i++)
+        //Drop current weapon in slot number, if it already exist
+        if(_weapons[slotNumber] != null)
         {
-            if (_weapons[i] != null)
-            {
-                continue;
-            }
-            else
-            {
-                _weapons[i] = weaponToAdd;
-                SwitchToWeapon(_weapons[i]);
-                AssignHotKeyForAddedWeapon(i);
-                break;
-            }
-        }
-        OnWeaponInventoryUpdate?.Invoke();
-    }
-
-    internal void ReplaceWeaponAtIndexOf(GameObject weaponToReplace, Transform weaponToAdd, Transform newParent)
-    {
-        ResetWeaponPositionAndRotation(weaponToAdd);
-
-        for (int i = 0; i < _weapons.Length; i++)
-        {
-            if (_weapons[i].gameObject == weaponToReplace)
-            {
-                SetNewParentForReplacedWeapon(newParent, i);
-                weaponToAdd.SetSiblingIndex(i);
-                
-                _weapons[i] = weaponToAdd;
-                ResetWeaponPositionAndRotation(_weapons[i]);
-                AssignHotKeyForAddedWeapon(i);
-                break;
-            }
+            SetNewParentForReplacedWeapon(newParent, slotNumber);
+            OnWeaponDropped?.Invoke(_weapons[slotNumber].GetComponent<BallisticWeapon>());
         }
 
-        SwitchToWeapon(weaponToAdd);
+        _weapons[slotNumber] = weaponToAdd;
+        SwitchToWeapon(_weapons[slotNumber]);
+        AssignHotKeyForAddedWeapon(slotNumber);
+
         OnWeaponInventoryUpdate?.Invoke();
     }
 
@@ -154,6 +132,9 @@ public class WeaponInventory : MonoBehaviour
     /// specified weaponIndex in the _weapons array.</param>
     private void SetNewParentForReplacedWeapon(Transform newParent, int weaponIndex)
     {
+        var weaponsInParent = newParent.GetComponentsInChildren<BallisticWeapon>();
+        if (weaponsInParent.Length > 0) return;
+
         _weapons[weaponIndex].gameObject.SetActive(false);
         _weapons[weaponIndex].GetComponent<BallisticWeapon>().weaponHotKey = KeyCode.None;
         _weapons[weaponIndex].transform.parent = newParent;

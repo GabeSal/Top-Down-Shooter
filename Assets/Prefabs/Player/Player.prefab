@@ -567,8 +567,9 @@ MonoBehaviour:
   _timeUntilNextBurstShot: 0.08
   _pelletsPerShotgunBlast: 6
   _manualActionDelay: 0
-  _weaponHotKey: 49
+  _slotNumber: 1
   _bulletTrail: {fileID: 6112683550287535616}
+  weaponHotKey: 0
 --- !u!114 &6112683548684349696
 MonoBehaviour:
   m_ObjectHideFlags: 0

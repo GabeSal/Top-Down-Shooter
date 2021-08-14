@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 8475789604226817492}
   m_LocalRotation: {x: 0, y: 0, z: -0.28401542, w: 0.95881975}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 1}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_Children: []
   m_Father: {fileID: 8475789604973497629}
   m_RootOrder: 1
@@ -72,9 +72,9 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 666ec7ed141d2e74aa1affe1d7c5c1d5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f90af3cd25869f743b2e9ccfdf8e4b5a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 25.999998, y: 14.002929}
@@ -360,8 +360,9 @@ MonoBehaviour:
   _timeUntilNextBurstShot: 0.05
   _pelletsPerShotgunBlast: 6
   _manualActionDelay: 0
-  _weaponHotKey: 50
+  _slotNumber: 1
   _bulletTrail: {fileID: 0}
+  weaponHotKey: 0
 --- !u!114 &8475789604518016252
 MonoBehaviour:
   m_ObjectHideFlags: 0

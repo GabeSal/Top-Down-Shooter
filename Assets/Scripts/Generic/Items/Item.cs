@@ -37,9 +37,9 @@ public class Item : MonoBehaviour
     /// </summary>
     protected void HideSprite()
     {
-        var sprite = GetComponentInChildren<SpriteRenderer>().gameObject;
+        var sprite = GetComponentInChildren<SpriteRenderer>();
 
-        sprite.SetActive(false);
+        sprite.enabled = false;
     }
     #endregion
 }
