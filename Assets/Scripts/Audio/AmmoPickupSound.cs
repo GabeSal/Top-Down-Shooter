@@ -20,22 +20,22 @@ public class AmmoPickupSound : MonoBehaviour
 
     private void OnEnable()
     {
-        GetComponent<AmmoDrop>().OnAmmoPickup += AmmoPickupSound_OnAmmoPickup;
+        GetComponent<AmmoDrop>().OnAmmoPickup += PlayAmmoPickupSound;
     }
 
     private void OnDisable()
     {
-        GetComponent<AmmoDrop>().OnAmmoPickup -= AmmoPickupSound_OnAmmoPickup;
+        GetComponent<AmmoDrop>().OnAmmoPickup -= PlayAmmoPickupSound;
     }
 
     private void OnDestroy()
     {
-        GetComponent<AmmoDrop>().OnAmmoPickup -= AmmoPickupSound_OnAmmoPickup;
+        GetComponent<AmmoDrop>().OnAmmoPickup -= PlayAmmoPickupSound;
     }
     #endregion
 
     #region Class Defined Methods
-    private void AmmoPickupSound_OnAmmoPickup()
+    private void PlayAmmoPickupSound()
     {
         var ammoDrop = this.GetComponent<AmmoDrop>();
         _ammoPickupSoundEvent.Play(_audioSource, true);

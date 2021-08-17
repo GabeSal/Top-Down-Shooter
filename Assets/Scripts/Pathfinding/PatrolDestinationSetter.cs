@@ -30,22 +30,28 @@ public class PatrolDestinationSetter : MonoBehaviour
     #region Standard Unity Methods
     private void Start()
     {
-        _ai = GetComponent<IAstarAI>();
-        _grid = AstarPath.active.data.gridGraph;
-        _aiDestinationSetter = GetComponent<AIDestinationSetter>();
-
-        _vision = GetComponentInChildren<EnemyVision>();
-        _vision.OnPlayerInVision += AIBehaviour_OnPlayerInVision;
-        _vision.OnPlayerOutOfVision += AIBehaviour_OnPlayerOutOfVision;
-
-        _target = _aiDestinationSetter.target.GetComponent<Collider2D>();        
-        _enemyShootingHandler = GetComponent<EnemyShootingHandler>();
-
-        if (_target == null)
-            Debug.LogError("AI destination setter has no target.");
-
         if (_isPatrolling)
+        {
+            _ai = GetComponent<IAstarAI>();
+            _grid = AstarPath.active.data.gridGraph;
+            _aiDestinationSetter = GetComponent<AIDestinationSetter>();
+
+            _vision = GetComponentInChildren<EnemyVision>();
+            _vision.OnPlayerInVision += AIBehaviour_OnPlayerInVision;
+            _vision.OnPlayerOutOfVision += AIBehaviour_OnPlayerOutOfVision;
+
+            _target = _aiDestinationSetter.target.GetComponent<Collider2D>();
+            _enemyShootingHandler = GetComponent<EnemyShootingHandler>();
+
+            if (_target == null)
+                Debug.LogError("AI destination setter has no target.");
+
             TurnOffAggressiveBehaviour();
+        }
+        else
+        {
+            this.enabled = false;
+        }
     }
 
     private void LateUpdate()

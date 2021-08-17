@@ -16,6 +16,7 @@ public class WeaponInventory : MonoBehaviour
     #region Action Events
     public event Action OnWeaponChanged;
     public event Action OnWeaponInventoryUpdate;
+    public event Action FirstWeaponFound;
     public event Action<BallisticWeapon> OnWeaponDropped;
     #endregion
 
@@ -84,7 +85,7 @@ public class WeaponInventory : MonoBehaviour
             Transform equippedWeapon = _playerWeaponHolder.transform.GetChild(0);
             int equippedWeaponsSlotNumber = equippedWeapon.GetComponent<BallisticWeapon>().SlotNumber - 1;
 
-            equippedWeapon.parent = this.transform;
+            equippedWeapon.SetParent(this.transform);
             equippedWeapon.SetSiblingIndex(equippedWeaponsSlotNumber);
 
             foreach (var weapon in _weapons)
@@ -95,11 +96,11 @@ public class WeaponInventory : MonoBehaviour
 
                     if (!weapon.gameObject.activeInHierarchy)
                     {
-                        weapon.parent = this.transform;
+                        weapon.SetParent(this.transform);
                     }
                     else
                     {
-                        weapon.parent = _playerWeaponHolder.transform;
+                        weapon.SetParent(_playerWeaponHolder.transform, false);
                         ResetWeaponPositionAndRotation(weapon);
                     }
                 }
@@ -144,8 +145,8 @@ public class WeaponInventory : MonoBehaviour
 
         _weapons[weaponIndex].gameObject.SetActive(false);
         _weapons[weaponIndex].GetComponent<BallisticWeapon>().weaponHotKey = KeyCode.None;
-        _weapons[weaponIndex].transform.parent = newParent;
-        _weapons[weaponIndex].transform.SetAsFirstSibling();
+        _weapons[weaponIndex].SetParent(newParent, false);
+        _weapons[weaponIndex].SetAsFirstSibling();
     }
 
     /// <summary>
@@ -174,18 +175,27 @@ public class WeaponInventory : MonoBehaviour
         var equippedWeapon = _playerWeaponHolder.transform.GetChild(0);
         int equippedWeaponSlotNumber = equippedWeapon.GetComponent<BallisticWeapon>().SlotNumber;
 
-        equippedWeapon.parent = this.transform;
-
-        if (equippedWeaponSlotNumber == 1)
-            equippedWeapon.SetAsFirstSibling();
-        else if (equippedWeaponSlotNumber == 2)
-            equippedWeapon.SetSiblingIndex(1);
-        else if (equippedWeaponSlotNumber == 3)
-            equippedWeapon.SetAsLastSibling();
-
+        equippedWeapon.SetParent(this.transform);
+        equippedWeapon.SetSiblingIndex(equippedWeaponSlotNumber - 1);
         equippedWeapon.gameObject.SetActive(false);
 
-        _weapons[0].gameObject.SetActive(true);
+        ActivateFirstAvailableWeapon();
+    }
+
+    /// <summary>
+    /// Uses a for loop to find the first available game object in the WeaponInventory to activate it
+    /// in the scene hierarchy and then break out of the loop once the weapon is found.
+    /// </summary>
+    private void ActivateFirstAvailableWeapon()
+    {
+        for (int i = 0; i < _weapons.Length; i++)
+        {
+            if (_weapons[i] != null)
+            {
+                _weapons[i].gameObject.SetActive(true);
+                break;
+            }
+        }
     }
 
     /// <summary>
@@ -219,31 +229,54 @@ public class WeaponInventory : MonoBehaviour
     /// <returns>Transform object that will be removed from the _weapons array and placed into the weapon pickup object.</returns>
     internal GameObject GetCurrentlyEquippedWeaponGameObject()
     {
-        GameObject weaponToReplace = null;
+        GameObject weapon = null;
 
         for (int i = 0; i < _weapons.Length; i++)
         {
-            if (_weapons[i].gameObject.activeInHierarchy)
+            if (_weapons[i] != null && _weapons[i].gameObject.activeInHierarchy)
             {
-                weaponToReplace = _weapons[i].gameObject;
+                weapon = _weapons[i].gameObject;
                 break;
             }
         }
-        return weaponToReplace;
+        return weapon;
     }
 
+    /// <summary>
+    /// Checks for each weapon in the WeaponInventory and finds the first weapon assigned in the array
+    /// to be parented to the player weapon holder and equipped.
+    /// </summary>
+    private void GetFirstAvailableWeapon()
+    {
+        for (int i = 0; i < _weapons.Length; i++)
+        {
+            if (_weapons[i] != null && _weapons[i].gameObject.activeInHierarchy)
+            {
+                _weapons[i].SetParent(_playerWeaponHolder.transform, false);
+                ResetWeaponPositionAndRotation(_weapons[i]);
+                break;
+            }
+        }
+        FirstWeaponFound?.Invoke();
+    }
+
+    private void UnsubscribeFromEndPointEvents()
+    {
+        _levelEndPoint.OnEndPointLevelTransition -= WeaponInventory_OnEndPointLevelTransition;
+        _levelEndPoint = null;
+    }
+
+    /// <summary>
+    /// Method invoked from the LoadingPlayableScene event from the GameManager Instance.
+    /// Assigns the _playerWeaponHolder object in the newly loaded scene and finds an EndPoint object
+    /// if one has been set in the level. If there are any weapons in the WeaponInventory _weapons array,
+    /// we will activate and equip the first available weapon from the array.
+    /// </summary>
     private void WeaponInventory_LoadingPlayableScene()
     {
         _playerWeaponHolder = FindObjectOfType<PlayerWeaponHolder>();
         _levelEndPoint = FindObjectOfType<EndPoint>();
-
-        if (_weapons[0] != null && _weapons[0].gameObject.activeInHierarchy)
-        {
-            _weapons[0].parent = _playerWeaponHolder.transform;
-            ResetWeaponPositionAndRotation(_weapons[0]);
-        }
-
-        OnWeaponChanged?.Invoke();
+        GetFirstAvailableWeapon();
 
         if (_levelEndPoint != null)
             _levelEndPoint.OnEndPointLevelTransition += WeaponInventory_OnEndPointLevelTransition;
@@ -251,6 +284,13 @@ public class WeaponInventory : MonoBehaviour
             Debug.LogWarning("There is no end point to this scene. Do you need one for this current level?");
     }
 
+    /// <summary>
+    /// Invoked method called from an EndPoint's OnEndPointLevelTransition event.
+    /// Checks to see if there is an equipped weapon on the player object through counting
+    /// its weapon holders transform children. If there is a weapon nested in the weapon holder
+    /// transform, then we parent the weapon to our WeaponInventory object before loading up the
+    /// next level/scene in order to save the weapon from being destroyed during the loading process.
+    /// </summary>
     private void WeaponInventory_OnEndPointLevelTransition(string s)
     {
         if (_playerWeaponHolder != null && _playerWeaponHolder.transform.childCount > 0)
@@ -261,6 +301,9 @@ public class WeaponInventory : MonoBehaviour
         UnsubscribeFromEndPointEvents();
     }
 
+    /// <summary>
+    /// Similar functionality to WeaponInventory_OnEndPointLevelTransition
+    /// </summary>
     private void WeaponInventory_RestartingLevel()
     {
         if (_playerWeaponHolder != null && _playerWeaponHolder.transform.childCount > 0)
@@ -269,19 +312,18 @@ public class WeaponInventory : MonoBehaviour
             Debug.LogWarning("There is no weapon holder transform for the player object! Please assign one to the prefab.");
     }
 
-    private void UnsubscribeFromEndPointEvents()
-    {
-        _levelEndPoint.OnEndPointLevelTransition -= WeaponInventory_OnEndPointLevelTransition;
-        _levelEndPoint = null;
-    }
-
+    /// <summary>
+    /// Invoked method called from the pause menu or gameover screen using the OnMainMenuLoaded event.
+    /// Empties out the _weapons array when loading up the main menu and pairs other weapon
+    /// transforms under the player to be destroyed during the loading process.
+    /// </summary>
     private void WeaponInventory_OnMainMenuLoaded()
     {
         for (int i = 0; i < _weapons.Length; i++)
         {
             if (_weapons[i] != null)
             {
-                _weapons[i].transform.parent = FindObjectOfType<PlayerWeaponHolder>().transform;
+                _weapons[i].SetParent(null);
                 _weapons[i] = null;
             }
             else

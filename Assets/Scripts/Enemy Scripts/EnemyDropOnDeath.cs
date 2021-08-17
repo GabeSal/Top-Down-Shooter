@@ -37,7 +37,7 @@ public class EnemyDropOnDeath : MonoBehaviour
 
         for (int i = 0; i < _amountToDrop; i++)
         {
-            if (dropChance >= 45f)
+            if (dropChance >= 25f)
                 _itemDrop.Get<PooledMonoBehaviour>(transform.position + GetRandomVectorOffset(), Quaternion.identity);
             else
                 return;

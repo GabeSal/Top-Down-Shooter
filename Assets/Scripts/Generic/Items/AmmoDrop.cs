@@ -67,6 +67,7 @@ public class AmmoDrop : Item
                 var currentWeaponAmmo = weapon.GetComponent<WeaponAmmo>();
                 if (currentWeaponAmmo.AmmoInReserve >= currentWeaponAmmo.TrueMaxAmmo)
                 {
+                    _collectedByPlayer = false;
                     OnMaxAmmoReached?.Invoke();
                     break;
                 }

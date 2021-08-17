@@ -261,7 +261,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _ammoInClipText: {fileID: 1288801850737388049}
-  _ammoInReserve: {fileID: 1288801849614942697}
+  _ammoInReserveText: {fileID: 1288801849614942697}
 --- !u!1 &1288801849122316611
 GameObject:
   m_ObjectHideFlags: 0
@@ -815,7 +815,7 @@ GameObject:
   - component: {fileID: 1288801849614942696}
   - component: {fileID: 1288801849614942697}
   m_Layer: 5
-  m_Name: Current Remaining Ammo
+  m_Name: Current Reserve Ammo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -901,7 +901,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -1816,7 +1816,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 4
   m_VerticalAlignment: 512
   m_textAlignment: 65535

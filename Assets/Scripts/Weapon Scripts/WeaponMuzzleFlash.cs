@@ -11,12 +11,14 @@ public class WeaponMuzzleFlash : MonoBehaviour
 
     #region Private Fields
     private BallisticWeapon _weapon;
+    private Light2D _lightFlash;
     #endregion
 
     #region Standard Unity Methods
     private void Awake()
     {
         _weapon = GetComponentInParent<BallisticWeapon>();
+        _lightFlash = _muzzleLight.GetComponent<Light2D>();
         _weapon.OnFire += Weapon_OnFire;
     }
 
@@ -45,12 +47,11 @@ public class WeaponMuzzleFlash : MonoBehaviour
     /// <returns></returns>
     private IEnumerator MuzzleLightFlash()
     {
-        Light2D lightFlash = _muzzleLight.GetComponent<Light2D>();
-        lightFlash.enabled = true;
+        _lightFlash.enabled = true;
 
-        yield return new WaitForSeconds(0.08f);
+        yield return new WaitForSeconds(0.04f);
 
-        lightFlash.enabled = false;
+        _lightFlash.enabled = false;
     } 
     #endregion
 }

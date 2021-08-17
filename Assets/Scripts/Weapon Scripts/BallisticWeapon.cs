@@ -50,12 +50,13 @@ public class BallisticWeapon : WeaponBase
     private bool _isFiring;
     #endregion
 
-    #region Properties
+    #region Public Fields
     [Tooltip("Assign the key to be pressed to select the weapon component defined in the editor.")]
     public KeyCode weaponHotKey;
+    #endregion
 
+    #region Properties
     public int SlotNumber { get => _slotNumber; }
-
     #endregion
 
     #region Action Events
@@ -89,7 +90,7 @@ public class BallisticWeapon : WeaponBase
                 _weaponSway = _previousWeaponSway;
 
             // Play out of ammo sound event
-            if (Input.GetKeyDown((KeyCode)PlayerControls.fireWeapon) && _weaponAmmo.HasAmmo() == false &&
+            if (Input.GetKeyDown((KeyCode)PlayerControls.fireWeapon) && !_weaponAmmo.HasAmmo() &&
                 !_weaponAmmo.IsReloading)
                 OutOfAmmo?.Invoke();
 

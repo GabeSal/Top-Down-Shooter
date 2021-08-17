@@ -95,7 +95,7 @@ public class EnemyShootingHandler : MonoBehaviour
     {
         _shootingTimer = 0;
 
-        Vector2 shootingDirection = AimAtPlayer(_target.GetComponent<Collider2D>());
+        Vector2 shootingDirection = AimAtPlayer();
 
         if (shootingDirection == Vector2.zero)
             return;
@@ -137,11 +137,16 @@ public class EnemyShootingHandler : MonoBehaviour
     /// <summary>
     /// Creates a Vector2 that is used to set the direction of the raycast in the ShootPlayer() method.
     /// </summary>
-    /// <param name="player">Collider2D object that is passed from the collision detected in the
-    /// overlap circle generated in the ShootPlayer() method.</param>
-    /// <returns></returns>
-    private Vector2 AimAtPlayer(Collider2D player)
+    /// <returns>Vector2 that will be used for the direction vector in drawing the weapon ray cast to hit the player
+    /// or environment.</returns>
+    private Vector2 AimAtPlayer()
     {
+        Collider2D player;
+        if (_target != null)
+            player = _target.GetComponent<Collider2D>();
+        else
+            player = null;
+
         if (player != null)
         {
             Vector3 weaponSwayOffset = new Vector3(GetRandomValueFromWeaponSway(), GetRandomValueFromWeaponSway(), 0f);
@@ -151,7 +156,6 @@ public class EnemyShootingHandler : MonoBehaviour
 
             return aimDirection;
         }
-
         return Vector2.zero;
     }
 

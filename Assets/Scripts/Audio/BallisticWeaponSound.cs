@@ -48,24 +48,24 @@ public class BallisticWeaponSound : MonoBehaviour
     #region Class Defined Methods
     private void SubscribeToWeaponEvents()
     {
-        _ballisticWeapon.OnFire += BallisticWeaponSound_OnFire;
-        _ballisticWeapon.OutOfAmmo += BallisticWeaponSound_OutOfAmmo;
-        _ballisticWeapon.OnManualAction += BallisticWeaponSound_OnManualAction;
-        _weaponInventory.OnWeaponChanged += BallisticWeaponSound_OnWeaponChanged;
-        _weaponAmmo.OnReload += BallisticWeaponSound_OnReload;
-        _weaponAmmo.OnManualReload += BallisticWeaponSound_OnManualReload;
-        _weaponAmmo.OnManualReloadFinish += BallisticWeaponSound_OnManualReloadFinish;
+        _ballisticWeapon.OnFire += PlayWeaponFireSound;
+        _ballisticWeapon.OutOfAmmo += PlayOutOfAmmoSound;
+        _ballisticWeapon.OnManualAction += PlayWeaponManualActionSound;
+        _weaponInventory.OnWeaponChanged += PlayWeaponReadySound;
+        _weaponAmmo.OnReload += PlayReloadSound;
+        _weaponAmmo.OnManualReload += PlayManualReloadSound;
+        _weaponAmmo.OnManualReloadFinish += PlayManualReloadFinishSound;
     }
 
     private void UnsubscribeToWeaponEvents()
     {
-        _ballisticWeapon.OnFire -= BallisticWeaponSound_OnFire;
-        _ballisticWeapon.OutOfAmmo -= BallisticWeaponSound_OutOfAmmo;
-        _ballisticWeapon.OnManualAction -= BallisticWeaponSound_OnManualAction;
-        _weaponInventory.OnWeaponChanged -= BallisticWeaponSound_OnWeaponChanged;
-        _weaponAmmo.OnReload -= BallisticWeaponSound_OnReload;
-        _weaponAmmo.OnManualReload -= BallisticWeaponSound_OnManualReload;
-        _weaponAmmo.OnManualReloadFinish -= BallisticWeaponSound_OnManualReloadFinish;
+        _ballisticWeapon.OnFire -= PlayWeaponFireSound;
+        _ballisticWeapon.OutOfAmmo -= PlayOutOfAmmoSound;
+        _ballisticWeapon.OnManualAction -= PlayWeaponManualActionSound;
+        _weaponInventory.OnWeaponChanged -= PlayWeaponReadySound;
+        _weaponAmmo.OnReload -= PlayReloadSound;
+        _weaponAmmo.OnManualReload -= PlayManualReloadSound;
+        _weaponAmmo.OnManualReloadFinish -= PlayManualReloadFinishSound;
     }
 
     #region Received Event Methods
@@ -73,15 +73,15 @@ public class BallisticWeaponSound : MonoBehaviour
     /// Plays the _outOfAmmoEvent SimpleAudioEvent object through the audio source when the 
     /// OutOfAmmo() event is invoked.
     /// </summary>
-    private void BallisticWeaponSound_OutOfAmmo()
+    private void PlayOutOfAmmoSound()
     {
-        _outOfAmmoEvent.Play(_shootSource, true);
+        _outOfAmmoEvent.Play(_reloadSource, true);
     }
     /// <summary>
     /// Plays the _firedEvent SimpleAudioEvent object through the audio source when the 
     /// OnFire() event is invoked.
     /// </summary>
-    private void BallisticWeaponSound_OnFire()
+    private void PlayWeaponFireSound()
     {
         _firedEvent.Play(_shootSource);
     }
@@ -89,14 +89,14 @@ public class BallisticWeaponSound : MonoBehaviour
     /// Plays the appropriate _reloadEvent SimpleAudioEvent object through the audio source when the 
     /// OnShotgunPump() event is invoked to simulate the shotgun being cocked after a shot.
     /// </summary>
-    private void BallisticWeaponSound_OnManualAction()
+    private void PlayWeaponManualActionSound()
     {
         _manualActionEvent.Play(_reloadSource, true);
     }
     /// <summary>
     /// Plays the _manualReloadEvent SimpleAudioEvent object the audio source when the OnManualReload() event is invoked.
     /// </summary>
-    private void BallisticWeaponSound_OnManualReload()
+    private void PlayManualReloadSound()
     {
         _manualReloadEvent.Play(_reloadSource, true);
     }
@@ -104,19 +104,19 @@ public class BallisticWeaponSound : MonoBehaviour
     /// Plays the appropriate _reloadEvent SimpleAudioEvent object through the audio source when the OnManualReloadFinish() 
     /// event is invoked to simulate the shotgun being cocked after all shells are reloaded.
     /// </summary>
-    private void BallisticWeaponSound_OnManualReloadFinish()
+    private void PlayManualReloadFinishSound()
     {
         _reloadEvent.Play(_reloadSource, true);
     }
     /// <summary>
     /// Plays the _reloadEvent SimpleAudioEvent object the audio source when the OnReload() event is invoked.
     /// </summary>
-    private void BallisticWeaponSound_OnReload()
+    private void PlayReloadSound()
     {
         _reloadEvent.Play(_reloadSource, true);
     }
 
-    private void BallisticWeaponSound_OnWeaponChanged()
+    private void PlayWeaponReadySound()
     {
         _changeWeaponEvent.Play(_shootSource, true);
     }

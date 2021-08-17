@@ -263,7 +263,7 @@ public class WeaponAmmo : MonoBehaviour
     #region Internal Class Methods
     internal string GetCurrentClipAmmoText()
     {
-        return string.Format("{0}/", _ammoInClip);
+        return string.Format("{0} /", _ammoInClip);
     }
 
     internal string GetNewReserveAmmoText()

@@ -17,22 +17,22 @@ public class HealingItemSound : MonoBehaviour
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
-        GetComponent<HealingItem>().OnHealingItemPickup += HealingItemSound_OnHealingItemPickup;
+        GetComponent<HealingItem>().OnHealingItemPickup += PlayHealingItemSound;
     }
 
     private void OnDestroy()
     {
-        GetComponent<HealingItem>().OnHealingItemPickup -= HealingItemSound_OnHealingItemPickup;
+        GetComponent<HealingItem>().OnHealingItemPickup -= PlayHealingItemSound;
     }
 
     private void OnDisable()
     {
-        GetComponent<HealingItem>().OnHealingItemPickup -= HealingItemSound_OnHealingItemPickup;
+        GetComponent<HealingItem>().OnHealingItemPickup -= PlayHealingItemSound;
     }
     #endregion
 
     #region Class Defined Methods
-    private void HealingItemSound_OnHealingItemPickup()
+    private void PlayHealingItemSound()
     {
         _healingSoundEvent.Play(_audioSource, true);
 

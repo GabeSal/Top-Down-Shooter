@@ -16,7 +16,7 @@ public class UIPlayerReloadTimer : MonoBehaviour
     #endregion
 
     #region Standard Unity Methods
-    private void Awake()
+    private void Start()
     {
         _weaponInventory = GameManager.Instance.GetComponentInChildren<WeaponInventory>();
         _weaponInventory.OnWeaponChanged += ReloadUI_OnWeaponChanged;

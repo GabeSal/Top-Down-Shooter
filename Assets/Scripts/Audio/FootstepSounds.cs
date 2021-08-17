@@ -18,38 +18,38 @@ public class FootstepSounds : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
 
         if (transform.CompareTag("Player"))
-            GetComponent<PlayerMovement>().OnPlayerStep += FootstepSounds_OnPlayerStep;
+            GetComponent<PlayerMovement>().OnPlayerStep += PlayPlayerFootStepSound;
 
         if (transform.CompareTag("Enemy"))
-            GetComponent<EnemyMovementSoundHandler>().OnEnemyStep += FootstepSounds_OnEnemyStep;
+            GetComponent<EnemyMovementSoundHandler>().OnEnemyStep += PlayEnemyFootStepSound;
     }
 
     private void OnDisable()
     {
         if (transform.CompareTag("Player"))
-            GetComponent<PlayerMovement>().OnPlayerStep -= FootstepSounds_OnPlayerStep;
+            GetComponent<PlayerMovement>().OnPlayerStep -= PlayPlayerFootStepSound;
 
         if (transform.CompareTag("Enemy"))
-            GetComponent<EnemyMovementSoundHandler>().OnEnemyStep -= FootstepSounds_OnEnemyStep;
+            GetComponent<EnemyMovementSoundHandler>().OnEnemyStep -= PlayEnemyFootStepSound;
     }
 
     private void OnDestroy()
     {
         if (transform.CompareTag("Player"))
-            GetComponent<PlayerMovement>().OnPlayerStep -= FootstepSounds_OnPlayerStep;
+            GetComponent<PlayerMovement>().OnPlayerStep -= PlayPlayerFootStepSound;
 
         if (transform.CompareTag("Enemy"))
-            GetComponent<EnemyMovementSoundHandler>().OnEnemyStep -= FootstepSounds_OnEnemyStep;
+            GetComponent<EnemyMovementSoundHandler>().OnEnemyStep -= PlayEnemyFootStepSound;
     }
     #endregion
 
     #region Received Event Methods
-    private void FootstepSounds_OnPlayerStep()
+    private void PlayPlayerFootStepSound()
     {
         _footstepEvent.Play(_audioSource, true);
     }
 
-    private void FootstepSounds_OnEnemyStep()
+    private void PlayEnemyFootStepSound()
     {
         _footstepEvent.Play(_audioSource, true);
     }

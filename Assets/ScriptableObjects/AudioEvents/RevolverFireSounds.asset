@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RevolverFireSounds
   m_EditorClassIdentifier: 
   _clips:
-  - {fileID: 8300000, guid: 686d684baf86f3c4c84d0b2ac7571d1d, type: 3}
+  - {fileID: 8300000, guid: b082b7148f46533429da8f49bebd761c, type: 3}
   volume:
     minValue: 1
     maxValue: 1

@@ -83,7 +83,7 @@ public class WeaponPickup : Item
         var weaponHolder = FindObjectOfType<PlayerWeaponHolder>().transform;
         var weaponIndex = _weapon.GetComponent<BallisticWeapon>().SlotNumber;
 
-        _weapon.parent = weaponHolder;
+        _weapon.SetParent(weaponHolder, false);
         _weapon.SetSiblingIndex(weaponIndex);
         _playerWeaponInventory.AddWeapon(_weapon.transform, this.transform);
 
