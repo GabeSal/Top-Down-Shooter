@@ -17,12 +17,12 @@ public class UIAmmoText : MonoBehaviour
     #endregion
 
     #region Standard Unity Methods
-    private void Awake()
+    private void Start()
     {
-        _weaponInventory = FindObjectOfType<WeaponInventory>();
+        _weaponInventory = GameManager.Instance.GetComponentInChildren<WeaponInventory>();
         _weaponInventory.OnWeaponChanged += WeaponInventory_OnWeaponChanged;
 
-        FindActivePlayerWeaponInScene();        
+        FindActivePlayerWeaponInScene();
     }
 
     private void OnDestroy()
@@ -40,16 +40,18 @@ public class UIAmmoText : MonoBehaviour
     /// </summary>
     private void FindActivePlayerWeaponInScene()
     {
-        foreach (var weapon in _weaponInventory.WeaponsInInventory)
+        var weaponHolder = FindObjectOfType<PlayerWeaponHolder>().transform;
+        if (weaponHolder.childCount > 0)
         {
-            if (weapon != null && weapon.gameObject.activeInHierarchy)
-            {
-                _currentWeaponAmmo = weapon.GetComponent<WeaponAmmo>();
-                break;
-            }
+            _currentWeaponAmmo = weaponHolder.GetChild(0).GetComponent<WeaponAmmo>();
+            SubscribeToWeaponAmmoEvents();
         }
-
-        SubscribeToWeaponAmmoEvents();
+        else
+        {
+            _ammoInClipText.text = "0 /";
+            _ammoInReserve.text = "0";
+        }
+            
     }
 
     /// <summary>
@@ -83,7 +85,9 @@ public class UIAmmoText : MonoBehaviour
     /// </summary>
     private void WeaponInventory_OnWeaponChanged()
     {
-        UnsubscribeToWeaponAmmoEvents();
+        if (_currentWeaponAmmo != null)
+            UnsubscribeToWeaponAmmoEvents();
+
         FindActivePlayerWeaponInScene();
         ShowAmmoText();
     }

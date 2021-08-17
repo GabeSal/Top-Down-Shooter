@@ -9,10 +9,10 @@ public class BallisticWeapon : WeaponBase
     [SerializeField]
     [Range(0f, 1.5f)]
     [Tooltip("Weapon sway value reduces the accuracy of the weapon if > 0.")]
-    private float _weaponSway;
+    private float _weaponSway = 0;
     [SerializeField]
     [Range(0f, 1f)]
-    private float _aimedWeaponSway;
+    private float _aimedWeaponSway = 0;
     [Header("Fire Mode Settings")]
     [SerializeField]
     private bool _isFullAuto;
@@ -27,15 +27,15 @@ public class BallisticWeapon : WeaponBase
     private int _shotsPerBurst = 3;
     [SerializeField]
     [Range(0.05f, 0.1f)]
-    private float _timeUntilNextBurstShot;
+    private float _timeUntilNextBurstShot = 0.05f;
     [SerializeField]
     [Range(6, 12)]
-    private int _pelletsPerShotgunBlast;
+    private int _pelletsPerShotgunBlast = 6;
     [SerializeField]
     private float _manualActionDelay;
     [SerializeField]
     [Range(1, 3)]
-    private int _slotNumber;
+    private int _slotNumber = 1;
 
     [Header("Ballistic Weapon Prefabs")]
     [SerializeField]
@@ -43,8 +43,9 @@ public class BallisticWeapon : WeaponBase
     #endregion
 
     #region Private Fields
-    private PlayerShootingUtility _playerShootingHandler;
     private WeaponAmmo _weaponAmmo;
+    private WeaponInventory _playerWeaponInventory;
+    private PlayerShootingUtility _playerShootingHandler;
     private float _previousWeaponSway;
     private bool _isFiring;
     #endregion
@@ -67,8 +68,12 @@ public class BallisticWeapon : WeaponBase
     private void Awake()
     {
         _previousWeaponSway = _weaponSway;
-        _playerShootingHandler = GetComponentInParent<PlayerShootingUtility>();
+        _playerWeaponInventory = GameManager.Instance.GetComponentInChildren<WeaponInventory>();
+
+        _playerWeaponInventory.OnWeaponInventoryUpdate += SetPlayerShootingHandlerForBallisticWeapon;
         _weaponAmmo = GetComponent<WeaponAmmo>();
+
+        GameManager.Instance.LoadingPlayableScene += SetBulletTrail;
     }
 
     private void Update()
@@ -88,44 +93,53 @@ public class BallisticWeapon : WeaponBase
                 !_weaponAmmo.IsReloading)
                 OutOfAmmo?.Invoke();
 
-            // Check if player is holding the fire button down
-            if (Input.GetKey((KeyCode)PlayerControls.fireWeapon) && _isFullAuto && !_isFiring && !_isBoltAction)
+            if (!_weaponAmmo.IsReloading)
             {
-                if (CanFire() && !_isShotgun && !_isBurstFire)
+                // Check if player is holding the fire button down
+                if (Input.GetKey((KeyCode)PlayerControls.fireWeapon) && _isFullAuto && !_isFiring && !_isBoltAction)
                 {
-                    FireWeapon();
+                    if (CanFire() && !_isShotgun && !_isBurstFire)
+                    {
+                        FireWeapon();
+                    }
+
+                    if (CanFire() && !_isShotgun && _isBurstFire)
+                    {
+                        StartCoroutine(BurstFire());
+                    }
+
+                    if (CanFire() && _isShotgun && !_isBurstFire)
+                    {
+                        FireShotgun();
+                    }
                 }
 
-                if (CanFire() && !_isShotgun && _isBurstFire)
+                // Check if player just pressed fire button
+                if (Input.GetKeyDown((KeyCode)PlayerControls.fireWeapon) && !_isFullAuto && !_isFiring)
                 {
-                    StartCoroutine(BurstFire());
-                }
+                    if (CanFire() && !_isShotgun && !_isBurstFire)
+                    {
+                        FireWeapon();
+                    }
 
-                if (CanFire() && _isShotgun && !_isBurstFire)
-                {
-                    FireShotgun();
-                }
-            }
+                    if (CanFire() && !_isShotgun && _isBurstFire)
+                    {
+                        StartCoroutine(BurstFire());
+                    }
 
-            // Check if player just pressed fire button
-            if (Input.GetKeyDown((KeyCode)PlayerControls.fireWeapon) && !_isFullAuto && !_isFiring)
-            {
-                if (CanFire() && !_isShotgun && !_isBurstFire)
-                {
-                    FireWeapon();
+                    if (CanFire() && _isShotgun && !_isBurstFire)
+                    {
+                        FireShotgun();
+                    }
                 }
-
-                if (CanFire() && !_isShotgun && _isBurstFire)
-                {
-                    StartCoroutine(BurstFire());
-                }
-
-                if (CanFire() && _isShotgun && !_isBurstFire)
-                {
-                    FireShotgun();
-                }
-            }
+            }            
         }
+    }
+
+    private void OnDestroy()
+    {
+        _playerWeaponInventory.OnWeaponInventoryUpdate -= SetPlayerShootingHandlerForBallisticWeapon;
+        GameManager.Instance.LoadingPlayableScene -= SetBulletTrail;
     }
     #endregion
 
@@ -143,7 +157,7 @@ public class BallisticWeapon : WeaponBase
         Vector2 shootingDirection = _playerShootingHandler.SetShootingDirection
             (GetRandomValueFromWeaponSway(), GetRandomValueFromWeaponSway());
 
-        RaycastHit2D hitInfo2D = Physics2D.Raycast(_playerShootingHandler.FirePoint.position, shootingDirection, 
+        RaycastHit2D hitInfo2D = Physics2D.Raycast(transform.GetChild(0).position, shootingDirection, 
             _weaponRange, _collisionLayers);
 
         if (_bulletTrail != null)
@@ -183,7 +197,7 @@ public class BallisticWeapon : WeaponBase
             Vector2 shootingDirection = _playerShootingHandler.SetShootingDirection
             (GetRandomValueFromWeaponSway(), GetRandomValueFromWeaponSway());
 
-            RaycastHit2D hitInfo2D = Physics2D.Raycast(_playerShootingHandler.FirePoint.position, shootingDirection,
+            RaycastHit2D hitInfo2D = Physics2D.Raycast(transform.GetChild(0).position, shootingDirection,
                 _weaponRange, _collisionLayers);
 
             Collider2D target = hitInfo2D.collider;
@@ -234,14 +248,14 @@ public class BallisticWeapon : WeaponBase
     {
         _bulletTrail.enabled = true;
 
-        _bulletTrail.SetPosition(0, _playerShootingHandler.FirePoint.position);
+        _bulletTrail.SetPosition(0, transform.GetChild(0).position);
         if (hit2D.point != Vector2.zero)
         {
             _bulletTrail.SetPosition(1, hit2D.point);
         }
         else
         {
-            _bulletTrail.SetPosition(1, _playerShootingHandler.FirePoint.position + (shotDirection * _weaponRange));
+            _bulletTrail.SetPosition(1, transform.GetChild(0).position + (shotDirection * _weaponRange));
         }
 
         yield return new WaitForSeconds(0.05f);
@@ -299,6 +313,19 @@ public class BallisticWeapon : WeaponBase
     private bool IsEnemy(Collider2D target)
     {
         return target.CompareTag("Enemy");
+    }
+
+    private void SetPlayerShootingHandlerForBallisticWeapon()
+    {
+        _playerShootingHandler = FindObjectOfType<PlayerShootingUtility>();
+    }
+
+    private void SetBulletTrail()
+    {
+        SetPlayerShootingHandlerForBallisticWeapon();
+
+        if (_bulletTrail == null)
+            _bulletTrail = FindObjectOfType<PlayerMovement>().GetComponentInChildren<LineRenderer>();
     }
     #endregion
 }

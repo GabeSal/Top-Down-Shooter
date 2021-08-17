@@ -23,7 +23,7 @@ public class WeaponPickup : Item
     {
         _weapon = transform.GetChild(0);
 
-        _playerWeaponInventory = FindObjectOfType<WeaponInventory>();
+        _playerWeaponInventory = GameManager.Instance.GetComponentInChildren<WeaponInventory>();
         if(_playerWeaponInventory != null)
             _playerWeaponInventory.OnWeaponDropped += SwapSpriteOfDroppedWeapon;        
     }
@@ -68,7 +68,7 @@ public class WeaponPickup : Item
     /// <returns>True if there are less than 3 and greater than 0 children within the Weapon Inventory transform.</returns>
     private bool CheckPlayerWeaponInventorySpace()
     {
-        if (_playerWeaponInventory.transform.childCount > 0 && _playerWeaponInventory.transform.childCount < 3)
+        if (_playerWeaponInventory.transform.childCount < 2)
             return true;
         else
             return false;
@@ -80,21 +80,17 @@ public class WeaponPickup : Item
     /// </summary>
     private void AddWeaponToWeaponInventory()
     {
-        //_isTouchingPlayer = false;
-
-        _weapon.parent = _playerWeaponInventory.transform;
+        var weaponHolder = FindObjectOfType<PlayerWeaponHolder>().transform;
         var weaponIndex = _weapon.GetComponent<BallisticWeapon>().SlotNumber;
+
+        _weapon.parent = weaponHolder;
         _weapon.SetSiblingIndex(weaponIndex);
         _playerWeaponInventory.AddWeapon(_weapon.transform, this.transform);
 
-        if (transform.GetChild(0).GetComponent<BallisticWeapon>() != null)
-        {
+        if (this.transform.GetChild(0).GetComponent<BallisticWeapon>() != null)
             _weapon = transform.GetChild(0);
-        }
         else
-        {
             this.gameObject.SetActive(false);
-        }
     }
 
     private void ChangeSpriteToTradedWeapon(BallisticWeapon weaponToReplace)

@@ -18,7 +18,7 @@ public class UIPlayerReloadTimer : MonoBehaviour
     #region Standard Unity Methods
     private void Awake()
     {
-        _weaponInventory = FindObjectOfType<WeaponInventory>();
+        _weaponInventory = GameManager.Instance.GetComponentInChildren<WeaponInventory>();
         _weaponInventory.OnWeaponChanged += ReloadUI_OnWeaponChanged;
 
         GameManager.Instance.OnGameOver += GameManagerInstance_OnGameOver;
@@ -44,18 +44,13 @@ public class UIPlayerReloadTimer : MonoBehaviour
     private void FindActivePlayerWeaponInScene()
     {
         if (_playerAmmo != null)
-            UnsubscribeToPlayerAmmoEvents();        
+            UnsubscribeToPlayerAmmoEvents();
 
-        foreach (var weapon in _weaponInventory.WeaponsInInventory)
-        {
-            if (weapon != null && weapon.gameObject.activeInHierarchy)
-            {
-                _playerAmmo = weapon.GetComponent<WeaponAmmo>();
-                break;
-            }
-        }
+        var weaponHolder = FindObjectOfType<PlayerMovement>().transform.GetChild(0);
+        _playerAmmo = weaponHolder.GetComponentInChildren<WeaponAmmo>();
 
-        SubscribeToPlayerAmmoEvents();
+        if (_playerAmmo != null)
+            SubscribeToPlayerAmmoEvents();
     }
 
     /// <summary>

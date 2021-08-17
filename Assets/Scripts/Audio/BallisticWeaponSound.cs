@@ -34,7 +34,7 @@ public class BallisticWeaponSound : MonoBehaviour
         _reloadSource = audioSources[1];
 
         _ballisticWeapon = GetComponent<BallisticWeapon>();
-        _weaponInventory = GetComponentInParent<WeaponInventory>();
+        _weaponInventory = GameManager.Instance.GetComponentInChildren<WeaponInventory>();
         _weaponAmmo = GetComponent<WeaponAmmo>();
         SubscribeToWeaponEvents();
     }

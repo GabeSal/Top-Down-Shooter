@@ -2,29 +2,23 @@ using UnityEngine;
 
 public class PlayerShootingUtility : MonoBehaviour
 {
+    #region Serialized Fields
+    [SerializeField]
+    private Transform _playerWeaponHolder;
+    #endregion
+
     #region Private Fields
     private Transform _firePoint;
     private WeaponInventory _weaponInventory;
     #endregion
 
-    #region Properties
-    public Transform FirePoint { get => _firePoint; }
-    #endregion
-
     #region Standard Unity Methods
     private void Awake()
     {
-        _weaponInventory = GetComponentInChildren<WeaponInventory>();
-        if (_weaponInventory != null)
-            _weaponInventory.OnWeaponInventoryUpdate += PlayerFirePoint_OnWeaponInventoryUpdate;
+        _weaponInventory = GameManager.Instance.GetComponentInChildren<WeaponInventory>();
 
-        FindActiveWeaponInWeaponInventory();
-    }
-
-    private void OnDestroy()
-    {
-        if (_weaponInventory != null)
-            _weaponInventory.OnWeaponInventoryUpdate -= PlayerFirePoint_OnWeaponInventoryUpdate;
+        if (_playerWeaponHolder.childCount > 0)
+            _firePoint = _playerWeaponHolder.GetChild(0).GetChild(0);
     }
     #endregion
 
@@ -41,8 +35,14 @@ public class PlayerShootingUtility : MonoBehaviour
     /// in the Weapon component.</returns>
     public Vector3 SetShootingDirection(float weaponSwayOffsetX, float weaponSwayOffsetY)
     {
+        if (_playerWeaponHolder != null)
+            _firePoint = _playerWeaponHolder.GetChild(0).GetChild(0);
+        else
+            Debug.LogWarning("There is no assigned player weapon holder in the PlayerShootingUtility" +
+                " component in the player prefab.");
+
         Vector3 offset = new Vector3(weaponSwayOffsetX, weaponSwayOffsetY, 0f);
-        Vector3 shootingDirection = (GetMousePosition() - _firePoint.position + offset).normalized;
+        Vector3 shootingDirection = ((GetMousePosition() - _firePoint.position) + offset).normalized;
 
         return shootingDirection;
     }
@@ -57,29 +57,6 @@ public class PlayerShootingUtility : MonoBehaviour
         mousePosition.z = 0f;
 
         return mousePosition;
-    }
-
-    /// <summary>
-    /// Loops through all of the transforms in the _weaponInventory array and checks which one is currently
-    /// active in the scene. If the weapon is active, then we set the _firePoint to the firepoint object
-    /// nested in the weapon transform.
-    /// </summary>
-    private void FindActiveWeaponInWeaponInventory()
-    {
-        for (int i = 0; i < _weaponInventory.transform.childCount; i++)
-        {
-            var weapon = _weaponInventory.transform.GetChild(i);
-            if (weapon.gameObject.activeInHierarchy)
-            {
-                _firePoint = weapon.GetChild(0);
-                break;
-            }
-        }
-    }
-
-    private void PlayerFirePoint_OnWeaponInventoryUpdate()
-    {
-        FindActiveWeaponInWeaponInventory();
     }
     #endregion
 }

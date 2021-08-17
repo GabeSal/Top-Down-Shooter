@@ -15,7 +15,7 @@ public class UIPlayerWeaponInventory : MonoBehaviour
     #region Standard Unity Methods
     private void Awake()
     {
-        _playerWeapons = FindObjectOfType<PlayerMovement>().GetComponentInChildren<WeaponInventory>();
+        _playerWeapons = GameManager.Instance.GetComponentInChildren<WeaponInventory>();
 
         if (_playerWeapons != null)
         {
@@ -73,7 +73,7 @@ public class UIPlayerWeaponInventory : MonoBehaviour
             }
             else
             {
-                break;
+                continue;
             }
             
         }

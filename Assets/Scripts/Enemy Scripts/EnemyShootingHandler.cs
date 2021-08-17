@@ -97,6 +97,9 @@ public class EnemyShootingHandler : MonoBehaviour
 
         Vector2 shootingDirection = AimAtPlayer(_target.GetComponent<Collider2D>());
 
+        if (shootingDirection == Vector2.zero)
+            return;
+
         RaycastHit2D target = Physics2D.Raycast(transform.position, shootingDirection, 
             _enemyWeapon.Range, _enemyWeapon.CollisionLayers);
 
@@ -139,12 +142,17 @@ public class EnemyShootingHandler : MonoBehaviour
     /// <returns></returns>
     private Vector2 AimAtPlayer(Collider2D player)
     {
-        Vector3 weaponSwayOffset = new Vector3(GetRandomValueFromWeaponSway(), GetRandomValueFromWeaponSway(), 0f);
+        if (player != null)
+        {
+            Vector3 weaponSwayOffset = new Vector3(GetRandomValueFromWeaponSway(), GetRandomValueFromWeaponSway(), 0f);
 
-        var aimDirection = (player.transform.position - this.transform.position +
-            weaponSwayOffset).normalized;
+            var aimDirection = (player.transform.position - this.transform.position +
+                weaponSwayOffset).normalized;
 
-        return aimDirection;
+            return aimDirection;
+        }
+
+        return Vector2.zero;
     }
 
     /// <summary>

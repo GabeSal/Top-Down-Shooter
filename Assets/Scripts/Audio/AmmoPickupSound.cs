@@ -37,9 +37,11 @@ public class AmmoPickupSound : MonoBehaviour
     #region Class Defined Methods
     private void AmmoPickupSound_OnAmmoPickup()
     {
+        var ammoDrop = this.GetComponent<AmmoDrop>();
         _ammoPickupSoundEvent.Play(_audioSource, true);
 
-        this.GetComponent<PooledMonoBehaviour>().ReturnToPool(2f);
+        if (!ammoDrop.infiniteAmmoDrop)
+            this.GetComponent<PooledMonoBehaviour>().ReturnToPool(1.5f);
     }
     #endregion
 }

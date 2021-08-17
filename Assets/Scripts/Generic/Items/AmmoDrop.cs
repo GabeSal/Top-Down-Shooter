@@ -8,6 +8,11 @@ public class AmmoDrop : Item
     private int _ammoAmount;
     #endregion
 
+    #region Private Fields
+    private bool _collectedByPlayer;
+    private int _originalAmmoAmount;
+    #endregion
+
     #region Properties
     public int AmmoAmount { get => _ammoAmount; }
     public Transform WeaponToAddAmmo { get; private set; }
@@ -19,11 +24,21 @@ public class AmmoDrop : Item
     public event Action OnLeavingAmmoPickup;
     #endregion
 
+    #region Public Fields
+    public bool infiniteAmmoDrop;
+    #endregion
+
     #region Standard Unity Methods
-    private void Update()
+    private void Awake()
     {
-        if (_isTouchingPlayer)
+        _originalAmmoAmount = _ammoAmount;
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!_collectedByPlayer || infiniteAmmoDrop)
             GivePlayerAmmo();
+        else
+            return;
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -40,12 +55,13 @@ public class AmmoDrop : Item
     /// </summary>
     private void GivePlayerAmmo()
     {
-        _isTouchingPlayer = false;
-        var playerWeapons = _player.GetComponentInChildren<WeaponInventory>().WeaponsInInventory;
+        _collectedByPlayer = true;
+        _ammoAmount = _originalAmmoAmount;
+        var playerWeapons = GameManager.Instance.GetComponentInChildren<WeaponInventory>().WeaponsInInventory;
 
         foreach (var weapon in playerWeapons)
         {
-            if (weapon.gameObject.activeInHierarchy)
+            if (weapon != null && weapon.gameObject.activeInHierarchy)
             {
                 WeaponToAddAmmo = weapon;
                 var currentWeaponAmmo = weapon.GetComponent<WeaponAmmo>();
@@ -63,7 +79,10 @@ public class AmmoDrop : Item
 
                     currentWeaponAmmo.AddAmmo(_ammoAmount);
                     OnAmmoPickup?.Invoke();
-                    HideSprite();
+
+                    if (!infiniteAmmoDrop)
+                        HideSprite();
+
                     break;
                 }
             }

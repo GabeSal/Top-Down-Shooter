@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WeaponInventory : MonoBehaviour
@@ -7,6 +6,11 @@ public class WeaponInventory : MonoBehaviour
     #region Serialized Fields
     [SerializeField]
     private Transform[] _weapons = new Transform[3];
+    #endregion
+
+    #region Private Fields
+    private PlayerWeaponHolder _playerWeaponHolder;
+    private EndPoint _levelEndPoint;
     #endregion
 
     #region Action Events
@@ -20,6 +24,13 @@ public class WeaponInventory : MonoBehaviour
     #endregion
 
     #region Standard Unity Methods
+    private void Awake()
+    {
+        GameManager.Instance.LoadingMainMenu += WeaponInventory_OnMainMenuLoaded;
+        GameManager.Instance.LoadingPlayableScene += WeaponInventory_LoadingPlayableScene;
+        GameManager.Instance.RestartingLevel += WeaponInventory_RestartingLevel;
+    }
+
     private void Update()
     {
         if (GameManager.Instance.InputsAllowed && GameManager.GameIsPaused == false)
@@ -61,19 +72,40 @@ public class WeaponInventory : MonoBehaviour
 
     #region Class Defined Methods
     /// <summary>
-    /// Loops through the _weapons array and searches for the weapon that matches the weaponToSwitchTo object
-    /// in order to activate it and hide the other weapons.
+    /// Sets the equipped weapon's parent transform to the WeaponInventory object and then loops
+    /// through the _weapons array and searches for the weapon that matches the weaponToSwitchTo object
+    /// in order to activate it, parent it to the _playerWeaponHolder transform, and hide the other weapons.
     /// </summary>
     /// <param name="weaponToSwitchTo">Transform of the weapon object we wish to switch to.</param>
     private void SwitchToWeapon(Transform weaponToSwitchTo)
     {
-        foreach (var weapon in _weapons)
+        if (_playerWeaponHolder.transform.childCount > 0)
         {
-            if (weapon != null)
-                weapon.gameObject.SetActive(weapon == weaponToSwitchTo);
+            Transform equippedWeapon = _playerWeaponHolder.transform.GetChild(0);
+            int equippedWeaponsSlotNumber = equippedWeapon.GetComponent<BallisticWeapon>().SlotNumber - 1;
 
+            equippedWeapon.parent = this.transform;
+            equippedWeapon.SetSiblingIndex(equippedWeaponsSlotNumber);
+
+            foreach (var weapon in _weapons)
+            {
+                if (weapon != null)
+                {
+                    weapon.gameObject.SetActive(weapon == weaponToSwitchTo);
+
+                    if (!weapon.gameObject.activeInHierarchy)
+                    {
+                        weapon.parent = this.transform;
+                    }
+                    else
+                    {
+                        weapon.parent = _playerWeaponHolder.transform;
+                        ResetWeaponPositionAndRotation(weapon);
+                    }
+                }
+            }
             OnWeaponChanged?.Invoke();
-        }
+        }        
     }
 
     /// <summary>
@@ -98,31 +130,6 @@ public class WeaponInventory : MonoBehaviour
     {
         weaponToAdd.localRotation = Quaternion.identity;
         weaponToAdd.localPosition = Vector3.zero;
-    }
-
-    /// <summary>
-    /// Adds the weaponToAdd object passed from the WeaponPickup item into the _weapons array
-    /// and then equips the newly added weapon. OnWeaponInventoryUpdate will then be invoked to update the UI elements
-    /// in the WeaponInventoryUI canvas group.
-    /// </summary>
-    /// <param name="weaponToAdd">Transform of the weapon game object that will be added to the _weapons array.</param>
-    internal void AddWeapon(Transform weaponToAdd, Transform newParent)
-    {
-        int slotNumber = weaponToAdd.GetComponent<BallisticWeapon>().SlotNumber - 1;
-        ResetWeaponPositionAndRotation(weaponToAdd);
-
-        //Drop current weapon in slot number, if it already exist
-        if(_weapons[slotNumber] != null)
-        {
-            SetNewParentForReplacedWeapon(newParent, slotNumber);
-            OnWeaponDropped?.Invoke(_weapons[slotNumber].GetComponent<BallisticWeapon>());
-        }
-
-        _weapons[slotNumber] = weaponToAdd;
-        SwitchToWeapon(_weapons[slotNumber]);
-        AssignHotKeyForAddedWeapon(slotNumber);
-
-        OnWeaponInventoryUpdate?.Invoke();
     }
 
     /// <summary>
@@ -159,6 +166,54 @@ public class WeaponInventory : MonoBehaviour
     }
 
     /// <summary>
+    /// Stores all of the weapons in the player inventory into the WeaponInventory transform to avoid 
+    /// destroying the instance of the weapon in the next scene.
+    /// </summary>
+    private void KeepPlayerInventoryForNextScene()
+    {
+        var equippedWeapon = _playerWeaponHolder.transform.GetChild(0);
+        int equippedWeaponSlotNumber = equippedWeapon.GetComponent<BallisticWeapon>().SlotNumber;
+
+        equippedWeapon.parent = this.transform;
+
+        if (equippedWeaponSlotNumber == 1)
+            equippedWeapon.SetAsFirstSibling();
+        else if (equippedWeaponSlotNumber == 2)
+            equippedWeapon.SetSiblingIndex(1);
+        else if (equippedWeaponSlotNumber == 3)
+            equippedWeapon.SetAsLastSibling();
+
+        equippedWeapon.gameObject.SetActive(false);
+
+        _weapons[0].gameObject.SetActive(true);
+    }
+
+    /// <summary>
+    /// Adds the weaponToAdd object passed from the WeaponPickup item into the _weapons array
+    /// and then equips the newly added weapon. OnWeaponInventoryUpdate will then be invoked to update the UI elements
+    /// in the WeaponInventoryUI canvas group.
+    /// </summary>
+    /// <param name="weaponToAdd">Transform of the weapon game object that will be added to the _weapons array.</param>
+    internal void AddWeapon(Transform weaponToAdd, Transform newParent)
+    {
+        int slotNumber = weaponToAdd.GetComponent<BallisticWeapon>().SlotNumber - 1;
+        ResetWeaponPositionAndRotation(weaponToAdd);
+
+        // Drop current weapon in slot number, if it already exist
+        if (_weapons[slotNumber] != null)
+        {
+            SetNewParentForReplacedWeapon(newParent, slotNumber);
+            OnWeaponDropped?.Invoke(_weapons[slotNumber].GetComponent<BallisticWeapon>());
+        }
+
+        _weapons[slotNumber] = weaponToAdd;
+        SwitchToWeapon(_weapons[slotNumber]);
+        AssignHotKeyForAddedWeapon(slotNumber);
+
+        OnWeaponInventoryUpdate?.Invoke();
+    }
+
+    /// <summary>
     /// Requests the transform of the currently active player weapon in the scene.
     /// </summary>
     /// <returns>Transform object that will be removed from the _weapons array and placed into the weapon pickup object.</returns>
@@ -175,6 +230,65 @@ public class WeaponInventory : MonoBehaviour
             }
         }
         return weaponToReplace;
+    }
+
+    private void WeaponInventory_LoadingPlayableScene()
+    {
+        _playerWeaponHolder = FindObjectOfType<PlayerWeaponHolder>();
+        _levelEndPoint = FindObjectOfType<EndPoint>();
+
+        if (_weapons[0] != null && _weapons[0].gameObject.activeInHierarchy)
+        {
+            _weapons[0].parent = _playerWeaponHolder.transform;
+            ResetWeaponPositionAndRotation(_weapons[0]);
+        }
+
+        OnWeaponChanged?.Invoke();
+
+        if (_levelEndPoint != null)
+            _levelEndPoint.OnEndPointLevelTransition += WeaponInventory_OnEndPointLevelTransition;
+        else
+            Debug.LogWarning("There is no end point to this scene. Do you need one for this current level?");
+    }
+
+    private void WeaponInventory_OnEndPointLevelTransition(string s)
+    {
+        if (_playerWeaponHolder != null && _playerWeaponHolder.transform.childCount > 0)
+            KeepPlayerInventoryForNextScene();
+        else
+            Debug.LogWarning("There is no weapon holder transform for the player object! Please assign one to the prefab.");
+
+        UnsubscribeFromEndPointEvents();
+    }
+
+    private void WeaponInventory_RestartingLevel()
+    {
+        if (_playerWeaponHolder != null && _playerWeaponHolder.transform.childCount > 0)
+            KeepPlayerInventoryForNextScene();
+        else
+            Debug.LogWarning("There is no weapon holder transform for the player object! Please assign one to the prefab.");
+    }
+
+    private void UnsubscribeFromEndPointEvents()
+    {
+        _levelEndPoint.OnEndPointLevelTransition -= WeaponInventory_OnEndPointLevelTransition;
+        _levelEndPoint = null;
+    }
+
+    private void WeaponInventory_OnMainMenuLoaded()
+    {
+        for (int i = 0; i < _weapons.Length; i++)
+        {
+            if (_weapons[i] != null)
+            {
+                _weapons[i].transform.parent = FindObjectOfType<PlayerWeaponHolder>().transform;
+                _weapons[i] = null;
+            }
+            else
+            {
+                continue;
+            }
+        }
     }
     #endregion
 }

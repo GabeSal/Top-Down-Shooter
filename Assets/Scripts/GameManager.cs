@@ -28,6 +28,9 @@ public class GameManager : MonoBehaviour
 
     #region Action Events
     public event Action OnGameOver;
+    public event Action RestartingLevel;
+    public event Action LoadingMainMenu;
+    public event Action LoadingPlayableScene;
     #endregion
 
     #region Properties
@@ -98,6 +101,7 @@ public class GameManager : MonoBehaviour
             _pauseMenu.SetActive(false);
         }
 
+        LoadingMainMenu?.Invoke();
         StartCoroutine(LoadSceneAsyncByName("Main Menu"));
     }
 
@@ -163,15 +167,16 @@ public class GameManager : MonoBehaviour
 
         if (SceneIsPlayable())
         {
-            ResetGameSettings();
             FindLevelUIElements();
             //FindCheckpoints();
             SubscribeToLevelEndPointEvents();
             SetGameOverClickEvents();
+            ResetGameSettings();
             if (sceneName == "Survival Level" || sceneName == "Tests")
             {
                 _enemyCounter = GetAllActiveEnemiesInScene();
-            }            
+            }
+            LoadingPlayableScene?.Invoke();
         }
         else
         {
@@ -190,15 +195,6 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Internal method that's called from the UIPlayerHealth object when the player's health reaches 0.
-    /// </summary>
-    private void GameManager_OnPlayerDied()
-    {
-        _playerIsDead = true;
-        GameOver();
-    }
-
-    /// <summary>
     /// Finds all of the game objects in the loaded scene that have the EnemyStatus component and
     /// counts how many are active/enabled in the Unity hierarchy.
     /// </summary>
@@ -210,11 +206,8 @@ public class GameManager : MonoBehaviour
         foreach (var enemy in enemiesInScene)
         {
             if (enemy.gameObject.activeInHierarchy)
-            {
-                enemyCount++;
-            }            
+                enemyCount++;   
         }
-
         return enemyCount;
     }
 
@@ -225,9 +218,9 @@ public class GameManager : MonoBehaviour
     {
         if (_playerUIHealth == null && _playerUIAmmo == null && _gameOverUI == null)
         {
-            _playerUIHealth = GetGameObjectFromTransformChildOf((int)EGui.playerHealth);
-            _playerUIAmmo = GetGameObjectFromTransformChildOf((int)EGui.playerAmmo);
-            _gameOverUI = GetGameObjectFromTransformChildOf((int)EGui.gameOver);
+            _playerUIHealth = GetGameObjectFromPlayerUITransform((int)EGui.playerHealth);
+            _playerUIAmmo = GetGameObjectFromPlayerUITransform((int)EGui.playerAmmo);
+            _gameOverUI = GetGameObjectFromPlayerUITransform((int)EGui.gameOver);
 
             _playerUIHealth.GetComponent<UIPlayerHealth>().OnPlayerDied += GameManager_OnPlayerDied;
             _gameOverUI.SetActive(false);
@@ -242,13 +235,9 @@ public class GameManager : MonoBehaviour
     {
         var endpoint = FindObjectOfType<EndPoint>();
         if (endpoint != null)
-        {
             endpoint.OnEndPointLevelTransition += GameManager_OnEndPointInteraction;
-        }
         else
-        {
             return;
-        }        
     }
 
     private void UnsubscribeFromAllEvents()
@@ -276,14 +265,6 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Calls the LoadSceneAsyncByName() method
-    /// </summary>
-    private void GameManager_OnEndPointInteraction(string sceneName)
-    {
-        StartCoroutine(LoadSceneAsyncByName(sceneName));
-    }
-
-    /// <summary>
     /// Finds and stores the UI elements from the main menu scene into our private UI game object fields.
     /// </summary>
     private void FindMainMenuUIElements()
@@ -306,7 +287,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     /// <param name="index">int value of the childs index nested in the Canvas object</param>
     /// <returns>GameObject that represents the UI element we wish to reference throughout this module.</returns>
-    private static GameObject GetGameObjectFromTransformChildOf(int index)
+    private static GameObject GetGameObjectFromPlayerUITransform(int index)
     {
         var canvases = FindObjectsOfType<Canvas>();
         foreach (var canvas in canvases)
@@ -314,6 +295,7 @@ public class GameManager : MonoBehaviour
             if (canvas.name == "PlayerUI")
                 return canvas.transform.GetChild(index).gameObject;
         }
+        Debug.LogError("No PlayerUI prefab/canvas object was found!");
         return null;
     }
 
@@ -381,6 +363,7 @@ public class GameManager : MonoBehaviour
     private void RestartLevel()
     {
         string currentScene = SceneManager.GetActiveScene().name;
+        RestartingLevel?.Invoke();
         StartCoroutine(LoadSceneAsyncByName(currentScene));
     }
 
@@ -416,6 +399,23 @@ public class GameManager : MonoBehaviour
             GameOver();
             _inputsAllowed = false;
         }
+    }
+
+    /// <summary>
+    /// Calls the LoadSceneAsyncByName() method
+    /// </summary>
+    private void GameManager_OnEndPointInteraction(string sceneName)
+    {
+        StartCoroutine(LoadSceneAsyncByName(sceneName));
+    }
+
+    /// <summary>
+    /// Invoked method that's called when the players health reaches zero.
+    /// </summary>
+    private void GameManager_OnPlayerDied()
+    {
+        _playerIsDead = true;
+        GameOver();
     }
     #endregion
 }

@@ -60,21 +60,13 @@ public class WeaponAmmo : MonoBehaviour
 
         GameManager.Instance.OnGameOver += GameManagerInstance_OnGameOver;
 
-        _weaponInventory = GetComponentInParent<WeaponInventory>();
+        _weaponInventory = GameManager.Instance.GetComponentInChildren<WeaponInventory>();
 
         if (_weaponInventory != null)
             _weaponInventory.OnWeaponChanged += WeaponAmmo_OnWeaponChanged;
 
         _ballisticWeapon = GetComponent<BallisticWeapon>();
         _ballisticWeapon.OnFire += BallisticWeapon_OnFire;
-    }
-
-    private void OnEnable()
-    {
-        _weaponInventory = GetComponentInParent<WeaponInventory>();
-
-        if (_weaponInventory != null)
-            _weaponInventory.OnWeaponChanged += WeaponAmmo_OnWeaponChanged;
     }
 
     private void Start()
@@ -98,6 +90,14 @@ public class WeaponAmmo : MonoBehaviour
                 CancelReload();
             }
         }        
+    }
+
+    private void OnEnable()
+    {
+        _weaponInventory = GetComponentInParent<WeaponInventory>();
+
+        if (_weaponInventory != null)
+            _weaponInventory.OnWeaponChanged += WeaponAmmo_OnWeaponChanged;
     }
 
     private void OnDisable()
