@@ -28,8 +28,8 @@ public class WeaponInventory : MonoBehaviour
     private void Awake()
     {
         GameManager.Instance.LoadingMainMenu += WeaponInventory_OnMainMenuLoaded;
-        GameManager.Instance.LoadingPlayableScene += WeaponInventory_LoadingPlayableScene;
-        GameManager.Instance.RestartingLevel += WeaponInventory_RestartingLevel;
+        GameManager.Instance.LoadingPlayableScene += GetPlayerWeaponHolderAndSubcribeToEndPointEvents;
+        GameManager.Instance.RestartingLevel += MoveWeaponFromWeaponHolderToInventory;
     }
 
     private void Update()
@@ -262,7 +262,7 @@ public class WeaponInventory : MonoBehaviour
 
     private void UnsubscribeFromEndPointEvents()
     {
-        _levelEndPoint.OnEndPointLevelTransition -= WeaponInventory_OnEndPointLevelTransition;
+        _levelEndPoint.OnEndPointLevelTransition -= CallMoveWeaponToInventoryMethod;
         _levelEndPoint = null;
     }
 
@@ -272,16 +272,26 @@ public class WeaponInventory : MonoBehaviour
     /// if one has been set in the level. If there are any weapons in the WeaponInventory _weapons array,
     /// we will activate and equip the first available weapon from the array.
     /// </summary>
-    private void WeaponInventory_LoadingPlayableScene()
+    private void GetPlayerWeaponHolderAndSubcribeToEndPointEvents()
     {
         _playerWeaponHolder = FindObjectOfType<PlayerWeaponHolder>();
-        _levelEndPoint = FindObjectOfType<EndPoint>();
         GetFirstAvailableWeapon();
+        SubscribeToEndPointEvents();
+    }
+
+    private void SubscribeToEndPointEvents()
+    {
+        _levelEndPoint = FindObjectOfType<EndPoint>();
 
         if (_levelEndPoint != null)
-            _levelEndPoint.OnEndPointLevelTransition += WeaponInventory_OnEndPointLevelTransition;
+            _levelEndPoint.OnEndPointLevelTransition += CallMoveWeaponToInventoryMethod;
         else
             Debug.LogWarning("There is no end point to this scene. Do you need one for this current level?");
+    }
+
+    private void CallMoveWeaponToInventoryMethod(string s)
+    {
+        MoveWeaponFromWeaponHolderToInventory();
     }
 
     /// <summary>
@@ -291,25 +301,15 @@ public class WeaponInventory : MonoBehaviour
     /// transform, then we parent the weapon to our WeaponInventory object before loading up the
     /// next level/scene in order to save the weapon from being destroyed during the loading process.
     /// </summary>
-    private void WeaponInventory_OnEndPointLevelTransition(string s)
+    private void MoveWeaponFromWeaponHolderToInventory()
     {
         if (_playerWeaponHolder != null && _playerWeaponHolder.transform.childCount > 0)
             KeepPlayerInventoryForNextScene();
         else
             Debug.LogWarning("There is no weapon holder transform for the player object! Please assign one to the prefab.");
 
-        UnsubscribeFromEndPointEvents();
-    }
-
-    /// <summary>
-    /// Similar functionality to WeaponInventory_OnEndPointLevelTransition
-    /// </summary>
-    private void WeaponInventory_RestartingLevel()
-    {
-        if (_playerWeaponHolder != null && _playerWeaponHolder.transform.childCount > 0)
-            KeepPlayerInventoryForNextScene();
-        else
-            Debug.LogWarning("There is no weapon holder transform for the player object! Please assign one to the prefab.");
+        if (_levelEndPoint != null)
+            UnsubscribeFromEndPointEvents();
     }
 
     /// <summary>

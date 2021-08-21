@@ -58,12 +58,13 @@ public class WeaponAmmo : MonoBehaviour
         _trueMaxAmmo = _maxAmmo - _ammoInClip;
         _ammoInReserve = _startingAmmo;
 
-        GameManager.Instance.OnGameOver += GameManagerInstance_OnGameOver;
+        GameManager.Instance.OnGameOver += StopAllFunctionsInWeapon;
+        GameManager.Instance.RestartingLevel += ResetAmmoInClip;
 
         _weaponInventory = GameManager.Instance.GetComponentInChildren<WeaponInventory>();
 
         if (_weaponInventory != null)
-            _weaponInventory.OnWeaponChanged += WeaponAmmo_OnWeaponChanged;
+            _weaponInventory.OnWeaponChanged += ChangeAmmoPool;
 
         _ballisticWeapon = GetComponent<BallisticWeapon>();
         _ballisticWeapon.OnFire += BallisticWeapon_OnFire;
@@ -97,19 +98,19 @@ public class WeaponAmmo : MonoBehaviour
         _weaponInventory = GetComponentInParent<WeaponInventory>();
 
         if (_weaponInventory != null)
-            _weaponInventory.OnWeaponChanged += WeaponAmmo_OnWeaponChanged;
+            _weaponInventory.OnWeaponChanged += ChangeAmmoPool;
     }
 
     private void OnDisable()
     {
         if (_weaponInventory != null)
-            _weaponInventory.OnWeaponChanged -= WeaponAmmo_OnWeaponChanged;
+            _weaponInventory.OnWeaponChanged -= ChangeAmmoPool;
     }
 
     private void OnDestroy()
     {
         _ballisticWeapon.OnFire -= BallisticWeapon_OnFire;
-        GameManager.Instance.OnGameOver -= GameManagerInstance_OnGameOver;
+        GameManager.Instance.OnGameOver -= StopAllFunctionsInWeapon;
     }
     #endregion
 
@@ -210,7 +211,7 @@ public class WeaponAmmo : MonoBehaviour
     /// <summary>
     /// Invoked method that's called when the GameManager sends the OnGameOver() event.
     /// </summary>
-    private void GameManagerInstance_OnGameOver()
+    private void StopAllFunctionsInWeapon()
     {
         _isReloading = false;
         StopAllCoroutines();
@@ -219,12 +220,17 @@ public class WeaponAmmo : MonoBehaviour
     /// <summary>
     /// Method that is invoked when the WeaponInventory object calls the OnWeaponChanged() event.
     /// </summary>
-    private void WeaponAmmo_OnWeaponChanged()
+    private void ChangeAmmoPool()
     {
         if (_isReloading)
             CancelReload();
         
         OnAmmoChanged?.Invoke();
+    }
+
+    private void ResetAmmoInClip()
+    {
+        _ammoInClip = _clipSize;
     }
 
     #region Public Methods

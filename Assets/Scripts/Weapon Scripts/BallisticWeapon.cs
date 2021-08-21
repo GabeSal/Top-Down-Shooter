@@ -251,13 +251,9 @@ public class BallisticWeapon : WeaponBase
 
         _bulletTrail.SetPosition(0, transform.GetChild(0).position);
         if (hit2D.point != Vector2.zero)
-        {
             _bulletTrail.SetPosition(1, hit2D.point);
-        }
         else
-        {
             _bulletTrail.SetPosition(1, transform.GetChild(0).position + (shotDirection * _weaponRange));
-        }
 
         yield return new WaitForSeconds(0.05f);
 
@@ -277,7 +273,6 @@ public class BallisticWeapon : WeaponBase
             _isFiring = true;
             yield return new WaitForSeconds(_timeUntilNextBurstShot);
         }
-
         _isFiring = false;
     }
 

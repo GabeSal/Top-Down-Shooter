@@ -222,7 +222,7 @@ public class GameManager : MonoBehaviour
             _playerUIAmmo = GetGameObjectFromPlayerUITransform((int)EGui.playerAmmo);
             _gameOverUI = GetGameObjectFromPlayerUITransform((int)EGui.gameOver);
 
-            _playerUIHealth.GetComponent<UIPlayerHealth>().OnPlayerDied += GameManager_OnPlayerDied;
+            _playerUIHealth.GetComponent<UIPlayerHealth>().OnPlayerDied += StartGameOver;
             _gameOverUI.SetActive(false);
         }
     }
@@ -235,7 +235,7 @@ public class GameManager : MonoBehaviour
     {
         var endpoint = FindObjectOfType<EndPoint>();
         if (endpoint != null)
-            endpoint.OnEndPointLevelTransition += GameManager_OnEndPointInteraction;
+            endpoint.OnEndPointLevelTransition += LoadEndPointScene;
         else
             return;
     }
@@ -247,7 +247,7 @@ public class GameManager : MonoBehaviour
 
         if (endPoint != null)
         {
-            endPoint.OnEndPointLevelTransition -= GameManager_OnEndPointInteraction;
+            endPoint.OnEndPointLevelTransition -= LoadEndPointScene;
         }
 
         //if (checkpoints.length != 0)
@@ -260,7 +260,7 @@ public class GameManager : MonoBehaviour
 
         if (_playerUIHealth != null)
         {
-            _playerUIHealth.GetComponent<UIPlayerHealth>().OnPlayerDied -= GameManager_OnPlayerDied;
+            _playerUIHealth.GetComponent<UIPlayerHealth>().OnPlayerDied -= StartGameOver;
         }
     }
 
@@ -373,6 +373,7 @@ public class GameManager : MonoBehaviour
     private void GameOver()
     {
         OnGameOver?.Invoke();
+        _inputsAllowed = false;
         _playerUIHealth.SetActive(false);
         _playerUIAmmo.SetActive(false);
 
@@ -404,7 +405,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Calls the LoadSceneAsyncByName() method
     /// </summary>
-    private void GameManager_OnEndPointInteraction(string sceneName)
+    private void LoadEndPointScene(string sceneName)
     {
         StartCoroutine(LoadSceneAsyncByName(sceneName));
     }
@@ -412,7 +413,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Invoked method that's called when the players health reaches zero.
     /// </summary>
-    private void GameManager_OnPlayerDied()
+    private void StartGameOver()
     {
         _playerIsDead = true;
         GameOver();

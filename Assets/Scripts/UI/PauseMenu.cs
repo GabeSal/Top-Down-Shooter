@@ -21,16 +21,12 @@ public class PauseMenu : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown((KeyCode)PlayerControls.pauseGame) && GameManager.Instance.SceneIsPlayable())
+        if (Input.GetKeyDown((KeyCode)PlayerControls.pauseGame) && (GameManager.Instance.SceneIsPlayable() && GameManager.Instance.InputsAllowed))
         {
             if (GameManager.GameIsPaused)
-            {
                 Resume();
-            }
             else
-            {
                 Pause();
-            }
         }
     }
     #endregion

@@ -16,22 +16,24 @@ public class UIPlayerReloadTimer : MonoBehaviour
     #endregion
 
     #region Standard Unity Methods
-    private void Start()
+    private void Awake()
     {
         _weaponInventory = GameManager.Instance.GetComponentInChildren<WeaponInventory>();
-        _weaponInventory.OnWeaponChanged += ReloadUI_OnWeaponChanged;
+        _weaponInventory.OnWeaponChanged += SetReloadUIToNewlyEquippedWeapon;
+        _weaponInventory.FirstWeaponFound += SetReloadUIToFirstWeapon;
 
         GameManager.Instance.OnGameOver += GameManagerInstance_OnGameOver;
-
-        FindActivePlayerWeaponInScene();
         ResetReloadUI();
     }
 
     private void OnDestroy()
     {
         GameManager.Instance.OnGameOver -= GameManagerInstance_OnGameOver;
-        _weaponInventory.OnWeaponChanged -= ReloadUI_OnWeaponChanged;
-        UnsubscribeToPlayerAmmoEvents();
+        _weaponInventory.OnWeaponChanged -= SetReloadUIToNewlyEquippedWeapon;
+        _weaponInventory.FirstWeaponFound -= SetReloadUIToFirstWeapon;
+
+        if (_playerAmmo != null)
+            UnsubscribeToPlayerAmmoEvents();
     }
     #endregion
 
@@ -46,7 +48,7 @@ public class UIPlayerReloadTimer : MonoBehaviour
         if (_playerAmmo != null)
             UnsubscribeToPlayerAmmoEvents();
 
-        var weaponHolder = FindObjectOfType<PlayerMovement>().transform.GetChild(0);
+        var weaponHolder = FindObjectOfType<PlayerWeaponHolder>().transform;
         _playerAmmo = weaponHolder.GetComponentInChildren<WeaponAmmo>();
 
         if (_playerAmmo != null)
@@ -58,9 +60,9 @@ public class UIPlayerReloadTimer : MonoBehaviour
     /// </summary>
     private void SubscribeToPlayerAmmoEvents()
     {
-        _playerAmmo.OnReload += ReloadUI_OnReload;
-        _playerAmmo.OnManualReload += ReloadUI_OnManualReload;
-        _playerAmmo.OnReloadCancel += ReloadUI_OnReloadCancel;
+        _playerAmmo.OnReload += StartReloadUITimer;
+        _playerAmmo.OnManualReload += StartManualReloadUITimer;
+        _playerAmmo.OnReloadCancel += CancelReloadTimer;
     }
 
     /// <summary>
@@ -68,41 +70,9 @@ public class UIPlayerReloadTimer : MonoBehaviour
     /// </summary>
     private void UnsubscribeToPlayerAmmoEvents()
     {
-        _playerAmmo.OnReload -= ReloadUI_OnReload;
-        _playerAmmo.OnManualReload -= ReloadUI_OnManualReload;
-        _playerAmmo.OnReloadCancel -= ReloadUI_OnReloadCancel;
-    }
-
-    /// <summary>
-    /// Called method when the WeaponInventory component has invoked the OnWeaponChanged() event.
-    /// </summary>
-    private void ReloadUI_OnWeaponChanged()
-    {
-        FindActivePlayerWeaponInScene();
-    }
-
-    /// <summary>
-    /// Called method when the WeaponAmmo component has invoked the OnReload() event.
-    /// </summary>
-    private void ReloadUI_OnReload()
-    {
-        ShowReloadUI();
-        StartCoroutine(FillReloadBar());
-    }
-    /// <summary>
-    /// Called method when the WeaponAmmo component has invoked the OnManualReload() event.
-    /// </summary>
-    private void ReloadUI_OnManualReload()
-    {
-        ShowReloadUI();
-        StartCoroutine(FillReloadBar());
-    }
-    /// <summary>
-    /// Called method when the WeaponAmmo component has invoked the OnReloadCancel() event.
-    /// </summary>
-    private void ReloadUI_OnReloadCancel()
-    {
-        ResetReloadUI();
+        _playerAmmo.OnReload -= StartReloadUITimer;
+        _playerAmmo.OnManualReload -= StartManualReloadUITimer;
+        _playerAmmo.OnReloadCancel -= CancelReloadTimer;
     }
 
     /// <summary>
@@ -119,6 +89,46 @@ public class UIPlayerReloadTimer : MonoBehaviour
     {
         _reloadBarFill.fillAmount = 0;
         this.gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// Called method when the WeaponInventory component has invoked the FirstWeaponFound() event.
+    /// </summary>
+    private void SetReloadUIToFirstWeapon()
+    {
+        FindActivePlayerWeaponInScene();
+    }
+
+    /// <summary>
+    /// Called method when the WeaponInventory component has invoked the OnWeaponChanged() event.
+    /// </summary>
+    private void SetReloadUIToNewlyEquippedWeapon()
+    {
+        FindActivePlayerWeaponInScene();
+    }
+
+    /// <summary>
+    /// Called method when the WeaponAmmo component has invoked the OnReload() event.
+    /// </summary>
+    private void StartReloadUITimer()
+    {
+        ShowReloadUI();
+        StartCoroutine(FillReloadBar());
+    }
+    /// <summary>
+    /// Called method when the WeaponAmmo component has invoked the OnManualReload() event.
+    /// </summary>
+    private void StartManualReloadUITimer()
+    {
+        ShowReloadUI();
+        StartCoroutine(FillReloadBar());
+    }
+    /// <summary>
+    /// Called method when the WeaponAmmo component has invoked the OnReloadCancel() event.
+    /// </summary>
+    private void CancelReloadTimer()
+    {
+        ResetReloadUI();
     }
 
     private void GameManagerInstance_OnGameOver()
