@@ -11,6 +11,7 @@ public class WeaponInventory : MonoBehaviour
     #region Private Fields
     private PlayerWeaponHolder _playerWeaponHolder;
     private EndPoint _levelEndPoint;
+    private int _currentWeaponIndex;
     #endregion
 
     #region Action Events
@@ -45,27 +46,79 @@ public class WeaponInventory : MonoBehaviour
                     if (ballisticWeapon != null)
                     {
                         if (Input.GetKeyDown((KeyCode)PlayerControls.weapon1) &&
-                        CompareWeaponKeyCodeWithPlayerControls(PlayerControls.weapon1, ballisticWeapon.weaponHotKey))
+                            CompareWeaponKeyCodeWithPlayerControls(PlayerControls.weapon1, ballisticWeapon.weaponHotKey))
                         {
-                            SwitchToWeapon(weapon);
-                            break;
+                            if (_weapons[_currentWeaponIndex] == weapon)
+                            {
+                                return;
+                            }
+                            else
+                            {
+                                SwitchToWeapon(weapon);
+                                break;
+                            }                            
                         }
 
                         if (Input.GetKeyDown((KeyCode)PlayerControls.weapon2) &&
                             CompareWeaponKeyCodeWithPlayerControls(PlayerControls.weapon2, ballisticWeapon.weaponHotKey))
                         {
-                            SwitchToWeapon(weapon);
-                            break;
+                            if (_weapons[_currentWeaponIndex] == weapon)
+                            {
+                                return;
+                            }
+                            else
+                            {
+                                SwitchToWeapon(weapon);
+                                break;
+                            }
                         }
 
                         if (Input.GetKeyDown((KeyCode)PlayerControls.weapon3) &&
                             CompareWeaponKeyCodeWithPlayerControls(PlayerControls.weapon3, ballisticWeapon.weaponHotKey))
                         {
-                            SwitchToWeapon(weapon);
+                            if (_weapons[_currentWeaponIndex] == weapon)
+                            {
+                                return;
+                            }
+                            else
+                            {
+                                SwitchToWeapon(weapon);
+                                break;
+                            }
+                        }
+
+                        if (Input.GetAxisRaw("Mouse Scroll Wheel") > 0f)
+                        {
+                            if (_currentWeaponIndex == _weapons.Length - 1)
+                            {
+                                SwitchToWeapon(GetFirstWeaponInInventory());
+                            }
+                            else
+                            {
+                                if (_weapons[_currentWeaponIndex + 1] != null)
+                                    SwitchToWeapon(_weapons[_currentWeaponIndex + 1]);
+                                else
+                                    SwitchToWeapon(GetLastWeaponInInventory());
+                            }
+                            break;
+                        }
+                        else if (Input.GetAxisRaw("Mouse Scroll Wheel") < 0f)
+                        {
+                            if (_currentWeaponIndex <= 0)
+                            {
+                                SwitchToWeapon(GetLastWeaponInInventory());
+                            }
+                            else
+                            {
+                                if (_weapons[_currentWeaponIndex - 1] != null)
+                                    SwitchToWeapon(_weapons[_currentWeaponIndex - 1]);
+                                else
+                                    SwitchToWeapon(GetFirstWeaponInInventory());
+                            }
                             break;
                         }
                     }
-                }                
+                }
             }
         }
     }
@@ -80,7 +133,7 @@ public class WeaponInventory : MonoBehaviour
     /// <param name="weaponToSwitchTo">Transform of the weapon object we wish to switch to.</param>
     private void SwitchToWeapon(Transform weaponToSwitchTo)
     {
-        if (_playerWeaponHolder.transform.childCount > 0)
+        if (_playerWeaponHolder.transform.childCount > 0 && weaponToSwitchTo != null)
         {
             Transform equippedWeapon = _playerWeaponHolder.transform.GetChild(0);
             int equippedWeaponsSlotNumber = equippedWeapon.GetComponent<BallisticWeapon>().SlotNumber - 1;
@@ -109,6 +162,26 @@ public class WeaponInventory : MonoBehaviour
         }        
     }
 
+    private Transform GetLastWeaponInInventory()
+    {
+        for (int i = 0; i < _weapons.Length; i++)
+        {
+            if (_weapons[i] != null)
+                return _weapons[i];
+        }
+        return null;
+    }
+
+    private Transform GetFirstWeaponInInventory()
+    {
+        for (int i = 0; i < _weapons.Length; i++)
+        {
+            if (_weapons[_weapons.Length - 1 - i] != null)
+                return _weapons[_weapons.Length - 1 - i];
+        }
+        return null;
+    }
+
     /// <summary>
     /// Compares the KeyCode values of the player input from the PlayerControls enum and the weapons
     /// KeyCode "hotkey" value.
@@ -131,6 +204,7 @@ public class WeaponInventory : MonoBehaviour
     {
         weaponToAdd.localRotation = Quaternion.identity;
         weaponToAdd.localPosition = Vector3.zero;
+        _currentWeaponIndex = weaponToAdd.GetComponent<BallisticWeapon>().SlotNumber - 1;
     }
 
     /// <summary>
