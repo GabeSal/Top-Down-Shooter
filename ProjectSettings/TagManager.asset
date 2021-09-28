@@ -10,6 +10,7 @@ TagManager:
   - End Point
   - Checkpoint
   - Weapon
+  - FootstepSwapTrigger
   layers:
   - Default
   - TransparentFX

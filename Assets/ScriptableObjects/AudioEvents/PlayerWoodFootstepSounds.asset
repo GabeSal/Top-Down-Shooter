@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b3705d216c1ae0408d37e04907b84a4, type: 3}
+  m_Name: PlayerWoodFootstepSounds
+  m_EditorClassIdentifier: 
+  _clips:
+  - {fileID: 8300000, guid: 5096f569ebefffe4c812e6820d203d6a, type: 3}
+  - {fileID: 8300000, guid: 66efdb1cabea81043b73185e84989a08, type: 3}
+  - {fileID: 8300000, guid: 4b9086d72effd194ebe7b6ed88e35226, type: 3}
+  - {fileID: 8300000, guid: ee47abb21d1b7e74eaaa37d7982d4cf3, type: 3}
+  volume:
+    minValue: 0.27962252
+    maxValue: 0.4071735
+  pitch:
+    minValue: 0.85204077
+    maxValue: 1.1530612
+  _distance:
+    minValue: 1
+    maxValue: 30.612541
+  _mixer: {fileID: -7106147715042027711, guid: 7ef3cd21aec11ee47ab69c73deda6c9f, type: 2}

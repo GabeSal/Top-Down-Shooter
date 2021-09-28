@@ -32,7 +32,6 @@ public class WeaponInventory : MonoBehaviour
         GameManager.Instance.LoadingPlayableScene += GetPlayerWeaponHolderAndSubcribeToEndPointEvents;
         GameManager.Instance.RestartingLevel += MoveWeaponFromWeaponHolderToInventory;
     }
-
     private void Update()
     {
         if (GameManager.Instance.InputsAllowed && GameManager.GameIsPaused == false)
@@ -45,8 +44,9 @@ public class WeaponInventory : MonoBehaviour
 
                     if (ballisticWeapon != null)
                     {
+                        #region Alpha Number Controls
                         if (Input.GetKeyDown((KeyCode)PlayerControls.weapon1) &&
-                            CompareWeaponKeyCodeWithPlayerControls(PlayerControls.weapon1, ballisticWeapon.weaponHotKey))
+                                            CompareWeaponKeyCodeWithPlayerControls(PlayerControls.weapon1, ballisticWeapon.weaponHotKey))
                         {
                             if (_weapons[_currentWeaponIndex] == weapon)
                             {
@@ -56,7 +56,7 @@ public class WeaponInventory : MonoBehaviour
                             {
                                 SwitchToWeapon(weapon);
                                 break;
-                            }                            
+                            }
                         }
 
                         if (Input.GetKeyDown((KeyCode)PlayerControls.weapon2) &&
@@ -86,8 +86,10 @@ public class WeaponInventory : MonoBehaviour
                                 break;
                             }
                         }
+                        #endregion
 
-                        if (Input.GetAxisRaw("Mouse Scroll Wheel") > 0f)
+                        #region Mouse Wheel Controls
+                        if (Input.GetAxisRaw("Mouse Scroll Wheel") < 0f)
                         {
                             if (_currentWeaponIndex == _weapons.Length - 1)
                             {
@@ -102,7 +104,7 @@ public class WeaponInventory : MonoBehaviour
                             }
                             break;
                         }
-                        else if (Input.GetAxisRaw("Mouse Scroll Wheel") < 0f)
+                        else if (Input.GetAxisRaw("Mouse Scroll Wheel") > 0f)
                         {
                             if (_currentWeaponIndex <= 0)
                             {
@@ -117,6 +119,7 @@ public class WeaponInventory : MonoBehaviour
                             }
                             break;
                         }
+                        #endregion
                     }
                 }
             }
@@ -162,7 +165,7 @@ public class WeaponInventory : MonoBehaviour
         }        
     }
 
-    private Transform GetLastWeaponInInventory()
+    private Transform GetFirstWeaponInInventory()
     {
         for (int i = 0; i < _weapons.Length; i++)
         {
@@ -172,7 +175,7 @@ public class WeaponInventory : MonoBehaviour
         return null;
     }
 
-    private Transform GetFirstWeaponInInventory()
+    private Transform GetLastWeaponInInventory()
     {
         for (int i = 0; i < _weapons.Length; i++)
         {
