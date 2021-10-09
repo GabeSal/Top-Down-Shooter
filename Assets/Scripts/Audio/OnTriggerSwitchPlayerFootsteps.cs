@@ -30,7 +30,8 @@ public class OnTriggerSwitchPlayerFootsteps : MonoBehaviour
 
     private void OnDestroy()
     {
-        _player.GetComponent<FootstepSounds>().StoreOldFootsteps -= ReceivePreviousFootstepEvent;
+        if (_player)
+            _player.GetComponent<FootstepSounds>().StoreOldFootsteps -= ReceivePreviousFootstepEvent;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

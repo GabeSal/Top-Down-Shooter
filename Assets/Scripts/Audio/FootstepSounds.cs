@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class FootstepSounds : MonoBehaviour
@@ -10,7 +11,7 @@ public class FootstepSounds : MonoBehaviour
 
     #region Private Fields
     private AudioSource _audioSource;
-    private PolygonCollider2D[] _audioSwappers;
+    private List<OnTriggerSwitchPlayerFootsteps> _audioSwappers = new List<OnTriggerSwitchPlayerFootsteps>();
     #endregion
 
     #region Action Events
@@ -22,18 +23,11 @@ public class FootstepSounds : MonoBehaviour
     {
         _audioSource = GetComponent<AudioSource>();
 
-        _audioSwappers = FindObjectsOfType<PolygonCollider2D>();
-        if (_audioSwappers != null)
-        {
-            foreach (var audioSwapper in _audioSwappers)
-            {
-                var footstepEvent = audioSwapper.GetComponent<OnTriggerSwitchPlayerFootsteps>();
+        StoreAllAudioSwappersInScene();
 
-                if (footstepEvent != null)
-                    footstepEvent.SwapPlayerFootsteps += ChangePlayerStepsTo;
-                else
-                    continue;                
-            }
+        foreach (var audioSwapper in _audioSwappers)
+        {
+            audioSwapper.SwapPlayerFootsteps += ChangePlayerStepsTo;
         }
 
         if (transform.CompareTag("Player"))
@@ -41,7 +35,7 @@ public class FootstepSounds : MonoBehaviour
 
         if (transform.CompareTag("Enemy"))
             GetComponent<EnemyMovementSoundHandler>().OnEnemyStep += PlayEnemyFootStepSound;
-    }    
+    }
 
     private void OnDisable()
     {
@@ -57,17 +51,38 @@ public class FootstepSounds : MonoBehaviour
     #region Class Defined Methods
     private void DeregisterEvents()
     {
+        if (_audioSwappers != null)
+        {
+            foreach (var audioSwapper in _audioSwappers)
+            {
+                audioSwapper.SwapPlayerFootsteps -= ChangePlayerStepsTo;
+            }
+        }
+
         if (transform.CompareTag("Player"))
             GetComponent<PlayerMovement>().OnPlayerStep -= PlayPlayerFootStepSound;
 
         if (transform.CompareTag("Enemy"))
             GetComponent<EnemyMovementSoundHandler>().OnEnemyStep -= PlayEnemyFootStepSound;
+    }
 
-        if (_audioSwappers != null)
+    private void StoreAllAudioSwappersInScene()
+    {
+        var polygonColliders = FindObjectsOfType<PolygonCollider2D>();
+
+        foreach (var polygonCollider in polygonColliders)
         {
-            foreach (var audioSwapper in _audioSwappers)
+            Debug.Log(polygonCollider);
+
+            var footstepEvent = polygonCollider.GetComponent<OnTriggerSwitchPlayerFootsteps>();
+
+            if (footstepEvent != null)
             {
-                audioSwapper.GetComponent<OnTriggerSwitchPlayerFootsteps>().SwapPlayerFootsteps -= ChangePlayerStepsTo;
+                _audioSwappers.Add(footstepEvent);
+            }
+            else
+            {
+                continue;
             }
         }
     }
